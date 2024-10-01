@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { loadDaumPostCodeModal } from '@/utils/daumPostcode.ts'
+import { formatPhoneNumber } from '@/utils/format.ts'
+import { initializeSmartEditor, getEditorContent, setEditorContent } from '@/utils/smartEditor.js';
 import axios from 'axios';
 
 const Test = () => {
@@ -11,22 +13,45 @@ const Test = () => {
     const [userZoneCode, setUserZoneCode] = useState('');
     const [userAddress, setUserAddress] = useState('');
     const [userDetailAddress, setUserDetailAddress] = useState('');
-    const [editorText, setEditorText] = useState('');
 
     const [entityList, setEntityList] = useState([]);
 
-    /* 컴포넌트가 마운트될 때 daumpostCode 스크립트 로드 */
+    const oEditors = useRef([]);
+
+    /* 컴포넌트가 마운트될 때 스크립트 로드 */
     useEffect(() => {
-        const script = document.createElement('script');
-        script.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-        script.async = true;
+        const loadScripts = () => {
+            // Daum Postcode 스크립트 로드
+            const daumScript = document.createElement('script');
+            daumScript.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+            daumScript.async = true;
 
-        document.body.appendChild(script);
+            document.body.appendChild(daumScript);
 
-        // 컴포넌트가 언마운트될 때 스크립트 제거
-        return () => {
-            document.body.removeChild(script);
-        }
+            // SmartEditor 스크립트 로드
+            const editorScript = document.createElement('script');
+
+            editorScript.src = '/smarteditor/js/HuskyEZCreator.js';
+            editorScript.type = 'text/javascript';
+            editorScript.charset = 'utf-8';
+
+            editorScript.onload = () => {
+                initializeSmartEditor('editorTxt', oEditors.current)
+                    .then(() => {})
+                    .catch((error) => {
+                        console.error('SmartEditor 초기화 중 오류 발생:', error);
+                    });
+            };
+
+            document.body.appendChild(editorScript);
+
+            return () => {
+                document.body.removeChild(daumScript);
+                document.body.removeChild(editorScript);
+            };
+        };
+
+        loadScripts();
     }, []);
 
     /* 테스트 데이터 로드 */
@@ -53,7 +78,9 @@ const Test = () => {
      */
     const saveData = async (e) => {
         e.preventDefault();
+
         try {
+            const editorContent = getEditorContent(oEditors.current);
             const jsonData = {
                 'userId': userId
                 , 'userPw': userPw
@@ -62,11 +89,16 @@ const Test = () => {
                 , 'userZoneCode': userZoneCode
                 , 'userAddress': userAddress
                 , 'userDetailAddress': userDetailAddress
-                , 'userInfo': editorText
+                , 'userInfo': editorContent
             }
             const url = '/api/test/save';
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}${url}`, jsonData);
-            findList();
+            const response
+                = await axios.post(`${import.meta.env.VITE_API_URL}${url}`, jsonData);
+            if(response.status === 200) {
+                findList();
+            } else {
+                console.error('error', response.data.status);
+            }
         } catch (error) {
             console.error('error', error);
         }
@@ -169,19 +201,18 @@ const Test = () => {
                 상세주소 :&nbsp;
                 <input type="text" value={userDetailAddress} onChange={(e) => setUserDetailAddress(e.target.value)}/>
             </div>
-            <div id="smarteditor" className="text-editor__wrapper">
-                 <textarea
+            <div id="smarteditor">
+                정보 :&nbsp;
+                <textarea
                     name="editorTxt"
                     id="editorTxt"
                     rows={20}
                     cols={10}
                     style={{width: '100%'}}
-                    value={editorText}
-                    onChange={(e) => setEditorText(e.target.value)}
-                 />
+                />
             </div>
             <div>
-                <button onClick={saveData} type="button">전송</button>
+                <button onClick={saveData} type="button">저장</button>
             </div>
             <div>
                 <h2>TestEntityList DB</h2>
@@ -189,7 +220,8 @@ const Test = () => {
                     {Array.isArray(entityList) && entityList.length > 0 ? (
                         entityList.map((entity) => (
                             <li key={entity.userMasterId}>
-                                아이디: {entity.userId} / 이름: {entity.userNm} / 번호: {entity.userPhone} / 주소 1
+                                아이디: {entity.userId} / 이름: {entity.userNm} /
+                                번호: {entity.userPhone ? formatPhoneNumber(entity.userPhone) : '-'} / 주소 1
                                 : {entity.userAddress} / 주소 2 : {entity.userDetailAddress}
                             </li>
                         ))
