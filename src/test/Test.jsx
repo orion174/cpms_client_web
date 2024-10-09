@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { loadDaumPostCodeModal } from '@/utils/daumPostcode.ts'
 import { formatPhoneNumber } from '@/utils/format.ts'
 import { initializeSmartEditor, getEditorContent, setEditorContent } from '@/utils/smartEditor.js';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Test = () => {
@@ -159,8 +160,11 @@ const Test = () => {
         loadDaumPostCodeModal(setUserZoneCode, setUserAddress);
     };
 
+    const navigate = useNavigate();
+
     return (
         <div>
+            <h2>CPMS<br/>회원가입</h2>
             <div>
                 ID :&nbsp;
                 <input type="text" value={userId} onChange={(e) => setUserId(e.target.value)}/>
@@ -213,6 +217,7 @@ const Test = () => {
             </div>
             <div>
                 <button onClick={saveData} type="button">저장</button>
+                <button onClick={() => navigate('/login')} type="button">뒤로가기</button>
             </div>
             <div>
                 <h2>TestEntityList DB</h2>
