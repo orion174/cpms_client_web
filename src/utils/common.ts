@@ -1,3 +1,5 @@
+import {DetailedHTMLProps, InputHTMLAttributes } from "react";
+
 export const handleInputKeyDown = async (
     event: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     func: () => Promise<void>

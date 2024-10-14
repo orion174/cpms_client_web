@@ -61,7 +61,7 @@ const AdminNavbar = () => {
               </div>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <NavLink className="nav-link-icon" to="/" tag={Link}>
+                  <NavLink className="nav-link-icon" to="/admin/index" tag={Link}>
                     <i className="ni ni-planet" />
                     <span className="nav-link-inner--text">Dashboard</span>
                   </NavLink>
@@ -69,7 +69,7 @@ const AdminNavbar = () => {
                 <NavItem>
                   <NavLink
                       className="nav-link-icon"
-                      to="/auth/register"
+                      to="/test"
                       tag={Link}
                   >
                     <i className="ni ni-circle-08" />
@@ -77,7 +77,7 @@ const AdminNavbar = () => {
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink className="nav-link-icon" to="/auth/login" tag={Link}>
+                  <NavLink className="nav-link-icon" to="/login" tag={Link}>
                     <i className="ni ni-key-25" />
                     <span className="nav-link-inner--text">Login</span>
                   </NavLink>

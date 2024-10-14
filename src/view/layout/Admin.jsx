@@ -1,5 +1,4 @@
 /*!
-
 =========================================================
 * Argon Dashboard React - v1.2.4
 =========================================================
@@ -16,7 +15,7 @@
 
 */
 import React from "react";
-import { useLocation, Route, Routes, Navigate } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 // reactstrap components
 import { Container } from "reactstrap";
 // core components
@@ -26,8 +25,6 @@ import Sidebar from "@/components/Sidebar/Sidebar.jsx";
 
 import logoImage from '@/assets/img/brand/argon-react.png';
 
-import routes from "@/router/routes.jsx";
-
 const Admin = (props) => {
   const mainContent = React.useRef(null);
   const location = useLocation();
@@ -35,58 +32,31 @@ const Admin = (props) => {
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-    mainContent.current.scrollTop = 0;
+    if (mainContent.current) {
+      mainContent.current.scrollTop = 0;
+    }
   }, [location]);
 
-  const getRoutes = (routes) => {
-    return routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        return (
-          <Route path={prop.path} element={prop.component} key={key} exact />
-        );
-      } else {
-        return null;
-      }
-    });
-  };
-
-  const getBrandText = (path) => {
-    for (let i = 0; i < routes.length; i++) {
-      if (
-        props?.location?.pathname.indexOf(routes[i].layout + routes[i].path) !==
-        -1
-      ) {
-        return routes[i].name;
-      }
-    }
-    return "Brand";
-  };
-
   return (
-    <>
-      <Sidebar
-        {...props}
-        routes={routes}
-        logo={{
-          innerLink: "/admin/index",
-          imgSrc: logoImage ,
-          imgAlt: "...",
-        }}
-      />
-      <div className="main-content" ref={mainContent}>
-        <AdminNavbar
-          {...props}
-          brandText={getBrandText(props?.location?.pathname)}
+      <>
+        <Sidebar
+            {...props}
+            routes={[]} // routes prop 제거 또는 빈 배열로 설정 (필요 시 수정)
+            logo={{
+              innerLink: "/admin/index",
+              imgSrc: logoImage,
+              imgAlt: "...",
+            }}
         />
-        <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/admin/index" replace />} />
-        </Routes>
-        <Container fluid>
-          <AdminFooter />
-        </Container>
-      </div>
-    </>
+        <div className="main-content" ref={mainContent}>
+          <AdminNavbar {...props} />
+          {/* 하위 라우트 렌더링 */}
+          <Outlet />
+          <Container fluid>
+            <AdminFooter />
+          </Container>
+        </div>
+      </>
   );
 };
 

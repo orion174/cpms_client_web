@@ -34,3 +34,4 @@ export interface JwtDto {
     loginPw?: string;
     loginHistoryId?: number;
 }
+

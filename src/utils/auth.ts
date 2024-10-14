@@ -1,5 +1,5 @@
 import { ResLoginDTO} from "@/definition/type.ts";
-import { utf8ToBase64 } from '@/utils/common.ts'
+import { utf8ToBase64 } from "@/utils/common.ts";
 
 import axios from 'axios';
 

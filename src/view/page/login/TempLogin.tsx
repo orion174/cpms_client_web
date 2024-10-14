@@ -6,9 +6,8 @@ import { useState } from 'react'
 
 import axios from 'axios';
 
-
 /* 로그인 페이지 */
-const Login = () => {
+const TempLogin = () => {
 
     /* 회원가입 페이지 이동 */
     const navigate = useNavigate();
@@ -32,22 +31,30 @@ const Login = () => {
                 },
             });
 
-            if(res.status) {
+            if(res.status == 200) {
                 if(res.data.result) {
                     await saveCookie(res.data.result);
                 }
-            } else {
-                const msg = res.message;
+            }
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        alert('아이디 또는 비밀번호가 일치하지 않습니다.');
 
-                if(msg === 'ERR_NOT_FOUND') {
-                    alert('일치하는 정보가 없습니다. 다시 한번 확인해주세요.');
+                    } else {
+                        alert('서버 오류가 발생했습니다. 관리자에게 문의하세요.');
+                    }
+
+                } else if (error.request) {
+                    alert('서버와의 연결이 원활하지 않습니다.');
 
                 } else {
-                    alert('오류가 발생하였습니다. 관리자에게 문의하세요.');
+                    alert('요청 중 오류가 발생했습니다.');
                 }
+            } else {
+                console.error(error);
             }
-        } catch (e) {
-            console.error(e);
         }
     };
 
@@ -88,4 +95,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default TempLogin;
