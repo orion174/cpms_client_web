@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import TempLogin from '@/view/page/login/TempLogin.tsx';
 import Test from '@/test/Test.jsx';
 import Admin from "@/view/layout/Admin.jsx";
 import Auth from "@/view/layout/Auth.jsx";
@@ -20,10 +19,7 @@ const Router = () => {
                 {/* 기본 경로 리다이렉트 */}
                 <Route path="/" element={<Navigate to="/auth/login" />} />
 
-                {/* 로그인 페이지 */}
-                <Route path="/login" element={<TempLogin />} />
-
-                {/* 테스트 페이지 */}
+                {/* 테스트 회원가입 페이지 */}
                 <Route path="/test" element={<Test />} />
 
                 {/* Auth 레이아웃 하위 라우트 */}

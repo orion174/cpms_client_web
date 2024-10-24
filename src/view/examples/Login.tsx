@@ -1,26 +1,14 @@
-/*!
+import { ApiRes, ResLoginDTO} from "@/definition/type.ts";
+import { handleInputKeyDown } from '@/utils/common.ts'
+import { saveCookie } from "@/utils/auth.ts";
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
 
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
+import axios from 'axios';
 
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-
-// reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   FormGroup,
   Form,
@@ -28,64 +16,81 @@ import {
   InputGroupAddon,
   InputGroupText,
   InputGroup,
-  Row,
+  // Row,
   Col,
 } from "reactstrap";
 
-import githubIcon from "@/assets/img/icons/common/github.svg";
-import googleIcon from "@/assets/img/icons/common/google.svg";
-
 const Login = () => {
+  const navigate = useNavigate();
+  const [loginId, setLoginId] = useState('')
+  const [loginPw, setLoginPw] = useState('')
+
+  /* CPMS 로그인 */
+  const login = async(): Promise<void> => {
+    const jsonData = {
+      'loginId' : loginId,
+      'loginPw' : loginPw
+    }
+
+    const url = `${import.meta.env.VITE_API_URL}/auth/login`;
+
+    try {
+      const res = await axios.post<ApiRes<ResLoginDTO>>(url, jsonData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if(res.status == 200) {
+        if(res.data.result) {
+          await saveCookie(res.data.result);
+          navigate('/admin/tables');
+        }
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+
+          } else {
+            alert('서버 오류가 발생했습니다. 관리자에게 문의하세요.');
+          }
+
+        } else if (error.request) {
+          alert('서버와의 연결이 원활하지 않습니다.');
+
+        } else {
+          alert('요청 중 오류가 발생했습니다.');
+        }
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
   return (
       <>
         <Col lg="5" md="7">
           <Card className="bg-secondary shadow border-0">
-            <CardHeader className="bg-transparent pb-5">
-              <div className="text-muted text-center mt-2 mb-3">
-                <small>Sign in with</small>
-              </div>
-              <div className="btn-wrapper text-center">
-                <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                >
-                <span className="btn-inner--icon">
-                  <img alt="..." src={githubIcon} />
-                </span>
-                  <span className="btn-inner--text">Github</span>
-                </Button>
-                <Button
-                    className="btn-neutral btn-icon"
-                    color="default"
-                    href="#pablo"
-                    onClick={(e) => e.preventDefault()}
-                >
-                <span className="btn-inner--icon">
-                  <img alt="..." src={googleIcon} />
-                </span>
-                  <span className="btn-inner--text">Google</span>
-                </Button>
-              </div>
-            </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <small>Or sign in with credentials</small>
+                <small className="custom-text">CPMS</small>
               </div>
               <Form role="form">
                 <FormGroup className="mb-3">
                   <InputGroup className="input-group-alternative">
                     <InputGroupAddon addonType="prepend">
                       <InputGroupText>
-                        <i className="ni ni-email-83" />
+                        <i className="ni ni-circle-08" />
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                        placeholder="Email"
-                        type="email"
-                        autoComplete="new-email"
-                        required
+                        type="text"
+                        value={loginId}
+                        placeholder="아이디"
+                        onChange={(e) => setLoginId(e.target.value)}
+                        onKeyDown={(event) => handleInputKeyDown(event, login)}
                     />
                   </InputGroup>
                 </FormGroup>
@@ -97,54 +102,54 @@ const Login = () => {
                       </InputGroupText>
                     </InputGroupAddon>
                     <Input
-                        placeholder="Password"
                         type="password"
-                        autoComplete="new-password"
-                        required
+                        placeholder="비밀번호"
+                        onChange={(e) => setLoginPw(e.target.value)}
+                        onKeyDown={(event) => handleInputKeyDown(event, login)}
                     />
                   </InputGroup>
                 </FormGroup>
-                <div className="custom-control custom-control-alternative custom-checkbox">
-                  <input
-                      className="custom-control-input"
-                      id=" customCheckLogin"
-                      type="checkbox"
-                  />
-                  <label
-                      className="custom-control-label"
-                      htmlFor=" customCheckLogin"
-                  >
-                    <span className="text-muted">Remember me</span>
-                  </label>
-                </div>
+                {/*<div className="custom-control custom-control-alternative custom-checkbox">*/}
+                {/*  <input*/}
+                {/*      className="custom-control-input"*/}
+                {/*      id=" customCheckLogin"*/}
+                {/*      type="checkbox"*/}
+                {/*  />*/}
+                {/*  <label*/}
+                {/*      className="custom-control-label"*/}
+                {/*      htmlFor="customCheckLogin"*/}
+                {/*  >*/}
+                {/*    <span className="text-muted">아이디 저장</span>*/}
+                {/*  </label>*/}
+                {/*</div>*/}
                 <div className="text-center">
-                  <Button className="my-4" color="primary" type="button">
-                    Sign in
+                  <Button onClick={login} className="my-4" color="primary" type="button">
+                    로그인
                   </Button>
                 </div>
               </Form>
             </CardBody>
           </Card>
-          <Row className="mt-3">
-            <Col xs="6">
-              <a
-                  className="text-light"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-              >
-                <small>Forgot password?</small>
-              </a>
-            </Col>
-            <Col className="text-right" xs="6">
-              <a
-                  className="text-light"
-                  href="#pablo"
-                  onClick={(e) => e.preventDefault()}
-              >
-                <small>Create new account</small>
-              </a>
-            </Col>
-          </Row>
+          {/*<Row className="mt-3">*/}
+          {/*  <Col xs="6">*/}
+          {/*    <a*/}
+          {/*        className="text-light"*/}
+          {/*        href="#pablo"*/}
+          {/*        onClick={(e) => e.preventDefault()}*/}
+          {/*    >*/}
+          {/*      <small>Forgot password?</small>*/}
+          {/*    </a>*/}
+          {/*  </Col>*/}
+          {/*  <Col className="text-right" xs="6">*/}
+          {/*    <a*/}
+          {/*        className="text-light"*/}
+          {/*        href="#pablo"*/}
+          {/*        onClick={(e) => e.preventDefault()}*/}
+          {/*    >*/}
+          {/*      <small>Create new account</small>*/}
+          {/*    </a>*/}
+          {/*  </Col>*/}
+          {/*</Row>*/}
         </Col>
       </>
   );
