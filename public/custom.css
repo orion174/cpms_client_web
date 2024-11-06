@@ -3,3 +3,14 @@
     font-weight: bold;
     font-size: 50px;
 }
+
+.my-file-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.my-input-text {
+    color: #000000 !important;
+    font-weight: 500 !important;
+}

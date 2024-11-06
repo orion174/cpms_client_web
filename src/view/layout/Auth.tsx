@@ -1,25 +1,26 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row } from "reactstrap";
 
-// core components
-import AuthNavbar from "@/components/Navbars/AuthNavbar.jsx";
-import AuthFooter from "@/components/Footers/AuthFooter.jsx";
+import AuthNavbar from "@/components/Navbars/AuthNavbar.tsx";
+import AuthFooter from "@/components/Footers/AuthFooter.tsx";
 
-const Auth = () => {
-  const mainContent = React.useRef(null);
+const Auth: React.FC = () => {
+  const mainContent = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("bg-default");
     return () => {
       document.body.classList.remove("bg-default");
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.documentElement.scrollTop = 0;
-    document.scrollingElement.scrollTop = 0;
+    if (document.scrollingElement) {
+      document.scrollingElement.scrollTop = 0;
+    }
     if (mainContent.current) {
       mainContent.current.scrollTop = 0;
     }
@@ -31,8 +32,7 @@ const Auth = () => {
           <AuthNavbar />
           <div className="header bg-gradient-info py-7 py-lg-8">
             <Container>
-              <div className="header-body text-center mb-7">
-              </div>
+              <div className="header-body text-center mb-7"></div>
             </Container>
             <div className="separator separator-bottom separator-skew zindex-100">
               <svg
@@ -43,10 +43,7 @@ const Auth = () => {
                   x="0"
                   y="0"
               >
-                <polygon
-                    className="fill-default"
-                    points="2560 0 2560 100 0 100"
-                />
+                <polygon className="fill-default" points="2560 0 2560 100 0 100"/>
               </svg>
             </div>
           </div>

@@ -3,8 +3,6 @@ import {
   UncontrolledCollapse,
   NavbarBrand,
   Navbar,
-  NavItem,
-  NavLink,
   Nav,
   Container,
   Row,
@@ -14,7 +12,7 @@ import {
 import argonReactWhite from "@/assets/img/brand/argon-react-white.png";
 import argonReact from "@/assets/img/brand/argon-react.png";
 
-const AdminNavbar = () => {
+const AuthNavbar = () => {
   return (
       <>
         <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">
@@ -48,16 +46,16 @@ const AdminNavbar = () => {
                 {/*    <span className="nav-link-inner--text">Dashboard</span>*/}
                 {/*  </NavLink>*/}
                 {/*</NavItem>*/}
-                <NavItem>
-                  <NavLink
-                      className="nav-link-icon"
-                      to="/test"
-                      tag={Link}
-                  >
-                    <i className="ni ni-single-02" />
-                    <span className="nav-link-inner--text">회원가입</span>
-                  </NavLink>
-                </NavItem>
+                {/*<NavItem>*/}
+                {/*  <NavLink*/}
+                {/*      className="nav-link-icon"*/}
+                {/*      to="/test"*/}
+                {/*      tag={Link}*/}
+                {/*  >*/}
+                {/*    <i className="ni ni-single-02" />*/}
+                {/*    <span className="nav-link-inner--text">회원가입</span>*/}
+                {/*  </NavLink>*/}
+                {/*</NavItem>*/}
                 {/*<NavItem>*/}
                 {/*  <NavLink className="nav-link-icon" to="/login" tag={Link}>*/}
                 {/*    <i className="ni ni-key-25" />*/}
@@ -82,4 +80,4 @@ const AdminNavbar = () => {
   );
 };
 
-export default AdminNavbar;
+export default AuthNavbar;

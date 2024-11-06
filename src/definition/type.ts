@@ -1,11 +1,11 @@
-/* API result */
+// API result
 export interface ApiRes<T> {
     status: boolean;
     result: T;
     message?: string;
 }
 
-/* 로그인 DTO */
+// 로그인 DTO
 export interface ResLoginDTO {
     userId: number;
     authType: string;
@@ -18,9 +18,10 @@ export interface ResLoginDTO {
     accessTokenExpiration: number;
     refreshToken: string;
     refreshTokenExpiration: number;
+    option: string;
 }
 
-/* JWT DTO */
+// JWT DTO
 export interface JwtDto {
     grantType?: string;
     accessToken: string;
@@ -35,3 +36,8 @@ export interface JwtDto {
     loginHistoryId?: number;
 }
 
+// 공통 코드 DTO
+export interface ResComCodeDTO {
+    codeId: string;
+    codeNm: string;
+}
