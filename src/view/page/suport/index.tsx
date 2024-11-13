@@ -39,8 +39,9 @@ import angularImage from "@/assets/img/theme/angular.jpg";
 const Suport = () => {
   const navigate = useNavigate();
 
+  // 지원 등록 폼 이동
   const handleRegisterClick = () => {
-    navigate('/admin/suportForm');
+    navigate('/admin/suportForm', {state: { formType: 'insert' }});
   };
 
   const pickerRef = useRef(null);

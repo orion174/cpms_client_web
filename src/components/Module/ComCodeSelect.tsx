@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Input } from "reactstrap";
-
 import { ApiRes, ResComCodeDTO } from "@/definition/type.ts";
 import { callAPI } from "@/utils/interceptor.ts";
 
 interface ComCodeProps  {
     masterCodeId: string;
     selectId: string;
+    value: string; // 외부 컴포넌트에서 value 처리
+    onChange: React.ChangeEventHandler<HTMLSelectElement>; // 외부 컴포넌트에서 react event 처리
 }
 
-const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId }) => {
+/**
+ * 공통코드 Select Option
+ * @param masterCodeId
+ * @param selectId
+ * @param value
+ * @param onChange
+ * @constructor
+ */
+const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, onChange }) => {
     const [options, setOptions] = useState<ResComCodeDTO[]>([]);
-    const [selectedValue, setSelectedValue] = useState<string>("");
 
     // 공통코드 조회 API
     const fetchComCodeList = async (masterCodeId: string): Promise<ApiRes<ResComCodeDTO[]>> => {
@@ -29,9 +36,9 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId }) => {
     useEffect(() => {
         const fetchOptions = async() => {
             try {
-                const res = await fetchComCodeList(masterCodeId);
+                const res
+                    = await fetchComCodeList(masterCodeId);
                 setOptions(res.result);
-
             } catch (error) {
                 console.error(error);
             }
@@ -39,16 +46,12 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId }) => {
         fetchOptions();
     }, [masterCodeId]);
 
-    const handleSelectChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
-        setSelectedValue(event.target.value);
-    };
-
     return (
-        <Input
+        <select
             id={selectId}
-            type="select"
-            value={selectedValue}
-            onChange={handleSelectChange as unknown as React.ChangeEventHandler<HTMLInputElement>}
+            className="my-input-text form-control"
+            value={value}
+            onChange={onChange}
         >
             <option value="" disabled>선택</option>
             {options.map((option) => (
@@ -56,7 +59,7 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId }) => {
                     {option.codeNm}
                 </option>
             ))}
-        </Input>
+        </select>
     );
 };
 

@@ -19,6 +19,7 @@ interface FileItem {
 // Props 타입 정의
 interface FileUploadProps {
     formType: string;
+    onFileChange: (files: FileItem[]) => void; // 첨부파일을 상태를 변경하는 콜백함수
 }
 
 // 허용할 파일 확장자 배열
@@ -54,7 +55,14 @@ const getIconByExtension = (extension: string) => {
     }
 };
 
-const FileUpload: React.FC<FileUploadProps> = ({ formType }) => {
+/**
+ * 공통 파일 업로드 Div
+ * @param formType
+ * @param onFileChange
+ * @constructor
+ */
+const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange  }) => {
+
     // 파일 리스트를 관리하는 상태
     const [fileList, setFileList] = useState<FileItem[]>([]);
 
@@ -65,7 +73,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType }) => {
             return ALLOWED_EXTENSIONS.includes(extension);
         });
 
-        const newFiles = files.slice(0, 5 - fileList.length); // 최대 5개 제한
+        // 최대 5개 제한
+        const newFiles = files.slice(0, 5 - fileList.length);
 
         if (fileList.length + files.length > 5) {
             alert("파일은 5개까지만 첨부 가능합니다.");
@@ -81,12 +90,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType }) => {
         ];
 
         setFileList(updatedFileList);
+        onFileChange(updatedFileList); // 부모 컴포넌트로 파일 리스트 전달
+        
         e.target.value = ""; // 선택 초기화
     };
 
     // 파일 삭제 이벤트 핸들러
     const handleDeleteFile = (fileId: number) => {
-        setFileList(fileList.filter((file) => file.id !== fileId));
+        const updatedFileList = fileList.filter((file) => file.id !== fileId);
+
+        setFileList(updatedFileList);
+        onFileChange(updatedFileList);// 파일 삭제 후에도 부모 컴포넌트에 변경 사항 전달
     };
 
     return (

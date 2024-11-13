@@ -14,6 +14,7 @@ export const initializeSmartEditor = (elemId, oEditors, onLoadCallback) => {
             fCreator: "createSEditor2",
             htParams: {
                 bUseVerticalResizer: false,
+                aAdditionalFontList : [['Pretendard Variable', 'Pretendard']],
                 fOnBeforeUnload: () => {}
             },
             fOnAppLoad: () => {
@@ -41,7 +42,7 @@ export const setEditorContent = (content, oEditors) => {
     if (oEditors.length > 0) {
         oEditors[0].exec("SET_IR", [content]);
     } else {
-        console.error("에디터가 초기화되지 않았습니다.");
+        console.error("에디터가 초기화되지 않았습니다.", error);
     }
 };
 
@@ -64,11 +65,11 @@ export const getEditorContent = (oEditors) => {
         if (elem) {
             return elem.value;
         } else {
-            console.error('에디터의 elPlaceHolder에 해당하는 DOM 요소를 찾을 수 없습니다.');
+            console.error('에디터의 elPlaceHolder에 해당하는 DOM 요소를 찾을 수 없습니다.', error);
             return '';
         }
     } else {
-        console.error("에디터가 초기화되지 않았습니다.");
+        console.error("에디터가 초기화되지 않았습니다.", error);
         return '';
     }
 };

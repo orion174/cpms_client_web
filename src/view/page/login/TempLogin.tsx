@@ -1,6 +1,6 @@
 import { ApiRes, ResLoginDTO} from "@/definition/type.ts";
 import { handleInputKeyDown } from '@/utils/common.ts'
-import { saveCookie } from "@/utils/auth.ts";
+import { saveCookie } from "@/utils/cookieUtils.ts";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react'
 
