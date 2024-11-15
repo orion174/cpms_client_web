@@ -36,8 +36,35 @@ import team3Image from "@/assets/img/theme/team-3-800x800.jpg";
 import team4Image from "@/assets/img/theme/team-4-800x800.jpg";
 import angularImage from "@/assets/img/theme/angular.jpg";
 
+import { ApiRes, ResSuportListDTO } from "@/definition/type.ts";
+import { callAPI } from "@/utils/interceptor.ts";
+
 const Suport = () => {
   const navigate = useNavigate();
+
+  const fetchSuportList = async (): Promise<ApiRes<ResSuportListDTO>> => {
+    const url = `api/suport/list`;
+    const jsonData = {
+      pageNo: 1
+      , pageSize: 10
+    };
+    const res = await callAPI.post<ApiRes<ResSuportListDTO>>(url, jsonData);
+    console.log(res.data);
+    return res.data;
+  };
+
+  useEffect(() => {
+    const getSuportList = async () => {
+      try {
+        const result = await fetchSuportList();
+        console.log(result);
+      } catch (error) {
+        console.error("데이터 조회 실패:", error);
+      }
+    };
+
+    getSuportList();
+  }, []);
 
   // 지원 등록 폼 이동
   const handleRegisterClick = () => {

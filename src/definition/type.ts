@@ -41,3 +41,21 @@ export interface ResComCodeDTO {
     codeId: string;
     codeNm: string;
 }
+
+// 유지보수 문의 리스트
+export interface ResSuportListDTO {
+    suportCnt: number;
+    suportList: SuportList[];
+}
+
+export interface SuportList {
+    suportReqId: number;
+    userCompanyNm: string;
+    reqProjectNm: string;
+    requestCdNm: string;
+    statusCdNm: string;
+    regUserNm: string;
+    regDt: string;
+    reqDate: string;
+    suportTitle: string;
+}

@@ -215,7 +215,7 @@ const SuportForm: React.FC = () => {
                                                            value={companyId} onChange={(e) => setCompanyId(e.target.value)}
                                                     >
                                                         <option value="">선택</option>
-                                                        <option value="1">강남구청</option>
+                                                        <option value="1">CODEIDEA</option>
                                                     </Input>
                                                 </FormGroup>
                                             </Col>
@@ -223,10 +223,13 @@ const SuportForm: React.FC = () => {
                                                 <FormGroup>
                                                     <label className="form-control-label" htmlFor="">프로젝트 선택</label>
                                                     <Input id="projectId" type="select" className="my-input-text"
-                                                           value={projectId} onChange={(e) => setProjectId(e.target.value)}
+                                                           value={projectId}
+                                                           onChange={(e) => setProjectId(e.target.value)}
                                                     >
                                                         <option value="">선택</option>
                                                         <option value="1">강남구청 행정포털</option>
+                                                        <option value="2">중랑구청 행정포털</option>
+                                                        <option value="3">중랑구 게시판</option>
                                                     </Input>
                                                 </FormGroup>
                                             </Col>
