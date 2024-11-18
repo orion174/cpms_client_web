@@ -42,12 +42,13 @@ export interface ResComCodeDTO {
     codeNm: string;
 }
 
-// 유지보수 문의 리스트
+// 유지보수 문의 리스트 
 export interface ResSuportListDTO {
     suportCnt: number;
     suportList: SuportList[];
 }
 
+// 유지보수 리스트 인터페이스
 export interface SuportList {
     suportReqId: number;
     userCompanyNm: string;
@@ -60,4 +61,34 @@ export interface SuportList {
     regDt: string;
     reqDate: string;
     suportTitle: string;
+}
+
+// 유지보수 상세 인터페이스
+export interface ResSuportDetailDTO {
+    suportReqId: number;
+    reqCompanyId: number;
+    userCompanyId: number;
+    reqProjectId: number;
+    resUserId: number;
+    requestCd: string;
+    statusCd: string;
+    reqDate: string;
+    resDate: string;
+    suportTitle: string;
+    suportEditor: string;
+    suportResId: number;
+    resEditor: string;
+    fileList: FileList[];
+}
+
+// 유지보수 첨부파일 인터페이스
+export interface FileList {
+    suportFileId: number;
+    suportReqId: number;
+    fileType: string;
+    filePath: string;
+    fileNm: string;
+    fileOgNm: string;
+    fileExt: string;
+    fileSize: number;
 }

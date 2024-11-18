@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/view/layout/Headers/Header.jsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
-import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
+import { ApiRes, ResSuportListDTO, SuportList, ResSuportDetailDTO } from "@/definition/type.ts";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { callAPI } from "@/utils/interceptor.ts";
 
@@ -49,17 +49,17 @@ const Suport = () => {
   // 유지보수 List 호출
   const fetchSuportList = useCallback(async () => {
     const url = `/api/suport/list`;
-    try {
-      const res = await callAPI.post<ApiRes<ResSuportListDTO>>(url, {
-        ...searchParams,
-        pageNo: currentPage,
-        pageSize: 10,
-      });
-      setTotalCnt(res.data.result.suportCnt);
-      setData(res.data.result.suportList);
-    } catch (error) {
-      console.error("데이터 조회 실패:", error);
-    }
+
+    const res
+        = await callAPI.post<ApiRes<ResSuportListDTO>>(url, {
+          ...searchParams,
+          pageNo: currentPage,
+          pageSize: 10,
+        });
+
+    setTotalCnt(res.data.result.suportCnt);
+    setData(res.data.result.suportList);
+
   }, [searchParams, currentPage]);
 
   useEffect(() => {
@@ -82,6 +82,19 @@ const Suport = () => {
       pickerInput.value = ""; // 입력 필드 초기화
     }
   };
+
+  // 유지보수 상세 데이터
+  const fetchSuportDetail = useCallback(async (suportReqId: number) => {
+    const jsonData = {
+      suportReqId: suportReqId ?? 0
+    };
+    const url = `/api/suport/detail`;
+
+    const res
+        = await callAPI.post<ResSuportDetailDTO>(url, jsonData);
+
+    console.log(res);
+  }, []);
 
   return (
       <>
@@ -189,7 +202,7 @@ const Suport = () => {
                   </Row>
                 </CardHeader>
 
-                <SuportTable data={data} />
+                <SuportTable data={data} onRowClick={fetchSuportDetail} />
 
                 <CardFooter className="py-4">
                   <Row className="align-items-center">

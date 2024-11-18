@@ -4,13 +4,14 @@ import { SuportList } from "@/definition/type.ts";
 
 interface TableProps {
     data: SuportList[];
+    onRowClick: (suportReqId : number) => void;
 }
 
 interface RowProps {
     row: SuportList;
 }
 
-const SuportTable: React.FC<TableProps> = ({ data }) => {
+const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
     return (
         <>
             {data.length > 0 ? (
@@ -29,20 +30,20 @@ const SuportTable: React.FC<TableProps> = ({ data }) => {
                     </thead>
                     <tbody>
                     {data.map((row) => (
-                        <TableRow key={row.suportReqId} row={row} />
+                        <TableRow key={row.suportReqId} row={row} onRowClick={onRowClick} />
                     ))}
                     </tbody>
                 </Table>
             ) : (
                 <div className="text-center py-4">
-                    <h4 className="text-muted">검색된 문의가 없습니다</h4>
+                    <h4 className="text-muted">검색된 프로젝트 문의글이 없습니다.</h4>
                 </div>
             )}
         </>
     );
 };
 
-const TableRow: React.FC<RowProps> = ({ row }) => {
+const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
     // 상태 코드에 따른 색상 매핑
     const statusColors: { [key: string]: string } = {
         "10": "warning",
@@ -68,21 +69,21 @@ const TableRow: React.FC<RowProps> = ({ row }) => {
             // 처리 기한이 초과된 경우
             return (
                 <span style={{ color: "red", fontWeight: "bold" }}>
-                {Math.abs(diffDays)}일 초과
-            </span>
+                    {Math.abs(diffDays)}일 초과
+                </span>
             );
         } else {
             // 처리 기한 전인 경우
             return (
                 <span style={{ color: "#007bff", fontWeight: "bold" }}>
-                {row.reqDate}
-            </span>
+                    {row.reqDate}
+                </span>
             );
         }
     };
 
     return (
-        <tr>
+        <tr key={row.suportReqId} onClick={() => onRowClick(row.suportReqId)} style={{ cursor: "pointer" }} >
             <td className="text-center align-middle">
                 <Badge color={row.requestCdNm === '문의' ? 'primary' : 'danger'}
                        className="px-3 py-2 fs-5 fw-bold pill custom-badge-status">
