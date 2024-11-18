@@ -5,7 +5,8 @@ import { callAPI } from "@/utils/interceptor.ts";
 interface ComCodeProps  {
     masterCodeId: string;
     selectId: string;
-    value: string; // 외부 컴포넌트에서 value 처리
+    value: string;
+    initText: string;
     onChange: React.ChangeEventHandler<HTMLSelectElement>; // 외부 컴포넌트에서 react event 처리
 }
 
@@ -17,7 +18,7 @@ interface ComCodeProps  {
  * @param onChange
  * @constructor
  */
-const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, onChange }) => {
+const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, initText, onChange }) => {
     const [options, setOptions] = useState<ResComCodeDTO[]>([]);
 
     // 공통코드 조회 API
@@ -53,7 +54,7 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, 
             value={value}
             onChange={onChange}
         >
-            <option value="" disabled>선택</option>
+            <option value="">{initText}</option>
             {options.map((option) => (
                 <option key={option.codeId} value={option.codeId}>
                     {option.codeNm}

@@ -2,8 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { Container, Row } from "reactstrap";
 
-import AuthNavbar from "@/components/Navbars/AuthNavbar.tsx";
-import AuthFooter from "@/components/Footers/AuthFooter.tsx";
+import AuthNavbar from "@/view/layout/Navbars/AuthNavbar.tsx";
+import AuthFooter from "@/view/layout/Footers/AuthFooter.tsx";
 
 const Auth: React.FC = () => {
   const mainContent = useRef<HTMLDivElement | null>(null);

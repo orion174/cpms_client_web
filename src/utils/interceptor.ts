@@ -66,9 +66,6 @@ callAPI.interceptors.response.use(
                 case 403:
                     openErrorModal('오류', '접근 권한이 없습니다.');
                     break;
-                default:
-                    openErrorModal('오류', '알 수 없는 오류가 발생했습니다.');
-                    break;
             }
         } else {
             console.error('네트워크 오류: ', error);
@@ -82,7 +79,6 @@ callAPI.interceptors.response.use(
 // API 통신 에러모달
 const openErrorModal = (title: string, message: string) => {
     const modalId = uuidv4(); // 고유 ID 생성
-
     // 콜백이 필요 없는 경우, undefined 전달
     store.dispatch(openModal({
         title,

@@ -4,6 +4,28 @@
     font-size: 50px;
 }
 
+.custom-badge-request {
+    font-size: 0.8rem !important; /* 글자 크기 */
+    padding: 0.75rem 1.25rem !important; /* 여백 */
+    font-weight: bold !important; /* 글자 굵기 */
+    border-radius: 0.5rem !important; /* 둥근 모서리 */
+    display: inline-block; /* 인라인 요소 강제 박스화 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    width: 80px; /* 가로 크기 고정 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.custom-badge-status {
+    font-size: 0.8rem !important; /* 글자 크기 */
+    padding: 0.75rem 1.25rem !important; /* 여백 */
+    font-weight: bold !important; /* 글자 굵기 */
+    border-radius: 0.5rem !important; /* 둥근 모서리 */
+    display: inline-block; /* 인라인 요소 강제 박스화 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    width: 60px; /* 가로 크기 고정 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
 .my-file-icon {
     width: 20px;
     height: 20px;
@@ -15,6 +37,29 @@
     font-size: 14px;
     font-weight: 500;
     color: #1E1E1E !important;
+}
+
+.my-litepicker {
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E1E1E !important;
+}
+
+.my-input-text-thead {
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
+    font-size: 20px; !important /* 글자 크기 */
+    font-weight: 700; /* 글자 굵기 */
+    color: #1E1E1E !important; /* 글자 색상 */
+    text-align: center; /* 가운데 정렬 */
+}
+
+.my-input-text-tbody {
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
+    font-size: 16px; !important; /* 글자 크기 */
+    font-weight: 500; /* 글자 굵기 */
+    color: #1E1E1E !important; /* 글자 색상 */
+    text-align: center; /* 가운데 정렬 */
 }
 
 .my-modal-header-text {
@@ -29,4 +74,10 @@
     font-size: 18px;
     font-weight: 600;
     color: #3E4046 !important;
+}
+
+.input-group-dynamic {
+    display: flex;
+    align-items: center;
+    flex-grow: 0.2;
 }

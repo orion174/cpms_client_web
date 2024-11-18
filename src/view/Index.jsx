@@ -22,7 +22,7 @@ import {
 // core components
 import { chartOptions, parseOptions, chartExample1, chartExample2 } from '@/variables/charts.jsx';
 
-import Header from "@/components/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.jsx";
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);

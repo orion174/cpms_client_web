@@ -3,6 +3,7 @@ import { handleInputKeyDown } from '@/utils/common.ts'
 import { saveCookie } from "@/utils/cookieUtils.ts";
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react'
+import useModalHook from '@/hook/useModal';
 
 import axios from 'axios';
 
@@ -22,6 +23,7 @@ import {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const {openCustomModal} = useModalHook();
 
   const [loginId, setLoginId] = useState('');
   const [loginPw, setLoginPw] = useState('');
@@ -45,20 +47,20 @@ const Login: React.FC = () => {
       return;
     }
 
-    const jsonData = {
-      loginId : loginId,
-      loginPw : loginPw
-    }
-
-    const url = `${import.meta.env.VITE_API_URL}/auth/login`;
-
     try {
+      const jsonData = {
+        loginId : loginId,
+        loginPw : loginPw
+      }
+
+      const url = `${import.meta.env.VITE_API_URL}/auth/login`;
+
       const res
           = await axios.post<ApiRes<ResLoginDTO>>(url, jsonData, {
               headers: {
                 'Content-Type': 'application/json',
               },
-           });
+          });
 
       if(res.status == 200) {
         if(res.data.result) {
@@ -70,17 +72,30 @@ const Login: React.FC = () => {
       if (axios.isAxiosError(error)) {
         if (error.response) {
           if (error.response.status === 401) {
-            alert('아이디 또는 비밀번호가 일치하지 않습니다.');
-
+            openCustomModal({
+              title: '알림',
+              message: '아이디 또는 비밀번호가 일치하지 않습니다.',
+              isConfirm: false
+            });
           } else {
-            alert('서버 오류가 발생했습니다. 관리자에게 문의하세요.');
+            openCustomModal({
+              title: '오류',
+              message: '서버 오류가 발생했습니다. 관리자에게 문의하세요..',
+              isConfirm: false
+            });
           }
-
         } else if (error.request) {
-          alert('서버와의 연결이 원활하지 않습니다.');
-
+          openCustomModal({
+            title: '오류',
+            message: '서버와의 연결이 원활하지 않습니다.',
+            isConfirm: false
+          });
         } else {
-          alert('요청 중 오류가 발생했습니다.');
+          openCustomModal({
+            title: '오류',
+            message: '요청 중 오류가 발생했습니다.',
+            isConfirm: false
+          });
         }
       } else {
         console.error(error);
@@ -90,7 +105,7 @@ const Login: React.FC = () => {
 
   return (
       <>
-        <Col lg="5" md="7">
+        <Col lg="5" md="8">
           <Card className="bg-secondary shadow border-0">
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">

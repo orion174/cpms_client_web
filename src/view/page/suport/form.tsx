@@ -1,332 +1,296 @@
 import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    FormGroup,
-    Form,
-    Input,
-    Container,
-    Row,
-    Col, InputGroupText, InputGroupAddon, InputGroup,
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  FormGroup,
+  Form,
+  Input,
+  Container,
+  Row,
+  Col
 } from "reactstrap";
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from 'react-router-dom';
-
-import Header from "@/components/Headers/Header.jsx";
+import { useLocation } from "react-router-dom";
+import Header from "@/view/layout/Headers/Header.jsx";
 
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
-import useModalHook from '@/hook/useModal';
-
+import useModalHook from "@/hook/useModal";
 import { callAPI } from "@/utils/interceptor";
 
-// 등록/수정 UI 분기
 interface FormType {
-    formType: 'insert' | 'update';
+  formType: "insert" | "update";
 }
 
-// 첨부파일 인터페이스
 interface FileItem {
-    id: number;
-    file: File;
-    name: string;
+  id: number;
+  file: File;
+  name: string;
 }
 
 /**
- * 유지보수 신규 등록 / 수정 폼
+ * 유지보수 문의 폼
  * @constructor
  */
 const SuportForm: React.FC = () => {
-    // 폼 이동
-    const location = useLocation();
-    const {formType} = location.state as FormType;
+  const location = useLocation();
+  const { formType } = location.state as FormType;
 
-    // Redux 기반 커스텀 알림 모달
-    const {openCustomModal} = useModalHook();
+  const { openCustomModal } = useModalHook();
 
-    // 파일 리스트 상태
-    const [fileList, setFileList] = useState<FileItem[]>([]);
 
-    // 파일 리스트 변경 시 호출되는 함수
-    const handleFileChange = (files: FileItem[]) => {
-        setFileList(files);
+
+  const [fileList, setFileList] = useState<FileItem[]>([]);
+
+  const [formData, setFormData] = useState({
+    reqCompanyId: "",
+    reqProjectId: "",
+    requestCd: "10",
+    statusCd: "10",
+    suportTitle: "",
+    reqDate: "",
+  });
+
+  const handleInputChange = (key: keyof typeof formData, value: string) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const oEditors = useRef<never[]>([]);
+
+  useEffect(() => {
+    const loadScripts = () => {
+      const script = document.createElement("script");
+      script.src = "/smarteditor/js/HuskyEZCreator.js";
+      script.type = "text/javascript";
+      script.charset = "utf-8";
+
+      script.onload = () => {
+        initializeSmartEditor("editorTxt", oEditors.current)
+          .then(() => console.log("SmartEditor initialized."))
+          .catch((error) => console.error("SmartEditor error:", error));
+      };
+
+      document.body.appendChild(script);
+
+      return () => {
+        document.body.removeChild(script);
+      };
     };
 
-    // 에디터 관련
-    const oEditors = useRef<never[]>([]);
+    loadScripts();
+  }, []);
 
-    useEffect(() => {
-        const loadScripts = () => {
-            const editorScript = document.createElement('script');
+  const handleSave = () => {
+      let message = "";
 
-            editorScript.src = '/smarteditor/js/HuskyEZCreator.js';
-            editorScript.type = 'text/javascript';
-            editorScript.charset = 'utf-8';
+      if (!formData.reqCompanyId) {
+          message = "업체를 선택해주세요.";
 
-            editorScript.onload = () => {
-                initializeSmartEditor('editorTxt', oEditors.current)
-                    .then(() => {
-                        console.log("SmartEditor가 성공적으로 초기화되었습니다.");
-                    })
-                    .catch((error: Error) => {
-                        console.error('SmartEditor 초기화 중 오류 발생:', error);
-                    });
-            };
+      } else if (!formData.reqProjectId) {
+          message = "프로젝트를 선택해주세요.";
 
-            document.body.appendChild(editorScript);
+      } else if (!formData.requestCd) {
+          message = "요청 유형을 선택해주세요.";
 
-            return () => {
-                document.body.removeChild(editorScript);
-            };
-        };
+      } else if (!formData.statusCd) {
+          message = "처리 상태를 선택해주세요.";
 
-        loadScripts();
-    }, []);
+      } else if (!formData.suportTitle) {
+          message = "제목을 입력해주세요.";
 
-    // 목록으로 이동
-    const handleList = () => {
+      } else if (!formData.reqDate) {
+          message = "처리 기한을 선택해주세요.";
+      }
+
+      if (message) {
+          openCustomModal({ title: "알림", message, isConfirm: false });
+          return;
+      }
+
+    openCustomModal({
+      title: "확인",
+      message: "저장하시겠습니까?",
+      isConfirm: true,
+      onConfirm: () => {
+        if (formType === "insert") {
+          saveSuportReq();
+        }
+      },
+    });
+  };
+
+  const saveSuportReq = async () => {
+    const data = new FormData();
+
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
+
+    data.append("suportEditor", getEditorContent(oEditors.current));
+
+    fileList.forEach((file) => data.append("suportFile", file.file));
+
+    const res
+        = await callAPI.post("/api/suport/insert", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+    if (res.status === 200) {
         openCustomModal({
-            title: '알림',
-            message: '목록으로 돌아가겠습니까?',
+            title: "알림",
+            message: "저장이 완료되었습니다.",
             isConfirm: false,
-            redirectUrl: '/admin/suport',
+            redirectUrl: "/admin/suport",
         });
     }
+  };
 
-    // 입력 데이터 상태관리
-    const [companyId, setCompanyId] = useState("");
-    const [projectId, setProjectId] = useState("");
-    const [requestCd, setRequestCd] = useState<string>("10");
-    const [statusCd, setStatusCd] = useState<string>("10");
-    const [suportTitle, setSuportTitle] = useState("");
+  const handleList = () => {
+    openCustomModal({
+      title: "알림",
+      message: "목록으로 돌아가겠습니까?",
+      isConfirm: false,
+      redirectUrl: "/admin/suport",
+    });
+  };
 
-    // 작성된 내용을 저장한다.
-    const handleSave = () => {
-        // 필수 값
-        if (!companyId) {
-            openCustomModal({ title: '알림', message: '업체를 선택해주세요.', isConfirm: false });
-            return;
-        }
-        if (!projectId) {
-            openCustomModal({ title: '알림', message: '프로젝트를 선택해주세요.', isConfirm: false });
-            return;
-        }
-        if (!requestCd) {
-            openCustomModal({ title: '알림', message: '요청 유형을 선택해주세요.', isConfirm: false });
-            return;
-        }
-        if (!statusCd) {
-            openCustomModal({ title: '알림', message: '처리 상태를 선택해주세요.', isConfirm: false });
-            return;
-        }
-        if (!suportTitle) {
-            openCustomModal({ title: '알림', message: '제목을 입력해주세요.', isConfirm: false });
-            return;
-        }
-
-        openCustomModal({
-            title: '확인',
-            message: '저장하시겠습니까?',
-            isConfirm: true,
-            onConfirm: () => {
-                if (formType === 'insert') {
-                    insertReqSupport();
-                }
-            }
-        });
-    };
-
-    // 유지보수 문의 저장 액션
-    const insertReqSupport = async () => {
-        const formData = new FormData();
-
-        formData.append("reqCompanyId", companyId);
-        formData.append("reqProjectId", projectId);
-        formData.append("requestCd", requestCd);
-        formData.append("reqDate", (document.getElementById("reqDate") as HTMLInputElement).value);
-        formData.append("statusCd", statusCd);
-        formData.append("suportTitle", suportTitle);
-
-        const editorContent = getEditorContent(oEditors.current);
-        formData.append("suportEditor", editorContent);
-
-        fileList.forEach((fileItem) => {
-            formData.append("suportFile", fileItem.file);
-        });
-
-        // API 호출
-        const response = await callAPI.post("/api/suport/insert", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data"
-            }
-        });
-
-        // 저장 성공 시
-        if (response.status === 200) {
-            openCustomModal({
-                title: '알림',
-                message: '저장이 완료되었습니다.',
-                isConfirm: false,
-                redirectUrl: '/admin/suport',
-            });
-        }
-    };
-
-    return (
-        <>
-            <Header/>
-            <Container className="mt--7" fluid>
-                <Row>
-                    <Col className="order-xl-1" xl="12">
-                        <Card className="bg-secondary shadow">
-                            <CardHeader className="bg-white border-0">
-                                <Row className="align-items-center">
-                                    <Col xs="8">
-                                        {formType === 'insert' && (
-                                            <h2 className="mb-0">프로젝트 문의</h2>
-                                        )}
-                                    </Col>
-                                    <Col className="text-right" xs="4">
-                                        <Button
-                                            color="default"
-                                            onClick={handleList}
-                                        >목록
-                                        </Button>
-                                        <Button
-                                            color="info"
-                                            onClick={handleSave}
-                                        >저장
-                                        </Button>
-                                    </Col>
-                                </Row>
-                            </CardHeader>
-                            <CardBody>
-                                <Form>
-                                    <div className="pl-lg-4">
-                                        <h3 className="heading text-muted mb-4">기본 정보</h3>
-                                        <Row>
-                                            <Col lg="4">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">업체 선택</label>
-                                                    <Input id="companyId" type="select" className="my-input-text"
-                                                           value={companyId} onChange={(e) => setCompanyId(e.target.value)}
-                                                    >
-                                                        <option value="">선택</option>
-                                                        <option value="1">CODEIDEA</option>
-                                                    </Input>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col lg="4">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">프로젝트 선택</label>
-                                                    <Input id="projectId" type="select" className="my-input-text"
-                                                           value={projectId}
-                                                           onChange={(e) => setProjectId(e.target.value)}
-                                                    >
-                                                        <option value="">선택</option>
-                                                        <option value="1">강남구청 행정포털</option>
-                                                        <option value="2">중랑구청 행정포털</option>
-                                                        <option value="3">중랑구 게시판</option>
-                                                    </Input>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col lg="4">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">요청유형 선택</label>
-                                                    <ComCodeSelect
-                                                        masterCodeId="10"
-                                                        selectId="requestCd"
-                                                        value={requestCd}
-                                                        onChange={(e) => setRequestCd(e.target.value)}
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col lg="4">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">처리 기한</label>
-                                                    <InputGroup>
-                                                        <LitePicker initDay={7} inputId="reqDate" />
-                                                        <InputGroupAddon addonType="append">
-                                                            <InputGroupText>
-                                                                <i className="ni ni-calendar-grid-58 text-primary"/>
-                                                            </InputGroupText>
-                                                        </InputGroupAddon>
-                                                    </InputGroup>
-                                                </FormGroup>
-                                            </Col>
-                                            <Col lg="4">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">처리상태</label>
-                                                    <ComCodeSelect
-                                                        masterCodeId="20"
-                                                        selectId="statusCd"
-                                                        value={statusCd}
-                                                        onChange={(e) => setStatusCd(e.target.value)}
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                            <Col lg="4">
-                                                {formType !== 'insert' && (
-                                                    <FormGroup>
-                                                        <label className="form-control-label" htmlFor="">담당자</label>
-                                                        <Input id="userId" type="select" className="my-input-text">
-                                                            <option value="">선택</option>
-                                                        </Input>
-                                                    </FormGroup>
-                                                )}
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                    <div className="pl-lg-4">
-                                        <h3 className="heading text-muted mb-4">요청 상세 작성</h3>
-                                        <Row>
-                                            <Col lg="12">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">요청 제목</label>
-                                                    <Input
-                                                        id="suportTitle"
-                                                        type="text"
-                                                        className="my-input-text"
-                                                        value={suportTitle}
-                                                        onChange={(e) => setSuportTitle(e.target.value)}
-                                                        placeholder="문의하실 글의 제목을 입력하세요."
-                                                    />
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                        <Row>
-                                            <Col lg="12">
-                                                <FormGroup>
-                                                    <label className="form-control-label" htmlFor="">상세 내용</label>
-                                                    <div id="smarteditor">
-                                                        <textarea
-                                                            name="editorTxt"
-                                                            id="editorTxt"
-                                                            rows={20}
-                                                            cols={10}
-                                                            style={{width: '100%'}}
-                                                        />
-                                                    </div>
-                                                </FormGroup>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                    <div>
-                                        <FileUpload formType="insert" onFileChange={handleFileChange}/>
-                                    </div>
-                                </Form>
-                            </CardBody>
-                        </Card>
-                    </Col>
+  return (
+    <>
+      <Header/>
+      <Container className="mt--7" fluid>
+        <Row>
+          <Col className="order-xl-1" xl="12">
+            <Card className="bg-secondary shadow">
+              <CardHeader className="bg-white border-0">
+                <Row className="align-items-center">
+                  <Col xs="8">
+                    {formType === "insert" && <h2 className="mb-0">프로젝트 문의</h2>}
+                  </Col>
+                  <Col className="text-right" xs="4">
+                    <Button color="default" onClick={handleList}>목록</Button>
+                    <Button color="info" onClick={handleSave}>저장</Button>
+                  </Col>
                 </Row>
-            </Container>
-        </>
-    );
-}
+              </CardHeader>
+              <CardBody>
+                <Form>
+                  <div className="pl-lg-4">
+                    <h3 className="heading text-muted mb-4">기본 정보</h3>
+                    <Row>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label className="form-control-label">업체 선택</label>
+                          <Input
+                            type="select"
+                            className="my-input-text"
+                            value={formData.reqCompanyId}
+                            onChange={(e) => handleInputChange("reqCompanyId", e.target.value)}
+                          >
+                            <option value="">선택</option>
+                            <option value="1">CODEIDEA</option>
+                          </Input>
+                        </FormGroup>
+                      </Col>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label className="form-control-label">프로젝트 선택</label>
+                            <Input
+                                type="select"
+                                className="my-input-text"
+                                value={formData.reqProjectId}
+                                onChange={(e) => handleInputChange("reqProjectId", e.target.value)}
+                            >
+                                <option value="">선택</option>
+                                <option value="1">강남구청 행정포털</option>
+                                <option value="2">중랑구청 행정포털</option>
+                                <option value="2">중랑구청 게시판</option>
+                            </Input>
+                        </FormGroup>
+                      </Col>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label className="form-control-label">요청 유형</label>
+                          <ComCodeSelect
+                            masterCodeId="10"
+                            selectId="requestCd"
+                            value={formData.requestCd}
+                            initText="요청 유형 선택"
+                            onChange={(e) => handleInputChange("requestCd", e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label className="form-control-label">처리 기한</label>
+                          <LitePicker
+                            inputId="reqDate"
+                            placeholder="처리 기한 선택"
+                            onDateChange={(startDate) => handleInputChange("reqDate", startDate)}
+                          />
+                        </FormGroup>
+                      </Col>
+                      <Col lg="4">
+                        <FormGroup>
+                          <label className="form-control-label">처리 상태</label>
+                          <ComCodeSelect
+                            masterCodeId="20"
+                            selectId="statusCd"
+                            value={formData.statusCd}
+                            initText="처리 상태 선택"
+                            onChange={(e) => handleInputChange("statusCd", e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div className="pl-lg-4">
+                    <h3 className="heading text-muted mb-4">요청 상세 작성</h3>
+                    <Row>
+                      <Col lg="12">
+                        <FormGroup>
+                          <label className="form-control-label">요청 제목</label>
+                          <Input
+                            type="text"
+                            className="my-input-text"
+                            placeholder="문의하실 글의 제목을 입력하세요."
+                            value={formData.suportTitle}
+                            onChange={(e) => handleInputChange("suportTitle", e.target.value)}
+                          />
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col lg="12">
+                        <FormGroup>
+                          <label className="form-control-label">상세 내용</label>
+                          <div id="smarteditor">
+                            <textarea
+                              name="editorTxt"
+                              id="editorTxt"
+                              rows={20}
+                              style={{ width: "100%" }}
+                            />
+                          </div>
+                        </FormGroup>
+                      </Col>
+                    </Row>
+                  </div>
+                  <div>
+                    <FileUpload formType="insert" onFileChange={setFileList} />
+                  </div>
+                </Form>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </>
+  );
+};
 
 export default SuportForm;

@@ -1,53 +1,74 @@
 import { Input } from "reactstrap";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import Litepicker from "litepicker";
 
 interface LitePickerProps {
-    initDay?: number; // 초기 날짜 값
-    inputId: string;
-    onDateChange?: (date: string) => void; // 날짜선택 콜백
+  inputId: string;
+  singleMode?: boolean;
+  format?: string;
+  delimiter?: string;
+  placeholder?: string;
+  onDateChange: (startDate: string, endDate?: string) => void;
 }
 
-/**
- * 날짜선택 LitePicker Input Element
- * @param initDay
- * @param onDateChange
- * @constructor
- */
-const LitePicker: React.FC<LitePickerProps> = ({initDay= 0, inputId, onDateChange}) => {
-    const pickerRef = useRef<HTMLInputElement>(null);
+const LitePicker = forwardRef(({
+  inputId,
+  singleMode = true,
+  format = "YYYY-MM-DD",
+  delimiter = " ~ ",
+  placeholder,
+  onDateChange,
+}: LitePickerProps, ref) => {
+  const pickerRef = useRef<HTMLInputElement | null>(null);
+  const pickerInstanceRef = useRef<Litepicker | null>(null);
 
-    useEffect(() => {
-        if (pickerRef.current) {
-            const currentDate = new Date();
-            const defaultDate = new Date();
+  useImperativeHandle(ref, () => ({
+    clear: () => {
+      if (pickerInstanceRef.current) {
+        pickerInstanceRef.current.clearSelection(); // Litepicker 초기화
+      }
+      if (pickerRef.current) {
+        pickerRef.current.value = ""; // 입력 필드 초기화
+      }
+    },
+  }));
 
-            defaultDate.setDate(currentDate.getDate() + initDay);
+  useEffect(() => {
+    if (pickerRef.current) {
+      const picker = new Litepicker({
+        element: pickerRef.current,
+        singleMode: singleMode,
+        format: format,
+        delimiter: delimiter,
+        setup: (picker) => {
+          picker.on("selected", (startDate, endDate) => {
+            onDateChange(
+              startDate.format(format),
+              endDate ? endDate.format(format) : undefined
+            );
+          });
+        },
+      });
 
-            const picker = new Litepicker({
-                element: pickerRef.current,
-                singleMode: true,
-                format: "YYYY-MM-DD",
-                startDate: defaultDate
-            });
+      pickerInstanceRef.current = picker;
 
-            return () => {
-                picker.destroy(); // 컴포넌트 언마운트 시 Litepicker 인스턴스 제거
-            };
-        }
-    }, [initDay, onDateChange]);
+      return () => {
+        picker.destroy(); // 컴포넌트 언마운트 시 Litepicker 제거
+      };
+    }
+  }, [singleMode, format, delimiter, onDateChange]);
 
-    return (
-        <Input
-            id={inputId}
-            type="text"
-            className="my-input-text"
-            placeholder="날짜를 선택하세요."
-            innerRef={pickerRef}
-            style={{ backgroundColor: "white" }}
-            readOnly
-        />
-    );
-}
+  return (
+    <Input
+      id={inputId}
+      type="text"
+      className="my-litepicker"
+      placeholder={placeholder}
+      innerRef={pickerRef}
+      style={{ backgroundColor: "white" }}
+      readOnly
+    />
+  );
+});
 
 export default LitePicker;

@@ -29,7 +29,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // core components
-import Header from "@/components/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.jsx";
 
 const Icons = () => {
   const [copiedText, setCopiedText] = useState();

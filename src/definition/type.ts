@@ -52,9 +52,11 @@ export interface SuportList {
     suportReqId: number;
     userCompanyNm: string;
     reqProjectNm: string;
+    requestCd: string;
     requestCdNm: string;
     statusCdNm: string;
-    regUserNm: string;
+    statusCd: string;
+    resUserNm: string;
     regDt: string;
     reqDate: string;
     suportTitle: string;
