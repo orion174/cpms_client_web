@@ -10,15 +10,17 @@ import {
   Row,
   Col
 } from "reactstrap";
+
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import Header from "@/view/layout/Headers/Header.jsx";
 
-import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
+import Header from "@/view/layout/Headers/Header.jsx";
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
+import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import useModalHook from "@/hook/useModal";
+
 import { callAPI } from "@/utils/interceptor";
 
 interface FormType {
@@ -40,8 +42,6 @@ const SuportForm: React.FC = () => {
   const { formType } = location.state as FormType;
 
   const { openCustomModal } = useModalHook();
-
-
 
   const [fileList, setFileList] = useState<FileItem[]>([]);
 
@@ -143,7 +143,7 @@ const SuportForm: React.FC = () => {
             title: "알림",
             message: "저장이 완료되었습니다.",
             isConfirm: false,
-            redirectUrl: "/admin/suport",
+            redirectUrl: "/admin/suport/index",
         });
     }
   };
@@ -153,7 +153,7 @@ const SuportForm: React.FC = () => {
       title: "알림",
       message: "목록으로 돌아가겠습니까?",
       isConfirm: false,
-      redirectUrl: "/admin/suport",
+      redirectUrl: "/admin/suport/index",
     });
   };
 
@@ -163,7 +163,7 @@ const SuportForm: React.FC = () => {
       <Container className="mt--7" fluid>
         <Row>
           <Col className="order-xl-1" xl="12">
-            <Card className="bg-secondary shadow">
+            <Card className="card-profile shadow">
               <CardHeader className="bg-white border-0">
                 <Row className="align-items-center">
                   <Col xs="8">
@@ -178,111 +178,118 @@ const SuportForm: React.FC = () => {
               <CardBody>
                 <Form>
                   <div className="pl-lg-4">
-                    <h3 className="heading text-muted mb-4">기본 정보</h3>
-                    <Row>
-                      <Col lg="4">
-                        <FormGroup>
-                          <label className="form-control-label">업체 선택</label>
-                          <Input
-                            type="select"
-                            className="my-input-text"
-                            value={formData.reqCompanyId}
-                            onChange={(e) => handleInputChange("reqCompanyId", e.target.value)}
-                          >
-                            <option value="">선택</option>
-                            <option value="1">CODEIDEA</option>
-                          </Input>
-                        </FormGroup>
-                      </Col>
-                      <Col lg="4">
-                        <FormGroup>
-                          <label className="form-control-label">프로젝트 선택</label>
+                    <h3 className="heading mb-4">문의 정보</h3>
+                    <div className="my-div-custom">
+                      <Row>
+                        <Col lg="4">
+                          <FormGroup>
+                            <label className="form-control-label">업체 선택</label>
+                            <Input
+                                type="select"
+                                className="my-input-text"
+                                value={formData.reqCompanyId}
+                                onChange={(e) => handleInputChange("reqCompanyId", e.target.value)}
+                            >
+                              <option value="">선택</option>
+                              <option value="1">CODEIDEA</option>
+                            </Input>
+                          </FormGroup>
+                        </Col>
+                        <Col lg="4">
+                          <FormGroup>
+                            <label className="form-control-label">프로젝트 선택</label>
                             <Input
                                 type="select"
                                 className="my-input-text"
                                 value={formData.reqProjectId}
                                 onChange={(e) => handleInputChange("reqProjectId", e.target.value)}
                             >
-                                <option value="">선택</option>
-                                <option value="1">강남구청 행정포털</option>
-                                <option value="2">중랑구청 행정포털</option>
-                                <option value="2">중랑구청 게시판</option>
+                              <option value="">선택</option>
+                              <option value="1">강남구청 행정포털</option>
+                              <option value="2">중랑구청 행정포털</option>
+                              <option value="2">중랑구청 게시판</option>
                             </Input>
-                        </FormGroup>
-                      </Col>
-                      <Col lg="4">
-                        <FormGroup>
-                          <label className="form-control-label">요청 유형</label>
-                          <ComCodeSelect
-                            masterCodeId="10"
-                            selectId="requestCd"
-                            value={formData.requestCd}
-                            initText="요청 유형 선택"
-                            onChange={(e) => handleInputChange("requestCd", e.target.value)}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col lg="4">
-                        <FormGroup>
-                          <label className="form-control-label">처리 기한</label>
-                          <LitePicker
-                            inputId="reqDate"
-                            placeholder="처리 기한 선택"
-                            onDateChange={(startDate) => handleInputChange("reqDate", startDate)}
-                          />
-                        </FormGroup>
-                      </Col>
-                      <Col lg="4">
-                        <FormGroup>
-                          <label className="form-control-label">처리 상태</label>
-                          <ComCodeSelect
-                            masterCodeId="20"
-                            selectId="statusCd"
-                            value={formData.statusCd}
-                            initText="처리 상태 선택"
-                            onChange={(e) => handleInputChange("statusCd", e.target.value)}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div className="pl-lg-4">
-                    <h3 className="heading text-muted mb-4">요청 상세 작성</h3>
-                    <Row>
-                      <Col lg="12">
-                        <FormGroup>
-                          <label className="form-control-label">요청 제목</label>
-                          <Input
-                            type="text"
-                            className="my-input-text"
-                            placeholder="문의하실 글의 제목을 입력하세요."
-                            value={formData.suportTitle}
-                            onChange={(e) => handleInputChange("suportTitle", e.target.value)}
-                          />
-                        </FormGroup>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col lg="12">
-                        <FormGroup>
-                          <label className="form-control-label">상세 내용</label>
-                          <div id="smarteditor">
-                            <textarea
-                              name="editorTxt"
-                              id="editorTxt"
-                              rows={20}
-                              style={{ width: "100%" }}
+                          </FormGroup>
+                        </Col>
+                        <Col lg="4">
+                          <FormGroup>
+                            <label className="form-control-label">요청 유형</label>
+                            <ComCodeSelect
+                                masterCodeId="10"
+                                selectId="requestCd"
+                                value={formData.requestCd}
+                                initText="요청 유형 선택"
+                                onChange={(e) => handleInputChange("requestCd", e.target.value)}
                             />
-                          </div>
-                        </FormGroup>
-                      </Col>
-                    </Row>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col lg="4">
+                          <FormGroup>
+                            <label className="form-control-label">처리 기한</label>
+                            <LitePicker
+                                inputId="reqDate"
+                                placeholder="처리 기한 선택"
+                                onDateChange={(startDate) => handleInputChange("reqDate", startDate)}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col lg="4">
+                          <FormGroup>
+                            <label className="form-control-label">처리 상태</label>
+                            <ComCodeSelect
+                                masterCodeId="20"
+                                selectId="statusCd"
+                                value={formData.statusCd}
+                                initText="처리 상태 선택"
+                                onChange={(e) => handleInputChange("statusCd", e.target.value)}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
-                  <div>
-                    <FileUpload formType="insert" onFileChange={setFileList} />
+
+                  <div className="pl-lg-4 section-space">
+                    <h3 className="heading mb-4">상세 요청 내용</h3>
+                    <div className="my-div-custom">
+                      <Row>
+                        <Col lg="12">
+                          <FormGroup>
+                            <label className="form-control-label">요청 제목</label>
+                            <Input
+                                type="text"
+                                className="my-input-text"
+                                placeholder="문의하실 글의 제목을 입력하세요."
+                                value={formData.suportTitle}
+                                onChange={(e) => handleInputChange("suportTitle", e.target.value)}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col lg="12">
+                          <FormGroup>
+                            <label className="form-control-label">상세 내용</label>
+                            <div id="smarteditor">
+                            <textarea
+                                name="editorTxt"
+                                id="editorTxt"
+                                rows={20}
+                                style={{width: "100%"}}
+                            />
+                            </div>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </div>
                   </div>
+
+                  <div className="section-space">
+                    <FileUpload formType="insert" onFileChange={setFileList}/>
+                  </div>
+
                 </Form>
               </CardBody>
             </Card>

@@ -17,8 +17,10 @@ import { useNavigate } from "react-router-dom";
 import Header from "@/view/layout/Headers/Header.jsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
-import { ApiRes, ResSuportListDTO, SuportList, ResSuportDetailDTO } from "@/definition/type.ts";
+import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
 import LitePicker from "@/components/Module/LitePicker.tsx";
+
+import { utf8ToBase64 } from "@/utils/common.ts";
 import { callAPI } from "@/utils/interceptor.ts";
 
 import SuportTable from "./components/SuportTable.tsx";
@@ -83,18 +85,12 @@ const Suport = () => {
     }
   };
 
-  // 유지보수 상세 데이터
-  const fetchSuportDetail = useCallback(async (suportReqId: number) => {
-    const jsonData = {
-      suportReqId: suportReqId ?? 0
-    };
-    const url = `/api/suport/detail`;
+  // 유지보수 상세 이동
+  const fetchSuportDetail = useCallback((suportReqId: number) => {
+    const encodedId = utf8ToBase64(suportReqId.toString());
+    navigate(`/admin/suport/detail?suport_page=${encodedId}`);
 
-    const res
-        = await callAPI.post<ResSuportDetailDTO>(url, jsonData);
-
-    console.log(res);
-  }, []);
+  }, [navigate]);
 
   return (
       <>
@@ -193,11 +189,12 @@ const Suport = () => {
                           type="button"
                           color="default"
                           onClick={() =>
-                              navigate("/admin/suportForm", {
+                              navigate("/admin/suport/form", {
                                 state: { formType: "insert" },
                               })
                           }
-                      >등록</Button>
+                      >등록
+                      </Button>
                     </Col>
                   </Row>
                 </CardHeader>

@@ -106,7 +106,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange  }) => {
     return (
         <div className="pl-lg-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
-                <h3 className="heading text-muted mb-0">첨부 파일</h3>
+                <h3 className="heading mb-0">첨부 파일</h3>
                 <Button
                     className="btn-icon btn-3"
                     size="sm"

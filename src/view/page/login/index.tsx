@@ -65,7 +65,7 @@ const Login: React.FC = () => {
       if(res.status == 200) {
         if(res.data.result) {
           await saveCookie(res.data.result);
-          navigate('/admin/suport');
+          navigate('/admin/suport/index');
         }
       }
     } catch (error) {

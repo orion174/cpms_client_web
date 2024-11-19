@@ -9,6 +9,7 @@ interface TableProps {
 
 interface RowProps {
     row: SuportList;
+    onRowClick: (suportReqId : number) => void;
 }
 
 const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {

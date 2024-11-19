@@ -66,12 +66,16 @@ export interface SuportList {
 // 유지보수 상세 인터페이스
 export interface ResSuportDetailDTO {
     suportReqId: number;
-    reqCompanyId: number;
-    userCompanyId: number;
-    reqProjectId: number;
-    resUserId: number;
+    reqCompanyNm: string;
+    userCompanyNm: string;
+    reqProjectNm: string;
     requestCd: string;
+    requestCdNm: string;
     statusCd: string;
+    statusCdNm: string;
+    resUserId: number;
+    resUserNm: string;
+    reqUserNm: string;
     reqDate: string;
     resDate: string;
     suportTitle: string;
