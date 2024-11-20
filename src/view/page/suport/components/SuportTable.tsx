@@ -12,6 +12,12 @@ interface RowProps {
     onRowClick: (suportReqId : number) => void;
 }
 
+/**
+ * 유지보수 테이블 헤더
+ * @param data
+ * @param onRowClick
+ * @constructor
+ */
 const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
     return (
         <>
@@ -44,8 +50,21 @@ const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
     );
 };
 
+/**
+ * 유지보수 테이블 바디
+ * @param row
+ * @param onRowClick
+ * @constructor
+ */
 const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
-    // 상태 코드에 따른 색상 매핑
+
+    // 요청 유횽 코드에 따른 색상 매핑
+    const requestCdColors: { [key: string]: string} = {
+        "10": "primary",
+        "20": "danger"
+    };
+
+    // 처리 상태 코드에 따른 색상 매핑
     const statusColors: { [key: string]: string } = {
         "10": "warning",
         "20": "info",
@@ -54,9 +73,11 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         "50": "success",
     };
 
+    // 처리기한 따라 다르게 표시
     const renderDeadline = () => {
         const today = new Date(); // 오늘 날짜
         today.setHours(0, 0, 0, 0); // 시간을 초기화해서 날짜 비교
+
         const targetDate = new Date(row.reqDate); // 처리 기한 날짜
         targetDate.setHours(0, 0, 0, 0); // 시간을 초기화해서 날짜 비교
 
@@ -65,7 +86,7 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
 
         if (diffDays === 0) {
             // 처리 기한이 오늘인 경우
-            return <span style={{ color: "green", fontWeight: "bold" }}>당일</span>;
+            return <span style={{ color: "green", fontWeight: "bold" }}>기한 당일</span>;
         } else if (diffDays < 0) {
             // 처리 기한이 초과된 경우
             return (
@@ -76,7 +97,7 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         } else {
             // 처리 기한 전인 경우
             return (
-                <span style={{ color: "#007bff", fontWeight: "bold" }}>
+                <span style={{ color: "green", fontWeight: "bold" }}>
                     {row.reqDate}
                 </span>
             );
@@ -84,10 +105,9 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
     };
 
     return (
-        <tr key={row.suportReqId} onClick={() => onRowClick(row.suportReqId)} style={{ cursor: "pointer" }} >
+        <tr onClick={() => onRowClick(row.suportReqId)} style={{ cursor: "pointer" }} >
             <td className="text-center align-middle">
-                <Badge color={row.requestCdNm === '문의' ? 'primary' : 'danger'}
-                       className="px-3 py-2 fs-5 fw-bold pill custom-badge-status">
+                <Badge color={requestCdColors[row.requestCd]} className="px-3 py-2 fs-5 fw-bold pill custom-badge-status">
                     {row.requestCdNm}
                 </Badge>
             </td>

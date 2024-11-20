@@ -8,7 +8,8 @@ import {
   Input,
   Container,
   Row,
-  Col
+  Col, InputGroupText, InputGroupAddon,
+  InputGroup
 } from "reactstrap";
 
 import { useState, useEffect, useRef } from "react";
@@ -226,13 +227,20 @@ const SuportForm: React.FC = () => {
                       </Row>
                       <Row>
                         <Col lg="4">
+                          <label className="form-control-label">처리 기한</label>
                           <FormGroup>
-                            <label className="form-control-label">처리 기한</label>
-                            <LitePicker
-                                inputId="reqDate"
-                                placeholder="처리 기한 선택"
-                                onDateChange={(startDate) => handleInputChange("reqDate", startDate)}
-                            />
+                            <InputGroup>
+                              <LitePicker
+                                  inputId="reqDate"
+                                  placeholder="처리 기한 선택"
+                                  onDateChange={(startDate) => handleInputChange("reqDate", startDate)}
+                              />
+                              <InputGroupAddon addonType="append">
+                                <InputGroupText>
+                                  <i className="ni ni-calendar-grid-58 text-primary" />
+                                </InputGroupText>
+                              </InputGroupAddon>
+                            </InputGroup>
                           </FormGroup>
                         </Col>
                         <Col lg="4">
@@ -250,7 +258,6 @@ const SuportForm: React.FC = () => {
                       </Row>
                     </div>
                   </div>
-
                   <div className="pl-lg-4 section-space">
                     <h3 className="heading mb-4">상세 요청 내용</h3>
                     <div className="my-div-custom">
@@ -273,12 +280,12 @@ const SuportForm: React.FC = () => {
                           <FormGroup>
                             <label className="form-control-label">상세 내용</label>
                             <div id="smarteditor">
-                            <textarea
-                                name="editorTxt"
-                                id="editorTxt"
-                                rows={20}
-                                style={{width: "100%"}}
-                            />
+                              <textarea
+                                  name="editorTxt"
+                                  id="editorTxt"
+                                  rows={20}
+                                  style={{width: "100%"}}
+                              />
                             </div>
                           </FormGroup>
                         </Col>
@@ -287,7 +294,7 @@ const SuportForm: React.FC = () => {
                   </div>
 
                   <div className="section-space">
-                    <FileUpload formType="insert" onFileChange={setFileList}/>
+                    <FileUpload formType={formType} onFileChange={setFileList} />
                   </div>
 
                 </Form>
@@ -295,6 +302,7 @@ const SuportForm: React.FC = () => {
             </Card>
           </Col>
         </Row>
+
       </Container>
     </>
   );

@@ -19,11 +19,17 @@ import {ApiRes, FileList, ResSuportDetailDTO} from "@/definition/type.ts";
 import { base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import { callAPI } from "@/utils/interceptor";
 import FileDown from "@/components/Module/FileDownload";
+import ResForm from "@/view/page/suport/components/ResForm.tsx";
 
 const SuportDetail: React.FC = () => {
     const navigate = useNavigate();
-    
     const { openCustomModal } = useModalHook();
+    const [ showResForm, setShowResForm ] = useState(false);
+
+    // 응답 폼 Show
+    const handleShowResForm = () => {
+        setShowResForm(true);
+    }
 
     // 목록 이동
     const handleList = () => {
@@ -78,12 +84,9 @@ const SuportDetail: React.FC = () => {
 
     }, [encodedId]);
 
-    console.log(result);
-
     return (
         <>
-            <Header/>
-
+            <Header />
             <Container className="mt--7" fluid>
                 <Row>
                   <Col className="order-xl-2 mb-5 mb-xl-0" xl="12">
@@ -143,7 +146,6 @@ const SuportDetail: React.FC = () => {
                                       </Col>
                                   </Row>
                               </div>
-
                               <div className="pl-lg-4 section-space">
                                   <Row>
                                       <Col lg="12">
@@ -159,7 +161,6 @@ const SuportDetail: React.FC = () => {
                                       </Col>
                                   </Row>
                               </div>
-
                               <div className="pl-lg-4 section-space">
                                   <Row>
                                       <Col lg="12">
@@ -175,16 +176,21 @@ const SuportDetail: React.FC = () => {
                                           </FormGroup>
                                       </Col>
                                   </Row>
+                                  {!showResForm && (
+                                      <div className="button-right" onClick={handleShowResForm}>
+                                          <Button color="success">응대</Button>
+                                      </div>
+                                  )}
                               </div>
 
-                              <div className="button-right">
-                                  <Button color="success">응대</Button>
-                              </div>
                           </Form>
                       </CardBody>
                     </Card>
                   </Col>
                 </Row>
+
+                {showResForm && <ResForm />}
+
             </Container>
         </>
     );

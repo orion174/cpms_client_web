@@ -14,7 +14,7 @@ import {
 } from "reactstrap";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "@/view/layout/Headers/Header.jsx";
+import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
 import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
@@ -86,16 +86,34 @@ const Suport = () => {
   };
 
   // 유지보수 상세 이동
-  const fetchSuportDetail = useCallback((suportReqId: number) => {
-    const encodedId = utf8ToBase64(suportReqId.toString());
-    navigate(`/admin/suport/detail?suport_page=${encodedId}`);
+  const handleRowClick = useCallback(
+      async (suportReqId: number, statusCd: string) => {
+        // 접수대기인 데이터는 상세 페이지 조회 시, 접수완료로 바뀐다.
+        if(statusCd === '10') {
+          const jsonData = {
+            suportReqId: suportReqId
+            , statusCd : '20'
+          }
+          const url = `/api/suport/updateStatus`;
+          
+          const res
+              = await callAPI.post<ApiRes<null>>(url, jsonData);
 
-  }, [navigate]);
+          if(res?.data?.result === false) {
+            console.error('처리상태 수정 API 에러');
+            return;
+          }
+        }
+
+        const encodeId = utf8ToBase64(suportReqId.toString());
+        navigate(`/admin/suport/detail?suport_page=${encodeId}`);
+      },
+      [navigate]
+  );
 
   return (
       <>
-        <Header />
-
+        <TempHeader />
         <Container className="mt--7" fluid>
           <Row>
             <div className="col">
@@ -199,7 +217,13 @@ const Suport = () => {
                   </Row>
                 </CardHeader>
 
-                <SuportTable data={data} onRowClick={fetchSuportDetail} />
+                <SuportTable
+                    data={data}
+                    onRowClick={(suportReqId: number) => {
+                        const row = data.find((item) => item.suportReqId === suportReqId);
+                        if (row) handleRowClick(row.suportReqId, row.statusCd);
+                    }}
+                />
 
                 <CardFooter className="py-4">
                   <Row className="align-items-center">
