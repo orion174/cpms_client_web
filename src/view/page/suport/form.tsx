@@ -88,39 +88,41 @@ const SuportForm: React.FC = () => {
       let message = "";
 
       if (!formData.reqCompanyId) {
-          message = "업체를 선택해주세요.";
+          message = "업체를 선택하세요.";
 
       } else if (!formData.reqProjectId) {
-          message = "프로젝트를 선택해주세요.";
+          message = "프로젝트를 선택하세요.";
 
       } else if (!formData.requestCd) {
-          message = "요청 유형을 선택해주세요.";
+          message = "요청 유형을 선택하세요.";
 
       } else if (!formData.statusCd) {
-          message = "처리 상태를 선택해주세요.";
+          message = "처리 상태를 선택하세요.";
 
       } else if (!formData.suportTitle) {
-          message = "제목을 입력해주세요.";
+          message = "제목을 입력하세요.";
 
       } else if (!formData.reqDate) {
-          message = "처리 기한을 선택해주세요.";
+          message = "처리 기한을 선택하세요.";
       }
 
       if (message) {
           openCustomModal({ title: "알림", message, isConfirm: false });
-          return;
-      }
 
-    openCustomModal({
-      title: "확인",
-      message: "저장하시겠습니까?",
-      isConfirm: true,
-      onConfirm: () => {
-        if (formType === "insert") {
-          saveSuportReq();
-        }
-      },
-    });
+          return;
+
+      } else {
+        openCustomModal({
+          title: "확인",
+          message: "저장하시겠습니까?",
+          isConfirm: true,
+          onConfirm: () => {
+            if (formType === "insert") {
+              saveSuportReq();
+            }
+          },
+        });
+      }
   };
 
   const saveSuportReq = async () => {
