@@ -1,11 +1,11 @@
-// API result
+// API 응답 인터페이스
 export interface ApiRes<T> {
     status: boolean;
     result: T;
     message?: string;
 }
 
-// 로그인 DTO
+// 로그인 응답 DTO
 export interface ResLoginDTO {
     userId: number;
     authType: string;
@@ -21,7 +21,7 @@ export interface ResLoginDTO {
     option: string;
 }
 
-// JWT DTO
+// JWT 토큰 DTO
 export interface JwtDto {
     grantType?: string;
     accessToken: string;
@@ -36,42 +36,42 @@ export interface JwtDto {
     loginHistoryId?: number;
 }
 
-// 공통 코드 DTO
+// 공통 코드 응답 DTO
 export interface ResComCodeDTO {
-    codeId: string;
+    codeId: number;
     codeNm: string;
 }
 
-// 유지보수 문의 리스트 
+// 프로젝트 유지보수 문의 인터페이스
 export interface ResSuportListDTO {
     suportCnt: number;
     suportList: SuportList[];
 }
 
-// 유지보수 리스트 인터페이스
+// 프로젝트 유지보수 문의 리스트 인터페이스
 export interface SuportList {
     suportReqId: number;
     userCompanyNm: string;
     reqProjectNm: string;
-    requestCd: string;
+    requestCd: number;
     requestCdNm: string;
+    statusCd: number;
     statusCdNm: string;
-    statusCd: string;
     resUserNm: string;
-    regDt: string;
     reqDate: string;
     suportTitle: string;
+    regDt: string;
 }
 
-// 유지보수 상세 인터페이스
+// 프로젝트 유지보수 문의 상세 조회 인터페이스
 export interface ResSuportDetailDTO {
     suportReqId: number;
     reqCompanyNm: string;
     userCompanyNm: string;
     reqProjectNm: string;
-    requestCd: string;
+    requestCd: number;
     requestCdNm: string;
-    statusCd: string;
+    statusCd: number;
     statusCdNm: string;
     resUserId: number;
     resUserNm: string;
@@ -80,19 +80,22 @@ export interface ResSuportDetailDTO {
     resDate: string;
     suportTitle: string;
     suportEditor: string;
-    suportResId: number;
-    resEditor: string;
+    suportRes : suportRes | null;
     fileList: FileList[];
 }
 
-// 유지보수 첨부파일 인터페이스
+export interface suportRes {
+    suportResId: number;
+    resTitle: string;
+    resEditor: string;
+}
+
+// 첨부파일 인터페이스
 export interface FileList {
     suportFileId: number;
-    suportReqId: number;
+    fileCategory : string;
     fileType: string;
     filePath: string;
     fileNm: string;
     fileOgNm: string;
-    fileExt: string;
-    fileSize: number;
 }

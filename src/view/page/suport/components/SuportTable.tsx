@@ -12,12 +12,6 @@ interface RowProps {
     onRowClick: (suportReqId : number) => void;
 }
 
-/**
- * 유지보수 테이블 헤더
- * @param data
- * @param onRowClick
- * @constructor
- */
 const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
     return (
         <>
@@ -50,27 +44,21 @@ const SuportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
     );
 };
 
-/**
- * 유지보수 테이블 바디
- * @param row
- * @param onRowClick
- * @constructor
- */
 const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
 
     // 요청 유횽 코드에 따른 색상 매핑
-    const requestCdColors: { [key: string]: string} = {
-        "10": "primary",
-        "20": "danger"
+    const requestCdColors: { [key: number]: string} = {
+        1: "primary",
+        2: "danger"
     };
 
     // 처리 상태 코드에 따른 색상 매핑
-    const statusColors: { [key: string]: string } = {
-        "10": "warning",
-        "20": "info",
-        "30": "primary",
-        "40": "danger",
-        "50": "success",
+    const statusColors: { [key: number]: string } = {
+        3: "warning",
+        4: "info",
+        5: "primary",
+        6: "danger",
+        7: "success",
     };
 
     // 처리기한 따라 다르게 표시
@@ -87,6 +75,7 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         if (diffDays === 0) {
             // 처리 기한이 오늘인 경우
             return <span style={{ color: "green", fontWeight: "bold" }}>기한 당일</span>;
+
         } else if (diffDays < 0) {
             // 처리 기한이 초과된 경우
             return (
@@ -94,6 +83,7 @@ const TableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
                     {Math.abs(diffDays)}일 초과
                 </span>
             );
+
         } else {
             // 처리 기한 전인 경우
             return (

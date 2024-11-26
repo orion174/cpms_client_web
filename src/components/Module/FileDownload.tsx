@@ -15,8 +15,6 @@ interface FileList {
     filePath: string;
     fileNm: string;
     fileOgNm: string;
-    fileExt: string;
-    fileSize: number;
 }
 
 interface FileDownProps<T extends keyof FileList> {

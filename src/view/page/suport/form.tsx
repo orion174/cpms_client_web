@@ -16,13 +16,13 @@ import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import Header from "@/view/layout/Headers/Header.jsx";
+import useModalHook from "@/hook/useModal";
+
+import { callAPI } from "@/utils/interceptor";
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
-import useModalHook from "@/hook/useModal";
-
-import { callAPI } from "@/utils/interceptor";
 
 interface FormType {
   formType: "insert" | "update";
@@ -34,10 +34,6 @@ interface FileItem {
   name: string;
 }
 
-/**
- * 유지보수 문의 폼
- * @constructor
- */
 const SuportForm: React.FC = () => {
   const location = useLocation();
   const { formType } = location.state as FormType;
@@ -46,11 +42,12 @@ const SuportForm: React.FC = () => {
 
   const [fileList, setFileList] = useState<FileItem[]>([]);
 
+  // 저장할 데이터
   const [formData, setFormData] = useState({
     reqCompanyId: "",
     reqProjectId: "",
-    requestCd: "10",
-    statusCd: "10",
+    requestCd: 0,
+    statusCd: 3,
     suportTitle: "",
     reqDate: "",
   });
@@ -59,8 +56,8 @@ const SuportForm: React.FC = () => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
+  /* 스마트 에디터 관련 */
   const oEditors = useRef<never[]>([]);
-
   useEffect(() => {
     const loadScripts = () => {
       const script = document.createElement("script");
@@ -84,6 +81,7 @@ const SuportForm: React.FC = () => {
     loadScripts();
   }, []);
 
+  // 저장버튼 클릭
   const handleSave = () => {
       let message = "";
 
@@ -96,11 +94,11 @@ const SuportForm: React.FC = () => {
       } else if (!formData.requestCd) {
           message = "요청 유형을 선택하세요.";
 
-      } else if (!formData.statusCd) {
-          message = "처리 상태를 선택하세요.";
-
       } else if (!formData.suportTitle) {
           message = "제목을 입력하세요.";
+
+      } else if (!formData.statusCd) {
+          message = "처리 상태를 선택하세요.";
 
       } else if (!formData.reqDate) {
           message = "처리 기한을 선택하세요.";
@@ -125,21 +123,23 @@ const SuportForm: React.FC = () => {
       }
   };
 
+  // 프로젝트 문의 저장 API
   const saveSuportReq = async () => {
     const data = new FormData();
-
+    
     Object.entries(formData).forEach(([key, value]) => {
-      data.append(key, value);
+      data.append(key, value.toString());
     });
 
+    // 에디터 내용
     data.append("suportEditor", getEditorContent(oEditors.current));
-
+    // 문의 첨부파일
     fileList.forEach((file) => data.append("suportFile", file.file));
 
     const res
         = await callAPI.post("/api/suport/insert", data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+            headers: { "Content-Type": "multipart/form-data" },
+          });
 
     if (res.status === 200) {
         openCustomModal({
@@ -151,6 +151,7 @@ const SuportForm: React.FC = () => {
     }
   };
 
+  // 목록으로 돌아가기
   const handleList = () => {
     openCustomModal({
       title: "알림",
@@ -174,7 +175,7 @@ const SuportForm: React.FC = () => {
                   </Col>
                   <Col className="text-right" xs="4">
                     <Button color="default" onClick={handleList}>목록</Button>
-                    <Button color="info" onClick={handleSave}>저장</Button>
+                    <Button color="success" onClick={handleSave}>저장</Button>
                   </Col>
                 </Row>
               </CardHeader>
@@ -218,11 +219,12 @@ const SuportForm: React.FC = () => {
                           <FormGroup>
                             <label className="form-control-label">요청 유형</label>
                             <ComCodeSelect
-                                masterCodeId="10"
+                                groupId="10"
                                 selectId="requestCd"
                                 value={formData.requestCd}
-                                initText="요청 유형 선택"
                                 onChange={(e) => handleInputChange("requestCd", e.target.value)}
+                                classNm="my-input-text form-control"
+                                initText="요청 유형 선택"
                             />
                           </FormGroup>
                         </Col>
@@ -249,11 +251,12 @@ const SuportForm: React.FC = () => {
                           <FormGroup>
                             <label className="form-control-label">처리 상태</label>
                             <ComCodeSelect
-                                masterCodeId="20"
+                                groupId="20"
                                 selectId="statusCd"
                                 value={formData.statusCd}
-                                initText="처리 상태 선택"
                                 onChange={(e) => handleInputChange("statusCd", e.target.value)}
+                                classNm="my-input-text form-control"
+                                initText="처리 상태 선택"
                             />
                           </FormGroup>
                         </Col>

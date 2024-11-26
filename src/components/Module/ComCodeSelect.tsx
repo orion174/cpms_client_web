@@ -3,29 +3,23 @@ import { ApiRes, ResComCodeDTO } from "@/definition/type.ts";
 import { callAPI } from "@/utils/interceptor.ts";
 
 interface ComCodeProps  {
-    masterCodeId: string;
+    groupId: string; // 공통코드 그룹
     selectId: string;
-    value: string;
-    initText: string;
+    value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>; // 외부 컴포넌트에서 react event 처리
+    initText: string;
+    classNm: string;
 }
 
-/**
- * 공통코드 Select Option
- * @param masterCodeId
- * @param selectId
- * @param value
- * @param onChange
- * @constructor
- */
-const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, initText, onChange }) => {
+const ComCodeSelect: React.FC<ComCodeProps> = ({ groupId, selectId, value, onChange, initText, classNm }) => {
     const [options, setOptions] = useState<ResComCodeDTO[]>([]);
 
-    // 공통코드 조회 API
-    const fetchComCodeList = async (masterCodeId: string): Promise<ApiRes<ResComCodeDTO[]>> => {
+    // 공통코드 조회 API 호출
+    const fetchComCodeList = async (groupId: string): Promise<ApiRes<ResComCodeDTO[]>> => {
         const url = `/com/code/list`;
+
         const jsonData = {
-            masterCodeId: masterCodeId ?? ''
+            groupId: groupId ?? ''
         };
 
         const res
@@ -38,23 +32,25 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ masterCodeId, selectId, value, 
         const fetchOptions = async() => {
             try {
                 const res
-                    = await fetchComCodeList(masterCodeId);
+                    = await fetchComCodeList(groupId);
+
                 setOptions(res.result);
+
             } catch (error) {
-                console.error(error);
+                console.error('공통코드 조회 실패' + error);
             }
         };
         fetchOptions();
-    }, [masterCodeId]);
+    }, [groupId]);
 
     return (
         <select
             id={selectId}
-            className="my-input-text form-control"
             value={value}
             onChange={onChange}
+            className={classNm}
         >
-            <option value="">{initText}</option>
+            <option value="0">{initText}</option>
             {options.map((option) => (
                 <option key={option.codeId} value={option.codeId}>
                     {option.codeNm}

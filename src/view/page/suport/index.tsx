@@ -12,18 +12,19 @@ import {
   Button,
   Col
 } from "reactstrap";
+
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
+import SuportTable from "./components/SuportTable.tsx";
+
+import { callAPI } from "@/utils/interceptor.ts";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
-import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
 import LitePicker from "@/components/Module/LitePicker.tsx";
-
 import { utf8ToBase64 } from "@/utils/common.ts";
-import { callAPI } from "@/utils/interceptor.ts";
-
-import SuportTable from "./components/SuportTable.tsx";
+import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
 
 const Suport = () => {
   const navigate = useNavigate();
@@ -32,15 +33,17 @@ const Suport = () => {
   const [data, setData] = useState<SuportList[]>([]);
   const [totalCnt, setTotalCnt] = useState<number>(0);
 
+  // 검색 데이터
   const [searchParams, setSearchParams] = useState({
     schCompanyId: 0,
-    schRequestCd: "",
-    schStatusCd: "",
+    schRequestCd:0,
+    schStatusCd: 0,
     schStartDt: "",
     schEndDt: "",
     schTitle: "",
   });
 
+  // 검색 입력
   const updateSearchParams = (key: keyof typeof searchParams, value: string) => {
     setSearchParams((prev) => ({
       ...prev,
@@ -54,10 +57,10 @@ const Suport = () => {
 
     const res
         = await callAPI.post<ApiRes<ResSuportListDTO>>(url, {
-          ...searchParams,
-          pageNo: currentPage,
-          pageSize: 10,
-        });
+            ...searchParams,
+            pageNo: currentPage,
+            pageSize: 10,
+          });
 
     setTotalCnt(res.data.result.suportCnt);
     setData(res.data.result.suportList);
@@ -72,8 +75,8 @@ const Suport = () => {
   const handleClear = () => {
     setSearchParams({
       schCompanyId: 0,
-      schRequestCd: "",
-      schStatusCd: "",
+      schRequestCd: 0,
+      schStatusCd: 0,
       schStartDt: "",
       schEndDt: "",
       schTitle: "",
@@ -87,13 +90,14 @@ const Suport = () => {
 
   // 유지보수 상세 이동
   const handleRowClick = useCallback(
-      async (suportReqId: number, statusCd: string) => {
+      async (suportReqId: number, statusCd: number) => {
         // 접수대기인 데이터는 상세 페이지 조회 시, 접수완료로 바뀐다.
-        if(statusCd === '10') {
+        if(statusCd === 3) {
           const jsonData = {
             suportReqId: suportReqId
-            , statusCd : '20'
+            , statusCd : 4
           }
+
           const url = `/api/suport/updateStatus`;
           
           const res
@@ -144,24 +148,26 @@ const Suport = () => {
                         </InputGroup>
                         <InputGroup>
                           <ComCodeSelect
-                              masterCodeId="10"
+                              groupId="10"
                               selectId="schRequestCd"
                               value={searchParams.schRequestCd}
-                              initText={"요청유형 선택"}
                               onChange={(e) =>
                                   updateSearchParams("schRequestCd", e.target.value)
                               }
+                              classNm="my-input-text form-control"
+                              initText="요청유형 선택"
                           />
                         </InputGroup>
                         <InputGroup>
                           <ComCodeSelect
-                              masterCodeId="20"
+                              groupId="20"
                               selectId="schStatusCd"
-                              initText={"처리상태 선택"}
                               value={searchParams.schStatusCd}
                               onChange={(e) =>
                                   updateSearchParams("schStatusCd", e.target.value)
                               }
+                              classNm="my-input-text form-control"
+                              initText="처리상태 선택"
                           />
                         </InputGroup>
                         <InputGroup className="input-group-dynamic">
