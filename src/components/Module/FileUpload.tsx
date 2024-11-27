@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useEffect } from "react";
+
 import { Button } from "reactstrap";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
@@ -8,18 +9,13 @@ import pdfIcon from "@/assets/img/icons/pdf_icon.png";
 import pngIcon from "@/assets/img/icons/png_icon.png";
 import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
+import { FileItem, ExistingFileItem, NewFileItem } from "@/definition/type.ts";
 
-// 파일 아이템에 대한 타입 정의
-interface FileItem {
-    id: number;
-    file: File;
-    name: string;
-}
-
-// Props 타입 정의
 interface FileUploadProps {
     formType: string;
     onFileChange: (files: FileItem[]) => void; // 첨부파일을 상태를 변경하는 콜백함수
+    initFiles?: ExistingFileItem[];
+    onDeleteFiles?: (fileId: number) => void; // 파일 삭제 API 콜백
 }
 
 // 허용할 파일 확장자 배열
@@ -55,53 +51,77 @@ const getIconByExtension = (extension: string) => {
     }
 };
 
-/**
- * 공통 파일 업로드 Div
- * @param formType
- * @param onFileChange
- * @constructor
- */
-const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange  }) => {
-
+const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFiles = [], onDeleteFiles }) => {
     // 파일 리스트를 관리하는 상태
     const [fileList, setFileList] = useState<FileItem[]>([]);
 
+    useEffect(() => {
+        if (initFiles.length > 0) {
+            const combinedFiles: FileItem[] = [
+                ...initFiles.map((file) => ({
+                    id: file.id,
+                    name: file.name,
+                    isNew: false,
+                })),
+                ...fileList.filter((file) => file.isNew), // 이미 추가된 신규 파일 유지
+            ];
+
+            setFileList(combinedFiles);
+        }
+    }, [initFiles]);
+
     // 파일 추가 이벤트 핸들러
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files || []).filter((file) => {
-            const extension = file.name.split(".").pop()?.toLowerCase() || "";
-            return ALLOWED_EXTENSIONS.includes(extension);
-        });
+        const files
+            = Array.from(e.target.files || [])
+                   .filter((file) => {
+                       const extension
+                           = file.name.split(".").pop()?.toLowerCase()
+                                || "";
+
+                           return ALLOWED_EXTENSIONS.includes(extension);
+                       }
+                   );
 
         // 최대 5개 제한
-        const newFiles = files.slice(0, 5 - fileList.length);
+        const newFiles: NewFileItem[]
+            = files.map((file, index) => ({
+                    id: Date.now() + index,
+                    file,
+                    name: file.name,
+                    isNew: true,
+                })
+            );
 
-        if (fileList.length + files.length > 5) {
-            alert("파일은 5개까지만 첨부 가능합니다.");
+
+        const totalFiles = [...fileList, ...newFiles];
+
+        if (totalFiles.length > 5) {
+            alert("파일은 최대 5개까지 첨부 가능합니다.");
         }
 
-        const updatedFileList = [
-            ...fileList,
-            ...newFiles.map((file, index) => ({
-                id: Date.now() + index,
-                file,
-                name: file.name,
-            })),
-        ];
+        const updatedFileList = totalFiles.slice(0, 5);
 
         setFileList(updatedFileList);
-        onFileChange(updatedFileList); // 부모 컴포넌트로 파일 리스트 전달
-        
-        e.target.value = ""; // 선택 초기화
+        onFileChange(updatedFileList);
+        // 선택 초기화
+        e.target.value = "";
     };
 
     // 파일 삭제 이벤트 핸들러
-    const handleDeleteFile = (fileId: number) => {
+    const handleDeleteFile = async (fileId: number) => {
         const updatedFileList = fileList.filter((file) => file.id !== fileId);
 
         setFileList(updatedFileList);
-        onFileChange(updatedFileList);// 파일 삭제 후에도 부모 컴포넌트에 변경 사항 전달
+        onFileChange(updatedFileList);
     };
+
+    // 파일 삭제 API 이벤트 핸들러
+    const handleDeleteExistingFile = (fileId: number) => {
+        if(onDeleteFiles) {
+            onDeleteFiles(fileId);
+        }
+    }
 
     return (
         <div className="pl-lg-4">
@@ -117,7 +137,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange  }) => {
                     <span className="btn-inner--icon">
                         <i className="ni ni-fat-add" />
                     </span>
-                    <span className="btn-inner--text">첨부파일 등록</span>
+                    {fileList.length === 0 ? (
+                        <span className="btn-inner--text">첨부파일 등록</span>
+                    ) : (
+                        <span className="btn-inner--text">첨부파일 추가 등록</span>
+                    )}
                 </Button>
                 <input
                     id="fileInput"
@@ -129,25 +153,34 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange  }) => {
                 />
             </div>
             <div>
-                <ul id="file-list" className="list-unstyled mb-0">
+                <ul className="list-unstyled mb-0">
                     {fileList.length === 0 ? (
                         <li className="text-muted">
                             {formType === 'insert' ? "첨부파일 등록" : "첨부된 파일이 없습니다."}
                         </li>
                     ) : (
                         fileList.map((file) => {
-                            const extension = file.name.split(".").pop()?.toLowerCase() || "";
+                            const extension
+                                = file.name.split(".").pop()?.toLowerCase()
+                                    || "";
+
                             return (
                                 <li key={file.id} className="mb-1 d-flex align-items-center">
-                                    <Button
-                                        className="btn-icon btn-3 mr-2"
-                                        size="sm"
-                                        color="danger"
-                                        type="button"
-                                        onClick={() => handleDeleteFile(file.id)}
-                                    >
-                                        <i className="ni ni-basket"/>
-                                    </Button>
+                                    {file.isNew ? (
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteFile(file.id)}
+                                        ><i className="ni ni-basket" />
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            color="danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteExistingFile(file.id)}
+                                        ><i className="ni ni-archive-2" />
+                                        </Button>
+                                    )}
                                     <img
                                         alt="..."
                                         src={getIconByExtension(extension)}

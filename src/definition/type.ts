@@ -81,7 +81,7 @@ export interface ResSuportDetailDTO {
     suportTitle: string;
     suportEditor: string;
     suportRes : suportRes | null;
-    fileList: FileList[];
+    fileList: suportFileList[];
 }
 
 export interface suportRes {
@@ -91,7 +91,7 @@ export interface suportRes {
 }
 
 // 첨부파일 인터페이스
-export interface FileList {
+export interface suportFileList {
     suportFileId: number;
     fileCategory : string;
     fileType: string;
@@ -99,3 +99,20 @@ export interface FileList {
     fileNm: string;
     fileOgNm: string;
 }
+
+// API 파일
+export interface ExistingFileItem {
+    id: number,
+    name: string,
+    isNew: false;
+}
+
+// 신규 업로드 첨부파일
+export interface NewFileItem  {
+    id: number;
+    file?: File;
+    name: string;
+    isNew: boolean;
+}
+
+export type FileItem = ExistingFileItem | NewFileItem; // Union Type

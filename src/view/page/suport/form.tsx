@@ -23,15 +23,10 @@ import FileUpload from "@/components/Module/FileUpload.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
+import {FileItem, NewFileItem} from "@/definition/type.ts";
 
 interface FormType {
   formType: "insert" | "update";
-}
-
-interface FileItem {
-  id: number;
-  file: File;
-  name: string;
 }
 
 const SuportForm: React.FC = () => {
@@ -133,8 +128,14 @@ const SuportForm: React.FC = () => {
 
     // 에디터 내용
     data.append("suportEditor", getEditorContent(oEditors.current));
+
     // 문의 첨부파일
-    fileList.forEach((file) => data.append("suportFile", file.file));
+    fileList.filter((file): file is NewFileItem => file.isNew && !!file.file)
+        .forEach((file) => {
+            if (file.file) {
+              data.append("suportFile", file.file);
+            }
+        });
 
     const res
         = await callAPI.post("/api/suport/insert", data, {
@@ -156,7 +157,7 @@ const SuportForm: React.FC = () => {
     openCustomModal({
       title: "알림",
       message: "목록으로 돌아가겠습니까?",
-      isConfirm: false,
+      isConfirm: true,
       redirectUrl: "/admin/suport/index",
     });
   };
@@ -276,6 +277,7 @@ const SuportForm: React.FC = () => {
                                 placeholder="문의하실 글의 제목을 입력하세요."
                                 value={formData.suportTitle}
                                 onChange={(e) => handleInputChange("suportTitle", e.target.value)}
+                                maxLength={50}
                             />
                           </FormGroup>
                         </Col>

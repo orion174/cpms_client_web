@@ -15,14 +15,13 @@ import ResForm from "@/view/page/suport/components/ResForm.tsx";
 import ResDetail from "@/view/page/suport/components/ResDetail.tsx";
 import useModalHook from "@/hook/useModal";
 
-import { SetStateAction, useEffect, useState} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import { SetStateAction, useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-import {callAPI} from "@/utils/interceptor";
-import {ApiRes, FileList, ResSuportDetailDTO, suportRes} from "@/definition/type.ts";
-import {base64ToUtf8, isBase64} from "@/utils/common.ts";
+import { callAPI } from "@/utils/interceptor";
+import { ApiRes, suportFileList, ResSuportDetailDTO, suportRes } from "@/definition/type.ts";
+import { base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import FileDown from "@/components/Module/FileDownload";
-import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 
 const SuportDetail: React.FC = () => {
     const navigate = useNavigate();
@@ -30,22 +29,18 @@ const SuportDetail: React.FC = () => {
     const {openCustomModal} = useModalHook();
     const [showResForm, setShowResForm] = useState(false);
 
-    // 응답 폼 Show
-    const handleShowResForm = () => {
-        setShowResForm(true);
-    }
-
-    // 목록 이동
-    const handleList = () => {
-        navigate("/admin/suport/index");
-    };
+    const [editMode, setEditMode] = useState(false);
+    const [statusCd, setStatusCd] = useState<number | null>(null);
+    const [editData, setEditData] = useState<suportRes | null>(null);
 
     const [searchParams] = useSearchParams();
     const encodedId = searchParams.get("suport_page");
 
+    // 프로젝트 문의 상세 데이터
     const [result, setResult] = useState<ResSuportDetailDTO | null>(null);
-    const [reqFileList, setReqFileList] = useState<FileList[]>([]);
-    const [resFileList, setResFileList] = useState<FileList[]>([]);
+    // 문의, 처리 첨부파일 구분
+    const [reqFileList, setReqFileList] = useState<suportFileList[]>([]);
+    const [resFileList, setResFileList] = useState<suportFileList[]>([]);
 
     // suport_page가 바뀔 때 마다 데이터 바인딩
     useEffect(() => {
@@ -85,8 +80,8 @@ const SuportDetail: React.FC = () => {
                 // 첨부파일
                 const fileList = res.data.result.fileList || [];
 
-                const reqFileList: SetStateAction<FileList[]> = [];
-                const resFileList: SetStateAction<FileList[]> = [];
+                const reqFileList: SetStateAction<suportFileList[]> = [];
+                const resFileList: SetStateAction<suportFileList[]> = [];
 
                 if(fileList.length > 0) {
                     fileList.forEach(item => {
@@ -108,6 +103,64 @@ const SuportDetail: React.FC = () => {
 
     }, [encodedId]);
 
+    // 답변 입력 폼 노출
+    const handleShowResForm = () => {
+        setShowResForm(true);
+    }
+
+    // 목록 이동
+    const handleList = () => {
+        navigate("/admin/suport/index");
+    };
+    
+    // 답변 삭제
+    const handleResDelete = async () => {
+        if(!result) {
+            return;
+
+        } else {
+            openCustomModal({
+                title: "알림",
+                message: "정말 삭제하시겠습니까?",
+                isConfirm: true,
+                onConfirm: async () => {
+                    const suportReqId = result.suportReqId;
+
+                    if(suportReqId) {
+                        const jsonData = {
+                            suportReqId: suportReqId
+                        }
+
+                        const res
+                            = await callAPI.post(`/api/suport/resDelete`, jsonData);
+
+                        if(res.status === 200) {
+                            openCustomModal({
+                                title: "알림",
+                                message: "답변이 삭제되었습니다.",
+                                isConfirm: false
+                                // 리다이렉트도 고려
+                            });
+
+                            setResult({ ...result, suportRes: null });
+                            setResFileList([]);
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+    // 답변 수정 ( 폼 리랜더링 )
+    const handleResUpdate = () => {
+        if(result && result.suportRes) {
+            setStatusCd(result.statusCd); // 처리 상태 코드
+            setEditData(result.suportRes); // 처리 내역 데이터
+            setEditMode(true);
+        }
+    }
+
+    // 문의의 답변 여부 상태를 감별한다.
     const hasSuportRes = (res: ResSuportDetailDTO | null): res is ResSuportDetailDTO & { suportRes: suportRes } => {
         return !!res?.suportRes && res.suportRes.suportResId > 0;
     };
@@ -169,14 +222,7 @@ const SuportDetail: React.FC = () => {
                                       <Col lg="4">
                                           <FormGroup>
                                               <label className="form-control-label-custom">처리 상태</label>
-                                              <ComCodeSelect
-                                                  groupId="20"
-                                                  selectId="statusCd"
-                                                  value={result?.statusCd ?? 0}
-                                                  onChange={(e) => (e.target.value)}
-                                                  initText="처리 상태 선택"
-                                                  classNm="my-detail-text"
-                                              />
+                                              <div className="my-detail-text">{result?.statusCdNm}</div>
                                           </FormGroup>
                                       </Col>
                                   </Row>
@@ -192,7 +238,8 @@ const SuportDetail: React.FC = () => {
                                   </Row>
                                   <Row>
                                       <Col lg="12">
-                                          <FileDown fileList={reqFileList} idKey="suportFileId" />
+                                          <label className="form-control-label-custom">첨부 파일</label>
+                                          <FileDown fileList={reqFileList} idKey="suportFileId"/>
                                       </Col>
                                   </Row>
                               </div>
@@ -214,7 +261,7 @@ const SuportDetail: React.FC = () => {
                               </div>
 
                               {!showResForm &&
-                                  !(hasSuportRes(result))  && (
+                                  !(hasSuportRes(result)) && (
                                       <div className="button-right" onClick={handleShowResForm}>
                                           <Button color="success">답변하기</Button>
                                       </div>
@@ -227,14 +274,25 @@ const SuportDetail: React.FC = () => {
                   </Col>
                 </Row>
 
-                {hasSuportRes(result) && (
+                {!editMode && hasSuportRes(result) && (
                     <ResDetail
                         suportRes={result.suportRes}
                         resFileList={resFileList}
+                        onResDelete={handleResDelete}
+                        onResUpdate={handleResUpdate}
                     />
                 )}
 
                 {showResForm && <ResForm />}
+
+                {editMode &&
+                    <ResForm
+                        statusCd={statusCd}
+                        editData={editData}
+                        resFileList={resFileList}
+                        onCancel={() => setEditMode(false)}
+                    />
+                }
 
             </Container>
         </>
