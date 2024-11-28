@@ -9,12 +9,12 @@ import pdfIcon from "@/assets/img/icons/pdf_icon.png";
 import pngIcon from "@/assets/img/icons/png_icon.png";
 import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
-import { FileItem, ExistingFileItem, NewFileItem } from "@/definition/type.ts";
+import { FileItem, NewFileItem } from "@/definition/type.ts";
 
 interface FileUploadProps {
     formType: string;
     onFileChange: (files: FileItem[]) => void; // 첨부파일을 상태를 변경하는 콜백함수
-    initFiles?: ExistingFileItem[];
+    initFiles?: FileItem[];
     onDeleteFiles?: (fileId: number) => void; // 파일 삭제 API 콜백
 }
 
@@ -56,18 +56,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
     const [fileList, setFileList] = useState<FileItem[]>([]);
 
     useEffect(() => {
-        if (initFiles.length > 0) {
-            const combinedFiles: FileItem[] = [
-                ...initFiles.map((file) => ({
-                    id: file.id,
-                    name: file.name,
-                    isNew: false,
-                })),
-                ...fileList.filter((file) => file.isNew), // 이미 추가된 신규 파일 유지
-            ];
-
-            setFileList(combinedFiles);
-        }
+        setFileList(initFiles.map((file) => ({ ...file})));
     }, [initFiles]);
 
     // 파일 추가 이벤트 핸들러
@@ -98,30 +87,32 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
 
         if (totalFiles.length > 5) {
             alert("파일은 최대 5개까지 첨부 가능합니다.");
+            return;
         }
 
         const updatedFileList = totalFiles.slice(0, 5);
 
         setFileList(updatedFileList);
         onFileChange(updatedFileList);
+
         // 선택 초기화
         e.target.value = "";
     };
 
     // 파일 삭제 이벤트 핸들러
-    const handleDeleteFile = async (fileId: number) => {
-        const updatedFileList = fileList.filter((file) => file.id !== fileId);
+    const handleDeleteFile = (fileId: number, isNew: boolean) => {
+        if (isNew) {
+            const updatedFileList = fileList.filter((file) => file.id !== fileId);
 
-        setFileList(updatedFileList);
-        onFileChange(updatedFileList);
-    };
+            setFileList(updatedFileList);
+            onFileChange(updatedFileList);
 
-    // 파일 삭제 API 이벤트 핸들러
-    const handleDeleteExistingFile = (fileId: number) => {
-        if(onDeleteFiles) {
-            onDeleteFiles(fileId);
+        } else {
+            if (onDeleteFiles) {
+                onDeleteFiles(fileId);
+            }
         }
-    }
+    };
 
     return (
         <div className="pl-lg-4">
@@ -166,21 +157,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
 
                             return (
                                 <li key={file.id} className="mb-1 d-flex align-items-center">
-                                    {file.isNew ? (
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            onClick={() => handleDeleteFile(file.id)}
-                                        ><i className="ni ni-basket" />
-                                        </Button>
-                                    ) : (
-                                        <Button
-                                            color="danger"
-                                            size="sm"
-                                            onClick={() => handleDeleteExistingFile(file.id)}
-                                        ><i className="ni ni-archive-2" />
-                                        </Button>
-                                    )}
+                                    <Button
+                                        color="danger"
+                                        size="sm"
+                                        onClick={() => handleDeleteFile(file.id, file.isNew)}
+                                    ><i className="ni ni-basket"/>
+                                    </Button>
                                     <img
                                         alt="..."
                                         src={getIconByExtension(extension)}

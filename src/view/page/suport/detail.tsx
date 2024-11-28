@@ -112,6 +112,14 @@ const SuportDetail: React.FC = () => {
     const handleList = () => {
         navigate("/admin/suport/index");
     };
+
+    const handleReqUpdate = () => {
+        openCustomModal({
+            title: "알림",
+            message: "해당 기능은 준비중입니다.",
+            isConfirm: false
+        });
+    }
     
     // 답변 삭제
     const handleResDelete = async () => {
@@ -179,7 +187,7 @@ const SuportDetail: React.FC = () => {
                           </Col>
                           <Col className="text-right" xs="4">
                             <Button color="default" onClick={handleList}>목록</Button>
-                            <Button color="info">문의수정</Button>
+                            <Button color="info" onClick={handleReqUpdate}>문의수정</Button>
                           </Col>
                         </Row>
                       </CardHeader>

@@ -14,10 +14,10 @@ import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js"
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import useModalHook from "@/hook/useModal.ts";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
-import { callAPI } from "@/utils/interceptor.ts";
 import { useSearchParams } from "react-router-dom";
 import { base64ToUtf8 } from "@/utils/common.ts";
 import { suportRes, suportFileList, FileItem, NewFileItem } from "@/definition/type.ts";
+import { callAPI } from "@/utils/interceptor.ts";
 
 interface ResFormProps {
     statusCd?: number | null;
@@ -30,6 +30,7 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
     const { openCustomModal } = useModalHook();
     const [ searchParams] = useSearchParams();
 
+    const [ suportResId, setSuportResId ] = useState<number>(editData?.suportResId || 0);
     const [ resStatusCd, setResStatusCd ] = useState<number>(editData?.suportResId ? statusCd || 0 : 0);
     const [ resTitle, setResTitle ] = useState<string>(editData?.resTitle || "");
     const [ fileList, setFileList ] = useState<FileItem[]>([]);
@@ -66,7 +67,7 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
     }, [editData]);
 
     useEffect(() => {
-        if (resFileList && fileList.length === 0) {
+        if (resFileList) {
             const existingFiles: FileItem[] = resFileList.map((file) => ({
                 id: file.suportFileId,
                 name: file.fileOgNm,
@@ -120,8 +121,13 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
         formData.append("resTitle", resTitle);
         formData.append("resEditor", getEditorContent(oEditorsRes.current));
 
+        if(editData) {
+            formData.append("suportResId", suportResId.toString());
+        }
+
         // 첨부파일
-        fileList.filter((file): file is NewFileItem => file.isNew && !!file.file)
+        fileList
+            .filter((file): file is NewFileItem => file.isNew && !!file.file)
             .forEach((file) => {
                 if (file.file) {
                     formData.append("resFile", file.file);
@@ -145,22 +151,29 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
         }
     };
 
-    const handleDeleteResFile = async (suportFileId: number) => {
+    const handleDeleteResFile = (suportFileId: number) => {
         openCustomModal({
             title: "알림",
-            message: "저장된 파일을 삭제하시겠습니까?",
+            message: "파일을 삭제하시겠습니까?",
             isConfirm: true,
             onConfirm: async () => {
-                const res
-                    = await callAPI.post(`/api/suport/file/${suportFileId}`);
+                const endPoint = `/api/suport/fileDelete/${suportFileId}`;
+                const res = await callAPI.post(endPoint);
 
-                if(res.status === 200) {
-                    openCustomModal({ title: "알림", message: "파일이 삭제되었습니다.", isConfirm: false });
+                if (res.status === 200) {
+                    openCustomModal({
+                        title: "알림",
+                        message: "파일이 삭제되었습니다.",
+                        isConfirm: false,
+                    });
 
-                    // UI에서 삭제된 파일 제거
-                    setFileList((prev) => prev.filter((file) => file.id !== suportFileId));
+                    const updatedFileList = fileList.filter(
+                        (file) => file.id !== suportFileId
+                    );
+
+                    setFileList(updatedFileList);
                 }
-            }
+            },
         });
     };
 
@@ -173,6 +186,11 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                             <Row className="align-items-center">
                                 <Col xs="10">
                                     <h2 className="mb-0">{editData ? "처리 내역 수정" : "처리 내역 작성"}</h2>
+                                    <Input
+                                        type="hidden"
+                                        value={suportResId}
+                                        onChange={(e) => setSuportResId(parseInt(e.target.value, 10))}
+                                    />
                                 </Col>
                             </Row>
                         </CardHeader>
@@ -227,12 +245,8 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                                         <Col xl="12">
                                             <FileUpload
                                                 formType={editData ? "update" : "insert"}
-                                                initFiles={resFileList?.map((file) => ({
-                                                    id: file.suportFileId,
-                                                    name: file.fileOgNm,
-                                                    isNew: false
-                                                }))}
                                                 onFileChange={setFileList}
+                                                initFiles={fileList}
                                                 onDeleteFiles={handleDeleteResFile}
                                             />
                                         </Col>
