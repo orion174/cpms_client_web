@@ -15,18 +15,17 @@ import {
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import SuportTable from "./components/SuportTable.tsx";
-
-import { callAPI } from "@/utils/interceptor.ts";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { utf8ToBase64 } from "@/utils/common.ts";
 import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
+import { callAPI } from "@/auth/interceptor.ts";
 
-const Suport = () => {
+const SuportHome: React.FC = () => {
+
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -257,4 +256,4 @@ const Suport = () => {
   );
 };
 
-export default Suport;
+export default SuportHome;

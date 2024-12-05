@@ -1,9 +1,7 @@
 import { useState } from "react";
-// node.js library that concatenates classes (strings)
 import classnames from "classnames";
-// react plugin used to create charts
 import { Line, Bar } from "react-chartjs-2";
-// reactstrap components
+
 import {
   Button,
   Card,
@@ -19,9 +17,7 @@ import {
   Col,
 } from "reactstrap";
 
-// core components
-import { chartOptions, parseOptions, chartExample1, chartExample2 } from '@/variables/charts.jsx';
-
+import { chartOptions, parseOptions, chartExample1, chartExample2 } from '@/view/examples/charts.jsx';
 import Header from "@/view/layout/Headers/Header.jsx";
 
 const Index = (props) => {

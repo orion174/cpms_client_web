@@ -1,25 +1,3 @@
-/*!
-
-=========================================================
-* Argon Dashboard React - v1.2.4
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/argon-dashboard-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
-//
-// Chart extension for making the bars rounded
-// Code from: https://codepen.io/jedtrow/full/ygRYgo
-//
-
 import {
   Chart as ChartJS,
   BarElement,
@@ -43,13 +21,12 @@ ChartJS.register(
     Legend
 );
 
-// 전역 폰트와 색상 정의
-var mode = "light"; // 테마 모드 (light 또는 dark)
+var mode = "light";
+
 var fonts = {
   base: "Open Sans",
 };
 
-// Colors (전역 색상 정의)
 var colors = {
   gray: {
     100: "#f6f9fc",
@@ -64,7 +41,7 @@ var colors = {
   },
   theme: {
     default: "#172b4d",
-    primary: "#5e72e4", // 주요 테마 색상
+    primary: "#5e72e4",
     info: "#11cdef",
     success: "#2dce89",
     danger: "#f5365c",
@@ -75,11 +52,9 @@ var colors = {
   transparent: "transparent",
 };
 
-// Chart.js 전역 설정 업데이트
 ChartJS.defaults.font.family = fonts.base;
 ChartJS.defaults.color = colors.gray[600];
 
-// 차트 옵션 정의
 const chartOptions = {
   scales: {
     y: {
@@ -124,7 +99,6 @@ const chartOptions = {
   },
 };
 
-// 옵션 병합을 위한 parseOptions 함수 정의
 const parseOptions = (parent, options) => {
   for (let item in options) {
     if (typeof options[item] !== 'object') {
@@ -135,7 +109,6 @@ const parseOptions = (parent, options) => {
   }
 };
 
-// 차트 데이터 정의 (전역 색상 사용)
 const chartExample1 = {
   data1: {
     labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -175,5 +148,4 @@ const chartExample2 = {
   options: chartOptions, // 전역 옵션 사용
 };
 
-// 필요한 함수와 변수를 내보냅니다.
 export { chartOptions, parseOptions, chartExample1, chartExample2 };

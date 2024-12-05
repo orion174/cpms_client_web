@@ -1,6 +1,8 @@
+import { Button } from "reactstrap";
+
 import React, { useState, ChangeEvent, useEffect } from "react";
 
-import { Button } from "reactstrap";
+import { FileItem, NewFileItem } from "@/definition/type.ts";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";
@@ -9,7 +11,6 @@ import pdfIcon from "@/assets/img/icons/pdf_icon.png";
 import pngIcon from "@/assets/img/icons/png_icon.png";
 import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
-import { FileItem, NewFileItem } from "@/definition/type.ts";
 
 interface FileUploadProps {
     formType: string;
@@ -18,11 +19,14 @@ interface FileUploadProps {
     onDeleteFiles?: (fileId: number) => void; // 파일 삭제 API 콜백
 }
 
-// 허용할 파일 확장자 배열
-const ALLOWED_EXTENSIONS = ['xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'];
+
+const ALLOWED_EXTENSIONS = [
+    'xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'
+];
 
 // 파일 확장자에 따른 아이콘 반환 함수
 const getIconByExtension = (extension: string) => {
+
     switch (extension) {
         case "xlsx":
             return excelIcon;
@@ -52,6 +56,7 @@ const getIconByExtension = (extension: string) => {
 };
 
 const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFiles = [], onDeleteFiles }) => {
+
     // 파일 리스트를 관리하는 상태
     const [fileList, setFileList] = useState<FileItem[]>([]);
 

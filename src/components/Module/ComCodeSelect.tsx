@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ApiRes, ResComCodeDTO } from "@/definition/type.ts";
-import { callAPI } from "@/utils/interceptor.ts";
+import { callAPI } from "@/auth/interceptor.ts";
 
 interface ComCodeProps  {
     groupId: string; // 공통코드 그룹
@@ -12,6 +12,7 @@ interface ComCodeProps  {
 }
 
 const ComCodeSelect: React.FC<ComCodeProps> = ({ groupId, selectId, value, onChange, initText, classNm }) => {
+
     const [options, setOptions] = useState<ResComCodeDTO[]>([]);
 
     // 공통코드 조회 API 호출

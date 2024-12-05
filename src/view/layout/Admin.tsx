@@ -43,8 +43,9 @@ const Admin: React.FC<AdminProps> = ({ brandText, routes }) => {
             />
             <div className="main-content" ref={mainContent}>
                 <AdminNavbar brandText={brandText} />
-                {/* 하위 라우트 렌더링 */}
+
                 <Outlet />
+
                 <Container fluid>
                     <AdminFooter />
                 </Container>

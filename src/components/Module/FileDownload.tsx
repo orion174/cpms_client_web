@@ -48,6 +48,7 @@ const getIconByExtension = (extension: string): string => {
 };
 
 const FileDown = <T extends keyof FileList>({ fileList, idKey }: FileDownProps<T>) => {
+
     // 파일 다운로드
     const handleFileDownload = async (fileId: any, fileOgNm: string) => {
         if(fileId > 0) {

@@ -14,16 +14,14 @@ import {
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-
 import Header from "@/view/layout/Headers/Header.jsx";
 import useModalHook from "@/hook/useModal";
-
-import { callAPI } from "@/utils/interceptor";
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
-import {FileItem, NewFileItem} from "@/definition/type.ts";
+import { FileItem, NewFileItem } from "@/definition/type.ts";
+import { callAPI } from "@/auth/interceptor.ts";
 
 interface FormType {
   formType: "insert" | "update";

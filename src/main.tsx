@@ -1,10 +1,10 @@
 import ReactDOM from 'react-dom/client';
+
 import { Provider } from 'react-redux';
-import store from '@/store';
 import App from './App';
 import AlertModal from "@/components/Module/AlertModal";
+import store from '@/store';
 
-// root 요소 가져오기
 const container = document.getElementById('root');
 
 if (!container) {

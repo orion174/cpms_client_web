@@ -9,6 +9,7 @@ import {
     Input,
     Row
 } from "reactstrap";
+
 import React, { useEffect, useRef, useState } from "react";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import FileUpload from "@/components/Module/FileUpload.tsx";
@@ -17,7 +18,7 @@ import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import { useSearchParams } from "react-router-dom";
 import { base64ToUtf8 } from "@/utils/common.ts";
 import { suportRes, suportFileList, FileItem, NewFileItem } from "@/definition/type.ts";
-import { callAPI } from "@/utils/interceptor.ts";
+import { callAPI } from "@/auth/interceptor.ts";
 
 interface ResFormProps {
     statusCd?: number | null;

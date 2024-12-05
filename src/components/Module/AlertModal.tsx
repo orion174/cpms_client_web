@@ -1,11 +1,14 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+
 import React, { useEffect } from 'react';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/store';
 import { closeModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
 
 const AlertModal: React.FC = () => {
+
     const dispatch = useDispatch();
     const { currentModal } = useSelector((state: RootState) => state.modal);
 

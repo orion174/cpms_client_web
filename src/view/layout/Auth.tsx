@@ -47,10 +47,8 @@ const Auth: React.FC = () => {
               </svg>
             </div>
           </div>
-          {/* Page content */}
           <Container className="mt--8 pb-5">
             <Row className="justify-content-center">
-              {/* 하위 라우트 렌더링 */}
               <Outlet />
             </Row>
           </Container>

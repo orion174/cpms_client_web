@@ -12,6 +12,7 @@ interface ModalOptions {
 }
 
 const useModalHook = () => {
+
     const dispatch = useDispatch();
 
     const openCustomModal = ({ title, message, isConfirm = false, onConfirm, redirectUrl }: ModalOptions) => {

@@ -9,19 +9,33 @@ export const isBase64 = (str: string): boolean => {
     return base64Regex.test(str);
 };
 
-export const utf8ToBase64 = (str: string): string => {
-    return btoa(unescape(encodeURIComponent(str)));
-}
+export const utf8ToBase64 = (value: string | number): string => {
+    return btoa(
+        encodeURIComponent(value.toString())
+            .replace(/%([0-9A-F]{2})/g, (_, p1) => String.fromCharCode(parseInt(p1, 16)))
+    );
+};
 
-export const base64ToUtf8 = (str: string): string => {
-    return decodeURIComponent(escape(atob(str)));
-}
+export const base64ToUtf8 = (base64Value: string): string => {
+    return decodeURIComponent(
+        atob(base64Value)
+            .split('')
+            .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, '0')}`)
+            .join('')
+    );
+};
 
-/*
- * 공백 유효성
- * @param event
- * @param setError
- */
+export const base64ToInteger = (base64Value: string): number => {
+    const utf8String = base64ToUtf8(base64Value);
+    const parsedInt = parseInt(utf8String, 10);
+
+    if (isNaN(parsedInt)) {
+        throw new Error(`Invalid Base64 value: ${base64Value}`);
+    }
+
+    return parsedInt;
+};
+
 export const clearErrorOnInput = (
     event : React.ChangeEvent<HTMLInputElement>
     , setError : React.Dispatch<React.SetStateAction<boolean>>
@@ -31,11 +45,6 @@ export const clearErrorOnInput = (
     }
 }
 
-/*
- * 엔터 키 이벤트
- * @param event
- * @param func
- */
 export const handleInputKeyDown = async (
     event: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
     func: () => Promise<void>
@@ -45,10 +54,6 @@ export const handleInputKeyDown = async (
     }
 };
 
-/*
- * 네이버 스마트 에디터 데이터 유효성 검사
- * @param html
- */
 export const isValidHtmlContent = (html: string | undefined | null): boolean => {
     if (!html) return false;
 

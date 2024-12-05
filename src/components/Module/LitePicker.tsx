@@ -19,6 +19,7 @@ const LitePicker = forwardRef(({
   placeholder,
   onDateChange,
 }: LitePickerProps, ref) => {
+
   const pickerRef = useRef<HTMLInputElement | null>(null);
   const pickerInstanceRef = useRef<Litepicker | null>(null);
 
@@ -43,8 +44,8 @@ const LitePicker = forwardRef(({
         setup: (picker) => {
           picker.on("selected", (startDate, endDate) => {
             onDateChange(
-              startDate.format(format),
-              endDate ? endDate.format(format) : undefined
+                startDate.format(format),
+                endDate ? endDate.format(format) : undefined
             );
           });
         },
@@ -59,15 +60,15 @@ const LitePicker = forwardRef(({
   }, [singleMode, format, delimiter, onDateChange]);
 
   return (
-    <Input
-      id={inputId}
-      type="text"
-      className="my-litepicker"
-      placeholder={placeholder}
-      innerRef={pickerRef}
-      style={{ backgroundColor: "white" }}
-      readOnly
-    />
+      <Input
+          id={inputId}
+          type="text"
+          className="my-litepicker"
+          placeholder={placeholder}
+          innerRef={pickerRef}
+          style={{ backgroundColor: "white" }}
+          readOnly
+      />
   );
 });
 

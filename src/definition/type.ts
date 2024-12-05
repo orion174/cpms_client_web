@@ -7,33 +7,33 @@ export interface ApiRes<T> {
 
 // 로그인 응답 DTO
 export interface ResLoginDTO {
-    userId: number;
+    accessToken: string;
+    refreshToken: string;
+    accessTokenExpiration: number;
+    refreshTokenExpiration: number;
     authType: string;
+    loginHistoryId: number;
+    userId: number;
     companyId: number;
     loginId: string;
     loginPw: string;
     useYn: string;
-    loginHistoryId: number;
-    accessToken: string;
-    accessTokenExpiration: number;
-    refreshToken: string;
-    refreshTokenExpiration: number;
     option: string;
 }
 
-// JWT 토큰 DTO
+// 토큰 DTO
 export interface JwtDto {
     grantType?: string;
-    accessToken: string;
-    accessTokenExpiration?: number;
+    accessToken?: string;
     refreshToken?: string;
+    accessTokenExpiration?: number;
     refreshTokenExpiration?: number;
-    userId?: number;
     authType?: string;
+    loginHistoryId?: number;
+    userId?: number;
     companyId?: number;
     loginId?: string;
     loginPw?: string;
-    loginHistoryId?: number;
 }
 
 // 공통 코드 응답 DTO
@@ -115,4 +115,4 @@ export interface NewFileItem  {
     isNew: boolean;
 }
 
-export type FileItem = ExistingFileItem | NewFileItem; // Union Type
+export type FileItem = ExistingFileItem | NewFileItem;

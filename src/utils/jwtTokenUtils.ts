@@ -1,7 +1,8 @@
 import { saveCookie, deleteCookie } from '@/utils/cookieUtils';
+import { base64ToInteger } from "@/utils/common.ts";
+
 import axios from 'axios';
 
-// API URL
 const API_URL = import.meta.env.VITE_API_URL;
 
 /**
@@ -32,17 +33,17 @@ export const getAccessToken = async (cookies: Record<string, string | undefined>
  * @param refreshToken
  * @param loginHistoryId
  */
-export const refreshAccessToken = async (
-    refreshToken: string,
-    loginHistoryId: string
-): Promise<string | null> => {
-    try {
-        const jsonData = {
-            loginHistoryId : loginHistoryId
-        }
-        const url = API_URL + `/auth/refreshToken`;
+export const refreshAccessToken = async (refreshToken: string, loginHistoryId: string ): Promise<string | null> => {
 
-        const res
+    try {
+
+        const jsonData = {
+            loginHistoryId : base64ToInteger(loginHistoryId)
+        }
+
+        const url =  `${API_URL}/auth/refreshToken`;
+
+        const response
             = await axios.post(url, jsonData,
             {
                     headers: {
@@ -54,15 +55,14 @@ export const refreshAccessToken = async (
             );
 
         // 토큰 리프레쉬 성공
-        if(res.data.status && res.data.result) {
-            const accessToken = res.data.result.accessToken;
-            const accessTokenExpiration = res.data.result.accessTokenExpiration;
+        if(response.data.status && response.data.result) {
+            const accessToken = response.data.result.accessToken;
+            const accessTokenExpiration = response.data.result.accessTokenExpiration;
 
             // 쿠크에 다시 토큰 저장
             saveCookie({
                 accessToken: accessToken
                 , accessTokenExpiration: accessTokenExpiration
-                , option: "refresh"
             });
 
             return accessToken;
@@ -80,8 +80,8 @@ export const refreshAccessToken = async (
     }
 }
 
-// Access Token 갱신 실패 시 쿠키 삭제 및 로그인 페이지로 이동
-const tokenError = () => {
+/* Access Token 갱신 실패 시 쿠키 삭제 및 로그인 페이지로 이동 */
+export const tokenError = () => {
     deleteCookie();
     window.location.href = '/auth/login';
 };
