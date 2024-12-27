@@ -46,6 +46,7 @@ export interface ResComCodeDTO {
 export interface ResSuportListDTO {
     suportCnt: number;
     suportList: SuportList[];
+    authType: string;
 }
 
 // 프로젝트 유지보수 문의 리스트 인터페이스
@@ -65,6 +66,7 @@ export interface SuportList {
 
 // 프로젝트 유지보수 문의 상세 조회 인터페이스
 export interface ResSuportDetailDTO {
+    authType: string;
     suportReqId: number;
     reqCompanyNm: string;
     userCompanyNm: string;

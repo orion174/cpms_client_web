@@ -18,9 +18,9 @@ import Icons from "@/view/examples/Icons.jsx";
 const adminRoutes = [
     { path: "/dashboard", layout: "/admin", name: "Dashboard", icon: "ni ni-tv-2 text-primary" },
     { path: "/suport/index", layout: "/admin", name: "Suport", icon: "ni ni-bullet-list-67 text-red" },
-    { path: "/user-profile", layout: "/admin", name: "User Profile", icon: "ni ni-single-02 text-yellow" },
-    { path: "/maps", layout: "/admin", name: "Maps", icon: "ni ni-pin-3 text-orange" },
-    { path: "/icons", layout: "/admin", name: "Icons", icon: "ni ni-planet text-blue" },
+    { path: "/company", layout: "/admin", name: "Company", icon: "ni ni-building text-yellow" },
+    { path: "/user-profile", layout: "/admin", name: "User", icon: "ni ni-badge text-blue" },
+    { path: "/setting", layout: "/admin", name: "Settings", icon: "ni ni-settings-gear-65 text-orange" },
 ];
 
 const Router = () => {
@@ -36,7 +36,7 @@ const Router = () => {
                     <Route path="register" element={<Register />} />
                 </Route>
 
-                <Route path="/admin/*" element={<Admin brandText="CPMS" routes={adminRoutes} />}>
+                <Route path="/admin/*" element={<Admin routes={adminRoutes} />}>
                     <Route path="suport/index" element={<SuportHome />} />
                     <Route path="suport/form" element={<SuportForm />} />
                     <Route path="suport/detail" element={<SuportDetail />} />

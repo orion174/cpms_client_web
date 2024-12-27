@@ -5,7 +5,7 @@ import AdminNavbar from "@/view/layout/Navbars/AdminNavbar.tsx";
 import AdminFooter from "@/view/layout/Footers/AdminFooter.tsx";
 import Sidebar from "@/view/layout/Sidebar/Sidebar.tsx";
 
-import logoImage from '@/assets/img/brand/argon-react.png';
+import logoImage from '@/assets/img/brand/main_logo.png';
 
 interface Route {
     path: string;
@@ -15,12 +15,11 @@ interface Route {
 }
 
 interface AdminProps {
-    brandText: string;
     routes: Route[];
     [key: string]: unknown;
 }
 
-const Admin: React.FC<AdminProps> = ({ brandText, routes }) => {
+const Admin: React.FC<AdminProps> = ({ routes }) => {
     const mainContent = useRef<HTMLDivElement | null>(null);
     const location = useLocation();
 
@@ -36,13 +35,13 @@ const Admin: React.FC<AdminProps> = ({ brandText, routes }) => {
             <Sidebar
                 routes={routes}
                 logo={{
-                    innerLink: "/admin/index",
+                    innerLink: "/admin/suport/index",
                     imgSrc: logoImage,
                     imgAlt: "...",
                 }}
             />
             <div className="main-content" ref={mainContent}>
-                <AdminNavbar brandText={brandText} />
+                <AdminNavbar />
 
                 <Outlet />
 

@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 import {
   Collapse,
   DropdownMenu,
@@ -22,7 +20,11 @@ import {
   Col,
 } from "reactstrap";
 
+import React, { useState } from "react";
+import { NavLink as NavLinkRRD, Link } from "react-router-dom";
+
 import team1Image from "@/assets/img/theme/team-1-800x800.jpg";
+import useModalHook from "@/hook/useModal.ts";
 
 interface Route {
   path: string;
@@ -47,7 +49,10 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
   const [collapseOpen, setCollapseOpen] = useState(false);
 
   const activeRoute = (routeName: string) => {
-    return window.location.pathname.indexOf(routeName) > -1 ? "active" : "";
+    const currentPath = window.location.pathname;
+    const targetPath = routeName.split('/').slice(0, 3).join('/');
+
+    return currentPath.startsWith(targetPath) ? "active" : "";
   };
 
   const toggleCollapse = () => {
@@ -58,15 +63,34 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
     setCollapseOpen(false);
   };
 
+  const { openCustomModal } = useModalHook();
+
+  const handleTempAlert = () => {
+    openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
+    return;
+  };
+
+
   const createLinks = (routes: Route[]) => {
     return routes.map((prop, key) => {
+
+      const isSuportLink = prop.layout + prop.path === "/admin/suport/index";
+
       return (
           <NavItem key={key}>
             <NavLink
-                to={prop.layout + prop.path}
+                to={prop.layout + prop.path} // Suport만 링크 이동
                 tag={NavLinkRRD}
-                onClick={closeCollapse}
-                className={activeRoute(prop.path)}
+                onClick={(e) => {
+                  if (!isSuportLink) {
+                    e.preventDefault();
+                    handleTempAlert();
+
+                  } else {
+                    closeCollapse();
+                  }
+                }}
+                className={activeRoute(prop.layout + prop.path)}
             >
               <i className={prop.icon} />
               {prop.name}
@@ -77,6 +101,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
   };
 
   let navbarBrandProps;
+
   if (logo?.innerLink) {
     navbarBrandProps = {
       to: logo.innerLink,
@@ -91,17 +116,21 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
 
   return (
       <Navbar className="navbar-vertical fixed-left navbar-light bg-white" expand="md" id="sidenav-main">
+
         <Container fluid>
+
           {/* Toggler */}
           <button className="navbar-toggler" type="button" onClick={toggleCollapse}>
             <span className="navbar-toggler-icon" />
           </button>
+
           {/* Brand */}
           {logo ? (
               <NavbarBrand className="pt-0" {...navbarBrandProps}>
                 <img alt={logo.imgAlt} className="navbar-brand-img" src={logo.imgSrc} />
               </NavbarBrand>
           ) : null}
+
           {/* User */}
           <Nav className="align-items-center d-md-none">
             <UncontrolledDropdown nav>
@@ -151,8 +180,10 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
+
           {/* Collapse */}
           <Collapse navbar isOpen={collapseOpen}>
+
             {/* Collapse header */}
             <div className="navbar-collapse-header d-md-none">
               <Row>
@@ -177,6 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
                 </Col>
               </Row>
             </div>
+
             {/* Form */}
             <Form className="mt-4 mb-3 d-md-none">
               <InputGroup className="input-group-rounded input-group-merge">
@@ -188,43 +220,47 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
                 </InputGroupAddon>
               </InputGroup>
             </Form>
+
             {/* Navigation */}
             <Nav navbar>{createLinks(routes)}</Nav>
+
             {/* Divider */}
-            <hr className="my-3" />
+            {/*<hr className="my-3" />*/}
             {/* Heading */}
-            <h6 className="navbar-heading text-muted">Documentation</h6>
+            {/*<h6 className="navbar-heading text-muted">Documentation</h6>*/}
             {/* Navigation */}
-            <Nav className="mb-md-3" navbar>
-              <NavItem>
-                <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">
-                  <i className="ni ni-spaceship" />
-                  Getting started
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">
-                  <i className="ni ni-palette" />
-                  Foundation
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">
-                  <i className="ni ni-ui-04" />
-                  Components
-                </NavLink>
-              </NavItem>
-            </Nav>
-            <Nav className="mb-md-3" navbar>
-              <NavItem className="active-pro active">
-                <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">
-                  <i className="ni ni-spaceship" />
-                  Upgrade to PRO
-                </NavLink>
-              </NavItem>
-            </Nav>
+            {/*<Nav className="mb-md-3" navbar>*/}
+            {/*  <NavItem>*/}
+            {/*    <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/overview?ref=adr-admin-sidebar">*/}
+            {/*      <i className="ni ni-spaceship" />*/}
+            {/*      Getting started*/}
+            {/*    </NavLink>*/}
+            {/*  </NavItem>*/}
+            {/*  <NavItem>*/}
+            {/*    <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/colors?ref=adr-admin-sidebar">*/}
+            {/*      <i className="ni ni-palette" />*/}
+            {/*      Foundation*/}
+            {/*    </NavLink>*/}
+            {/*  </NavItem>*/}
+            {/*  <NavItem>*/}
+            {/*    <NavLink href="https://demos.creative-tim.com/argon-dashboard-react/#/documentation/alerts?ref=adr-admin-sidebar">*/}
+            {/*      <i className="ni ni-ui-04" />*/}
+            {/*      Components*/}
+            {/*    </NavLink>*/}
+            {/*  </NavItem>*/}
+            {/*</Nav>*/}
+            {/*<Nav className="mb-md-3" navbar>*/}
+            {/*  <NavItem className="active-pro active">*/}
+            {/*    <NavLink href="https://www.creative-tim.com/product/argon-dashboard-pro-react?ref=adr-admin-sidebar">*/}
+            {/*      <i className="ni ni-spaceship" />*/}
+            {/*      Upgrade to PRO*/}
+            {/*    </NavLink>*/}
+            {/*  </NavItem>*/}
+            {/*</Nav>*/}
           </Collapse>
+
         </Container>
+
       </Navbar>
   );
 };

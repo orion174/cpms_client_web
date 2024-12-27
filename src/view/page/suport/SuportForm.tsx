@@ -37,8 +37,8 @@ const SuportForm: React.FC = () => {
 
   // 저장할 데이터
   const [formData, setFormData] = useState({
-    reqCompanyId: "",
-    reqProjectId: "",
+    reqCompanyId: 1,
+    reqProjectId: 0,
     requestCd: 0,
     statusCd: 3,
     suportTitle: "",
@@ -78,10 +78,11 @@ const SuportForm: React.FC = () => {
   const handleSave = () => {
       let message = "";
 
-      if (!formData.reqCompanyId) {
-          message = "업체를 선택하세요.";
-
-      } else if (!formData.reqProjectId) {
+      // if (!formData.reqCompanyId) {
+      //     message = "업체를 선택하세요.";
+      //
+      // }
+      if (!formData.reqProjectId) {
           message = "프로젝트를 선택하세요.";
 
       } else if (!formData.requestCd) {
@@ -99,7 +100,6 @@ const SuportForm: React.FC = () => {
 
       if (message) {
           openCustomModal({ title: "알림", message, isConfirm: false });
-
           return;
 
       } else {
@@ -187,20 +187,23 @@ const SuportForm: React.FC = () => {
                         <Col lg="4">
                           <FormGroup>
                             <label className="form-control-label">업체 선택</label>
+                            {/* TODO 업체 리스트 선택 컴포넌트 구현 */}
                             <Input
                                 type="select"
                                 className="my-input-text"
                                 value={formData.reqCompanyId}
-                                onChange={(e) => handleInputChange("reqCompanyId", e.target.value)}
+                                onChange={(e) =>
+                                    handleInputChange("reqCompanyId", e.target.value)
+                                }
                             >
-                              <option value="">선택</option>
-                              <option value="1">CODEIDEA</option>
+                              <option value="1">CodeIdea</option>
                             </Input>
                           </FormGroup>
                         </Col>
                         <Col lg="4">
                           <FormGroup>
                             <label className="form-control-label">프로젝트 선택</label>
+                            {/* TODO 프로젝트 리스트 선택 컴포넌트 구현 */}
                             <Input
                                 type="select"
                                 className="my-input-text"
@@ -208,9 +211,11 @@ const SuportForm: React.FC = () => {
                                 onChange={(e) => handleInputChange("reqProjectId", e.target.value)}
                             >
                               <option value="">선택</option>
-                              <option value="1">강남구청 행정포털</option>
-                              <option value="2">중랑구청 행정포털</option>
-                              <option value="2">중랑구청 게시판</option>
+                              <option value="1">헤리티지</option>
+                              <option value="2">마켓헤머 Web</option>
+                              <option value="3">마켓헤머 App</option>
+                              <option value="4">마켓헤머 리뉴얼</option>
+                              <option value="5">헤머넷</option>
                             </Input>
                           </FormGroup>
                         </Col>
@@ -299,7 +304,11 @@ const SuportForm: React.FC = () => {
                   </div>
 
                   <div className="section-space">
-                    <FileUpload formType={formType} onFileChange={setFileList} />
+                    <FileUpload
+                        formType={formType}
+                        onFileChange={setFileList}
+                        initFiles={fileList}
+                    />
                   </div>
 
                 </Form>

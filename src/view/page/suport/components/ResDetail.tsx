@@ -16,15 +16,17 @@ import { isValidHtmlContent } from "@/utils/common.ts";
 
 interface ResDetailProps {
     suportRes: suportRes;
+    authType: authType;
     resFileList: suportFileList[];
     onResDelete: () => void;
     onResUpdate: () => void;
 }
 
-const ResDetail: React.FC<ResDetailProps> = ({ suportRes, resFileList, onResDelete, onResUpdate }) => {
+const ResDetail: React.FC<ResDetailProps> = ({ suportRes, authType, resFileList, onResDelete, onResUpdate }) => {
     const hasValidTitle = suportRes.resTitle && suportRes.resTitle.trim() !== "";
     const hasValidEditor = isValidHtmlContent(suportRes.resEditor);
     const hasFiles = resFileList && resFileList.length > 0;
+    console.log(authType)
 
     return (
         <div className="res-form-container">
@@ -78,10 +80,13 @@ const ResDetail: React.FC<ResDetailProps> = ({ suportRes, resFileList, onResDele
                                                 </FormGroup>
                                             </Col>
                                         )}
-                                        <Col className="text-right" xs="12">
-                                            <Button onClick={onResDelete} color="danger" outline>답변삭제</Button>
-                                            <Button onClick={onResUpdate} color="info" outline>답변수정</Button>
-                                        </Col>
+
+                                        {authType !== "USER" && (
+                                            <Col className="text-right" xs="12">
+                                                <Button onClick={onResDelete} color="danger" outline>답변삭제</Button>
+                                                <Button onClick={onResUpdate} color="info" outline>답변수정</Button>
+                                            </Col>
+                                        )}
                                     </Row>
                                 </div>
 

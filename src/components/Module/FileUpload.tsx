@@ -19,7 +19,6 @@ interface FileUploadProps {
     onDeleteFiles?: (fileId: number) => void; // 파일 삭제 API 콜백
 }
 
-
 const ALLOWED_EXTENSIONS = [
     'xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'
 ];
@@ -56,7 +55,6 @@ const getIconByExtension = (extension: string) => {
 };
 
 const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFiles = [], onDeleteFiles }) => {
-
     // 파일 리스트를 관리하는 상태
     const [fileList, setFileList] = useState<FileItem[]>([]);
 
@@ -86,7 +84,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
                     isNew: true,
                 })
             );
-
 
         const totalFiles = [...fileList, ...newFiles];
 

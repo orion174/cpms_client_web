@@ -81,6 +81,13 @@
     flex-grow: 0.2;
 }
 
+.input-group-dynamic-2date {
+    display: flex;
+    align-items: center;
+    flex-grow: 0.1; /* 가로폭을 더 줄임 */
+    max-width: 300px; /* 최대 가로폭 설정 */
+}
+
 .text-editor__wrapper {
     width: 100% !important; /* 가로 너비를 유지 */
     height: auto; /* 높이를 내용에 따라 유동적으로 변경 */
@@ -148,6 +155,12 @@
 
 .form-control-label-custom {
     color: #525f7f;
+    font-size: 1.0rem;
+    font-weight: 600;
+}
+
+.form-control-today {
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
     font-size: 1.0rem;
     font-weight: 600;
 }

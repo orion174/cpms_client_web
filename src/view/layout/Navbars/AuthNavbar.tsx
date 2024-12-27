@@ -7,9 +7,11 @@ import {
   Container,
   Row,
   Col,
+  NavItem,
+  NavLink
 } from "reactstrap";
 
-import argonReactWhite from "@/assets/img/brand/argon-react-white.png";
+// import argonReactWhite from "@/assets/img/brand/argon-react-white.png";
 import argonReact from "@/assets/img/brand/argon-react.png";
 
 const AuthNavbar = () => {
@@ -18,7 +20,7 @@ const AuthNavbar = () => {
         <Navbar className="navbar-top navbar-horizontal navbar-dark" expand="md">
           <Container className="px-4">
             <NavbarBrand to="/" tag={Link}>
-              <img src={argonReactWhite} />
+              {/*<img src={argonReactWhite}/>*/}
             </NavbarBrand>
             <button className="navbar-toggler" id="navbar-collapse-main">
               <span className="navbar-toggler-icon" />
@@ -41,35 +43,13 @@ const AuthNavbar = () => {
               </div>
               <Nav className="ml-auto" navbar>
                 {/*<NavItem>*/}
-                {/*  <NavLink className="nav-link-icon" to="/admin/index" tag={Link}>*/}
-                {/*    <i className="ni ni-planet" />*/}
-                {/*    <span className="nav-link-inner--text">Dashboard</span>*/}
-                {/*  </NavLink>*/}
-                {/*</NavItem>*/}
-                {/*<NavItem>*/}
                 {/*  <NavLink*/}
                 {/*      className="nav-link-icon"*/}
                 {/*      to="/test"*/}
                 {/*      tag={Link}*/}
                 {/*  >*/}
-                {/*    <i className="ni ni-single-02" />*/}
-                {/*    <span className="nav-link-inner--text">회원가입</span>*/}
-                {/*  </NavLink>*/}
-                {/*</NavItem>*/}
-                {/*<NavItem>*/}
-                {/*  <NavLink className="nav-link-icon" to="/login" tag={Link}>*/}
-                {/*    <i className="ni ni-key-25" />*/}
-                {/*    <span className="nav-link-inner--text">Login</span>*/}
-                {/*  </NavLink>*/}
-                {/*</NavItem>*/}
-                {/*<NavItem>*/}
-                {/*  <NavLink*/}
-                {/*      className="nav-link-icon"*/}
-                {/*      to="/admin/user-profile"*/}
-                {/*      tag={Link}*/}
-                {/*  >*/}
-                {/*    <i className="ni ni-single-02" />*/}
-                {/*    <span className="nav-link-inner--text">Profile</span>*/}
+                {/*    <i className="ni ni-align-left-2" />*/}
+                {/*    <span className="nav-link-inner--text">사용문의</span>*/}
                 {/*  </NavLink>*/}
                 {/*</NavItem>*/}
               </Nav>

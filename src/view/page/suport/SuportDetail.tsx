@@ -24,21 +24,24 @@ import { callAPI } from "@/auth/interceptor.ts";
 const SuportDetail: React.FC = () => {
     const navigate = useNavigate();
 
-    const {openCustomModal} = useModalHook();
-    const [showResForm, setShowResForm] = useState(false);
+    const { openCustomModal } = useModalHook();
+    const [ showResForm, setShowResForm ] = useState(false);
 
-    const [editMode, setEditMode] = useState(false);
-    const [statusCd, setStatusCd] = useState<number | null>(null);
-    const [editData, setEditData] = useState<suportRes | null>(null);
+    const [ editMode, setEditMode ] = useState(false);
+    const [ statusCd, setStatusCd ] = useState<number | null>(null);
+    const [ editData, setEditData ] = useState<suportRes | null>(null);
 
-    const [searchParams] = useSearchParams();
+    const [ searchParams ] = useSearchParams();
     const encodedId = searchParams.get("suport_page");
 
     // 프로젝트 문의 상세 데이터
-    const [result, setResult] = useState<ResSuportDetailDTO | null>(null);
+    const [ result, setResult ] = useState<ResSuportDetailDTO | null>(null);
     // 문의, 처리 첨부파일 구분
-    const [reqFileList, setReqFileList] = useState<suportFileList[]>([]);
-    const [resFileList, setResFileList] = useState<suportFileList[]>([]);
+    const [ reqFileList, setReqFileList ] = useState<suportFileList[]>([]);
+    const [ resFileList, setResFileList ] = useState<suportFileList[]>([]);
+    const [ authType, setAuthType ] = useState<string>("");
+
+    const hasFiles = reqFileList && reqFileList.length > 0;
 
     // suport_page가 바뀔 때 마다 데이터 바인딩
     useEffect(() => {
@@ -74,6 +77,7 @@ const SuportDetail: React.FC = () => {
 
             if (res?.data?.result) {
                 setResult(res.data.result);
+                setAuthType(res.data.result.authType);
 
                 // 첨부파일
                 const fileList = res.data.result.fileList || [];
@@ -81,9 +85,9 @@ const SuportDetail: React.FC = () => {
                 const reqFileList: SetStateAction<suportFileList[]> = [];
                 const resFileList: SetStateAction<suportFileList[]> = [];
 
-                if(fileList.length > 0) {
+                if (fileList.length > 0) {
                     fileList.forEach(item => {
-                        if(item.fileType === 'REQ') {
+                        if (item.fileType === 'REQ') {
                             reqFileList.push(item);
 
                         } else if(item.fileType === 'RES') {
@@ -233,7 +237,7 @@ const SuportDetail: React.FC = () => {
                                       </Col>
                                   </Row>
                               </div>
-                              <div className="pl-lg-4 section-space">
+                              <div className="pl-lg-4">
                                   <Row>
                                       <Col lg="12">
                                           <FormGroup>
@@ -242,14 +246,20 @@ const SuportDetail: React.FC = () => {
                                           </FormGroup>
                                       </Col>
                                   </Row>
-                                  <Row>
-                                      <Col lg="12">
-                                          <label className="form-control-label-custom">첨부 파일</label>
-                                          <FileDown fileList={reqFileList} idKey="suportFileId"/>
-                                      </Col>
-                                  </Row>
                               </div>
-                              <div className="pl-lg-4 section-space">
+                              {hasFiles && (
+                                  <div className="pl-lg-4">
+                                      <Row>
+                                          <Col lg="12">
+                                              <FormGroup>
+                                                  <label className="form-control-label-custom">첨부 파일</label>
+                                                  <FileDown fileList={reqFileList} idKey="suportFileId"/>
+                                              </FormGroup>
+                                          </Col>
+                                      </Row>
+                                  </div>
+                              )}
+                              <div className="pl-lg-4">
                                   <Row>
                                       <Col lg="12">
                                           <FormGroup>
@@ -266,23 +276,21 @@ const SuportDetail: React.FC = () => {
                                   </Row>
                               </div>
 
-                              {!showResForm &&
-                                  !(hasSuportRes(result)) && (
-                                      <div className="button-right" onClick={handleShowResForm}>
-                                          <Button color="success">답변하기</Button>
-                                      </div>
-                                  )
-                              }
-
+                              {authType !== "USER" && !showResForm && !hasSuportRes(result) && (
+                                  <div className="button-right" onClick={handleShowResForm}>
+                                      <Button color="success">답변하기</Button>
+                                  </div>
+                              )}
                           </Form>
                       </CardBody>
                     </Card>
-                  </Col>
+                    </Col>
                 </Row>
 
                 {!editMode && hasSuportRes(result) && (
                     <ResDetail
                         suportRes={result.suportRes}
+                        authType={authType}
                         resFileList={resFileList}
                         onResDelete={handleResDelete}
                         onResUpdate={handleResUpdate}

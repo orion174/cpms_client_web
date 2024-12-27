@@ -15,27 +15,29 @@ import {
 
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useModalHook from "@/hook/useModal.ts";
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import SuportTable from "./components/SuportTable.tsx";
 import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
-import { utf8ToBase64 } from "@/utils/common.ts";
+import { utf8ToBase64, base64ToUtf8 } from "@/utils/common.ts";
 import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
 import { callAPI } from "@/auth/interceptor.ts";
 
 const SuportHome: React.FC = () => {
-
   const navigate = useNavigate();
+  const { openCustomModal } = useModalHook();
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [data, setData] = useState<SuportList[]>([]);
-  const [totalCnt, setTotalCnt] = useState<number>(0);
+  const [ currentPage, setCurrentPage ] = useState<number>(1);
+  const [ data, setData ] = useState<SuportList[]>([]);
+  const [ totalCnt, setTotalCnt ] = useState<number>(0);
+  const [ authType, setAuthType ] = useState<string>("");
 
   // 검색 데이터
   const [searchParams, setSearchParams] = useState({
-    schCompanyId: 0,
-    schRequestCd:0,
+    schCompanyId: "",
+    schRequestCd: 0,
     schStatusCd: 0,
     schStartDt: "",
     schEndDt: "",
@@ -63,6 +65,7 @@ const SuportHome: React.FC = () => {
 
     setTotalCnt(res.data.result.suportCnt);
     setData(res.data.result.suportList);
+    setAuthType(res.data.result.authType);
 
   }, [searchParams, currentPage]);
 
@@ -73,7 +76,7 @@ const SuportHome: React.FC = () => {
   // 검색 초기화
   const handleClear = () => {
     setSearchParams({
-      schCompanyId: 0,
+      schCompanyId: "",
       schRequestCd: 0,
       schStatusCd: 0,
       schStartDt: "",
@@ -82,6 +85,7 @@ const SuportHome: React.FC = () => {
     });
 
     const pickerInput = document.getElementById("schDate") as HTMLInputElement;
+
     if (pickerInput) {
       pickerInput.value = ""; // 입력 필드 초기화
     }
@@ -114,9 +118,16 @@ const SuportHome: React.FC = () => {
       [navigate]
   );
 
+  // 엑셀 다운로드
+  const handleExcelDown = () => {
+      openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
+      return;
+  };
+
   return (
       <>
-        <TempHeader />
+        <TempHeader/>
+
         <Container className="mt--7" fluid>
           <Row>
             <div className="col">
@@ -130,20 +141,23 @@ const SuportHome: React.FC = () => {
                           style={{ gap: "0.5rem" }}
                       >
                         <InputGroup>
-                          <Input
-                              id="schCompanyId"
-                              type="select"
-                              className="my-input-text form-control"
-                              value={searchParams.schCompanyId}
-                              onChange={(e) =>
-                                  updateSearchParams("schCompanyId", e.target.value)
-                              }
-                          >
-                            <option value="">업체 선택</option>
-                            <option value="1">CODEIDEA</option>
-                            <option value="2">강남구청</option>
-                            <option value="3">중랑구청</option>
-                          </Input>
+                          {/* TODO 업체 리스트 선택 컴포넌트 구현 */}
+                          {authType !== "USER" && (
+                            <Input
+                                id="schCompanyId"
+                                type="select"
+                                className="my-input-text form-control"
+                                value={searchParams.schCompanyId}
+                                onChange={(e) =>
+                                    updateSearchParams("schCompanyId", e.target.value)
+                                }
+                            >
+                              <option value="">업체 선택</option>
+                              <option value="1">CodeIdea</option>
+                              <option value="2">Heritage</option>
+                              <option value="3">마켓헤머</option>
+                            </Input>
+                          )}
                         </InputGroup>
                         <InputGroup>
                           <ComCodeSelect
@@ -154,7 +168,7 @@ const SuportHome: React.FC = () => {
                                   updateSearchParams("schRequestCd", e.target.value)
                               }
                               classNm="my-input-text form-control"
-                              initText="요청유형 선택"
+                              initText="요청 선택"
                           />
                         </InputGroup>
                         <InputGroup>
@@ -169,7 +183,7 @@ const SuportHome: React.FC = () => {
                               initText="처리상태 선택"
                           />
                         </InputGroup>
-                        <InputGroup className="input-group-dynamic">
+                        <InputGroup className="input-group-dynamic-2date">
                           <LitePicker
                               inputId="schDate"
                               singleMode={false}
@@ -205,7 +219,7 @@ const SuportHome: React.FC = () => {
                       </Form>
                     </Col>
                     <Col md="2" className="d-flex justify-content-end align-items-center">
-                      <Button type="button" color="success">
+                      <Button type="button" onClick={handleExcelDown} color="success">
                         엑셀다운
                       </Button>
                       <Button
@@ -216,7 +230,7 @@ const SuportHome: React.FC = () => {
                                 state: { formType: "insert" },
                               })
                           }
-                      >등록
+                      >신규등록
                       </Button>
                     </Col>
                   </Row>

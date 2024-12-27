@@ -1,5 +1,6 @@
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 
+// TODO 간략통계 UI 구현
 const Header = () => {
     return (
         <>
@@ -17,10 +18,10 @@ const Header = () => {
                                           tag="h5"
                                           className="text-uppercase text-muted mb-0"
                                         >
-                                          Traffic
+                                          신규 등록
                                         </CardTitle>
                                         <span className="h2 font-weight-bold mb-0">
-                                          350,897
+                                          897
                                         </span>
                                       </div>
                                       <Col className="col-auto">
@@ -31,9 +32,9 @@ const Header = () => {
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-success mr-2">
-                                        <i className="fa fa-arrow-up" /> 3.48%
+                                        <i className="fa fa-arrow-up" /> 136 건
                                       </span>{" "}
-                                      <span className="text-nowrap">Since last month</span>
+                                      <span className="text-nowrap">어제 보다</span>
                                     </p>
                                   </CardBody>
                                 </Card>
@@ -47,21 +48,21 @@ const Header = () => {
                                           tag="h5"
                                           className="text-uppercase text-muted mb-0"
                                         >
-                                          New users
+                                          신규 접수
                                         </CardTitle>
-                                        <span className="h2 font-weight-bold mb-0">2,356</span>
+                                        <span className="h2 font-weight-bold mb-0">1056</span>
                                       </div>
                                       <Col className="col-auto">
                                         <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
-                                          <i className="fas fa-chart-pie" />
+                                          <i className="ni ni-chat-round" />
                                         </div>
                                       </Col>
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-danger mr-2">
-                                        <i className="fas fa-arrow-down" /> 3.48%
+                                        <i className="fas fa-arrow-down" /> 34 건
                                       </span>{" "}
-                                      <span className="text-nowrap">Since last week</span>
+                                      <span className="text-nowrap">어제 보다</span>
                                     </p>
                                   </CardBody>
                                 </Card>
@@ -75,21 +76,21 @@ const Header = () => {
                                           tag="h5"
                                           className="text-uppercase text-muted mb-0"
                                         >
-                                          Sales
+                                          처리 완료
                                         </CardTitle>
                                         <span className="h2 font-weight-bold mb-0">924</span>
                                       </div>
                                       <Col className="col-auto">
-                                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                                          <i className="fas fa-users" />
+                                        <div className="icon icon-shape bg-green text-white rounded-circle shadow">
+                                          <i className="ni ni-check-bold" />
                                         </div>
                                       </Col>
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-warning mr-2">
-                                        <i className="fas fa-arrow-down" /> 1.10%
+                                        <i className="fas fa-arrow-down" /> 11 건
                                       </span>{" "}
-                                      <span className="text-nowrap">Since yesterday</span>
+                                      <span className="text-nowrap">어제 보다</span>
                                     </p>
                                   </CardBody>
                                 </Card>
@@ -103,13 +104,13 @@ const Header = () => {
                                           tag="h5"
                                           className="text-uppercase text-muted mb-0"
                                         >
-                                          Performance
+                                          전체 처리율
                                         </CardTitle>
-                                        <span className="h2 font-weight-bold mb-0">49,65%</span>
+                                        <span className="h2 font-weight-bold mb-0">59,6%</span>
                                       </div>
                                       <Col className="col-auto">
                                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                                          <i className="fas fa-percent" />
+                                          <i className="ni ni-settings" />
                                         </div>
                                       </Col>
                                     </Row>
@@ -117,7 +118,7 @@ const Header = () => {
                                       <span className="text-success mr-2">
                                         <i className="fas fa-arrow-up" /> 12%
                                       </span>{" "}
-                                      <span className="text-nowrap">Since last month</span>
+                                      <span className="text-nowrap">어제 보다</span>
                                     </p>
                                   </CardBody>
                                 </Card>
