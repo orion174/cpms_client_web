@@ -22,6 +22,7 @@ import LitePicker from "@/components/Module/LitePicker.tsx";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import { FileItem, NewFileItem } from "@/definition/type.ts";
 import { callAPI } from "@/auth/interceptor.ts";
+import CpmsProjectSelect from "@/components/Module/CpmsProjectSelect.tsx";
 
 interface FormType {
   formType: "insert" | "update";
@@ -186,7 +187,7 @@ const SuportForm: React.FC = () => {
                       <Row>
                         <Col lg="4">
                           <FormGroup>
-                            <label className="form-control-label">업체 선택</label>
+                            <label className="form-control-label">요청 업체</label>
                             {/* TODO 업체 리스트 선택 컴포넌트 구현 */}
                             <Input
                                 type="select"
@@ -196,27 +197,20 @@ const SuportForm: React.FC = () => {
                                     handleInputChange("reqCompanyId", e.target.value)
                                 }
                             >
-                              <option value="1">CodeIdea</option>
+                              <option value="1">CODEIDEA</option>
                             </Input>
                           </FormGroup>
                         </Col>
                         <Col lg="4">
                           <FormGroup>
-                            <label className="form-control-label">프로젝트 선택</label>
-                            {/* TODO 프로젝트 리스트 선택 컴포넌트 구현 */}
-                            <Input
-                                type="select"
-                                className="my-input-text"
+                            <label className="form-control-label">문의 프로젝트</label>
+                            <CpmsProjectSelect
+                                selectId="reqProjectId"
                                 value={formData.reqProjectId}
                                 onChange={(e) => handleInputChange("reqProjectId", e.target.value)}
-                            >
-                              <option value="">선택</option>
-                              <option value="1">헤리티지</option>
-                              <option value="2">마켓헤머 Web</option>
-                              <option value="3">마켓헤머 App</option>
-                              <option value="4">마켓헤머 리뉴얼</option>
-                              <option value="5">헤머넷</option>
-                            </Input>
+                                classNm="my-input-text form-control"
+                                initText="프로젝트 선택"
+                            />
                           </FormGroup>
                         </Col>
                         <Col lg="4">

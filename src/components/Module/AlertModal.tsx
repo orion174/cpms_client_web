@@ -8,7 +8,6 @@ import { closeModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
 
 const AlertModal: React.FC = () => {
-
     const dispatch = useDispatch();
     const { currentModal } = useSelector((state: RootState) => state.modal);
 

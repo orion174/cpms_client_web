@@ -23,7 +23,7 @@ const AuthFooter = () => {
                   className="font-weight-bold ml-1"
                   href="https://github.com/orion174"
                   target="_blank"
-                >ParkBumJin
+                >React, JPA Project
                 </a>
               </div>
             </Col>

@@ -12,7 +12,6 @@ interface ComCodeProps  {
 }
 
 const ComCodeSelect: React.FC<ComCodeProps> = ({ groupId, selectId, value, onChange, initText, classNm }) => {
-
     const [options, setOptions] = useState<ResComCodeDTO[]>([]);
 
     // 공통코드 조회 API 호출
@@ -30,7 +29,7 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ groupId, selectId, value, onCha
     };
 
     useEffect(() => {
-        const fetchOptions = async() => {
+        const fetchOptions = async () => {
             try {
                 const res
                     = await fetchComCodeList(groupId);
@@ -52,11 +51,11 @@ const ComCodeSelect: React.FC<ComCodeProps> = ({ groupId, selectId, value, onCha
             className={classNm}
         >
             <option value="0">{initText}</option>
-            {options.map((option) => (
-                <option key={option.codeId} value={option.codeId}>
-                    {option.codeNm}
-                </option>
-            ))}
+                {options.map((option) => (
+                    <option key={option.codeId} value={option.codeId}>
+                        {option.codeNm}
+                    </option>
+                ))}
         </select>
     );
 };

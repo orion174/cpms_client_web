@@ -11,5 +11,6 @@ declare module "@/utils/smartEditor.js" {
     ): Promise<void>;
 
     export function setEditorContent(content: string, oEditors: Editor[]): void;
+
     export function getEditorContent(oEditors: Editor[]): string;
 }
