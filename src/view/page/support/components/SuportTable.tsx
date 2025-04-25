@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table, Badge } from 'reactstrap';
-import { SuportList } from "@/definition/type.ts";
+import { SuportList } from "@/definition/commonType.ts";
 
 interface TableProps {
     data: SuportList[];

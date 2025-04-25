@@ -2,7 +2,7 @@ import { Button } from "reactstrap";
 
 import React, { useState, ChangeEvent, useEffect } from "react";
 
-import { FileItem, NewFileItem } from "@/definition/type.ts";
+import { FileItem, NewFileItem } from "@/definition/commonType.ts";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";

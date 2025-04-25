@@ -18,12 +18,12 @@ import { useNavigate } from "react-router-dom";
 import useModalHook from "@/hook/useModal.ts";
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import SuportTable from "./components/SuportTable.tsx";
-import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
+import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { utf8ToBase64, base64ToUtf8 } from "@/utils/common.ts";
-import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/type.ts";
-import { callAPI } from "@/auth/interceptor.ts";
+import { ApiRes, ResSuportListDTO, SuportList } from "@/definition/commonType.ts";
+import { callAPI } from "@/server/interceptor.ts";
 
 const SuportHome: React.FC = () => {
   const navigate = useNavigate();
@@ -160,7 +160,7 @@ const SuportHome: React.FC = () => {
                           )}
                         </InputGroup>
                         <InputGroup>
-                          <ComCodeSelect
+                          <CommonCodeSelect
                               groupId="10"
                               selectId="schRequestCd"
                               value={searchParams.schRequestCd}
@@ -172,7 +172,7 @@ const SuportHome: React.FC = () => {
                           />
                         </InputGroup>
                         <InputGroup>
-                          <ComCodeSelect
+                          <CommonCodeSelect
                               groupId="20"
                               selectId="schStatusCd"
                               value={searchParams.schStatusCd}

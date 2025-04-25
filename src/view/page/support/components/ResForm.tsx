@@ -14,11 +14,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import useModalHook from "@/hook/useModal.ts";
-import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
+import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
 import { useSearchParams } from "react-router-dom";
 import { base64ToUtf8 } from "@/utils/common.ts";
-import { suportRes, suportFileList, FileItem, NewFileItem } from "@/definition/type.ts";
-import { callAPI } from "@/auth/interceptor.ts";
+import { suportRes, suportFileList, FileItem, NewFileItem } from "@/definition/commonType.ts";
+import { callAPI } from "@/server/interceptor.ts";
 
 interface ResFormProps {
     statusCd?: number | null;
@@ -211,7 +211,7 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                                             </FormGroup>
                                         </Col>
                                         <Col xs="2">
-                                            <ComCodeSelect
+                                            <CommonCodeSelect
                                                 groupId="20"
                                                 selectId="resStatusCd"
                                                 value={resStatusCd}

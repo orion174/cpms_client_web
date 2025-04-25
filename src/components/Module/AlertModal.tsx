@@ -1,8 +1,7 @@
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-
 import React, { useEffect } from 'react';
-
 import { useSelector, useDispatch } from 'react-redux';
+
 import { RootState } from '@/store';
 import { closeModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
@@ -14,6 +13,7 @@ const AlertModal: React.FC = () => {
     useEffect(() => {
         if (currentModal?.isOpen) {
             document.body.style.removeProperty('padding-right'); // 패딩 제거
+
         } else {
             // 모달이 닫힐 때 스크롤 활성화
             document.body.style.overflow = 'auto';

@@ -16,10 +16,10 @@ import ResDetail from "@/view/page/suport/components/ResDetail.tsx";
 import useModalHook from "@/hook/useModal";
 import { SetStateAction, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ApiRes, suportFileList, ResSuportDetailDTO, suportRes } from "@/definition/type.ts";
+import { ApiRes, suportFileList, ResSuportDetailDTO, suportRes } from "@/definition/commonType.ts";
 import { base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import FileDown from "@/components/Module/FileDownload";
-import { callAPI } from "@/auth/interceptor.ts";
+import { callAPI } from "@/server/interceptor.ts";
 
 const SuportDetail: React.FC = () => {
     const navigate = useNavigate();

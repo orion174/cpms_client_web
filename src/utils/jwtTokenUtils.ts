@@ -15,13 +15,13 @@ export const getAccessToken = async (cookies: Record<string, string | undefined>
     const loginHistoryId = cookies?.loginHistoryId ?? null;
 
     // 로그인 히스토리 ID 또는 리프레쉬 토큰이 없으면, 로그인 페이지로 리다이렉트
-    if(!loginHistoryId || !refreshToken) {
+    if (!loginHistoryId || !refreshToken) {
         tokenError();
         return null;
     }
 
     // AccessToken이 없지만, 로그인 히스토리 ID 또는 리프레쉬 토큰이 존재하면 토큰 갱신시도
-    if(!accessToken) {
+    if (!accessToken) {
         accessToken = await refreshAccessToken(refreshToken, loginHistoryId);
     }
 

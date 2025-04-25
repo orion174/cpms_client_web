@@ -11,7 +11,7 @@ import {
 } from "reactstrap";
 
 import FileDown from "@/components/Module/FileDownload";
-import { suportRes, suportFileList } from "@/definition/type.ts";
+import { suportRes, suportFileList } from "@/definition/commonType.ts";
 import { isValidHtmlContent } from "@/utils/common.ts";
 
 interface ResDetailProps {

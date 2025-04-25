@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react'
-import { ApiRes, ResLoginDTO} from "@/definition/type.ts";
+import { ApiRes, ResLoginDTO} from "@/definition/commonType.ts";
 import useModalHook from '@/hook/useModal';
-import { handleApiError } from "@/auth/interceptor.ts";
+import { handleApiError } from "@/server/interceptor.ts";
 import { handleInputKeyDown } from '@/utils/common.ts'
 import { saveCookie } from "@/utils/cookieUtils.ts";
 import axios from 'axios';

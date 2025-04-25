@@ -17,11 +17,11 @@ import { useLocation } from "react-router-dom";
 import Header from "@/view/layout/Headers/Header.jsx";
 import useModalHook from "@/hook/useModal";
 import FileUpload from "@/components/Module/FileUpload.tsx";
-import ComCodeSelect from "@/components/Module/ComCodeSelect.tsx";
+import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
-import { FileItem, NewFileItem } from "@/definition/type.ts";
-import { callAPI } from "@/auth/interceptor.ts";
+import { FileItem, NewFileItem } from "@/definition/commonType.ts";
+import { callAPI } from "@/server/interceptor.ts";
 import CpmsProjectSelect from "@/components/Module/CpmsProjectSelect.tsx";
 
 interface FormType {
@@ -216,7 +216,7 @@ const SuportForm: React.FC = () => {
                         <Col lg="4">
                           <FormGroup>
                             <label className="form-control-label">요청 유형</label>
-                            <ComCodeSelect
+                            <CommonCodeSelect
                                 groupId="10"
                                 selectId="requestCd"
                                 value={formData.requestCd}
@@ -248,7 +248,7 @@ const SuportForm: React.FC = () => {
                         <Col lg="4">
                           <FormGroup>
                             <label className="form-control-label">처리 상태</label>
-                            <ComCodeSelect
+                            <CommonCodeSelect
                                 groupId="20"
                                 selectId="statusCd"
                                 value={formData.statusCd}

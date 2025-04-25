@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {ApiRes, ResProjectDTO} from "@/definition/type.ts";
-import { callAPI } from "@/auth/interceptor.ts";
+import {ApiRes, ResProjectDTO} from "@/definition/commonType.ts";
+import { callAPI } from "@/server/interceptor.ts";
 
 interface CpmsProjectProps  {
     companyId?: number;
