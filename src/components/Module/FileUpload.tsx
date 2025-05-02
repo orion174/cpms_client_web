@@ -1,8 +1,7 @@
 import { Button } from "reactstrap";
-
 import React, { useState, ChangeEvent, useEffect } from "react";
 
-import { FileItem, NewFileItem } from "@/definition/commonType.ts";
+import { FileItem, NewFileItem } from "@/definition/common.types.ts";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";
@@ -25,7 +24,6 @@ const ALLOWED_EXTENSIONS = [
 
 // 파일 확장자에 따른 아이콘 반환 함수
 const getIconByExtension = (extension: string) => {
-
     switch (extension) {
         case "xlsx":
             return excelIcon;
@@ -153,9 +151,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
                         </li>
                     ) : (
                         fileList.map((file) => {
-                            const extension
-                                = file.name.split(".").pop()?.toLowerCase()
-                                    || "";
+                            const extension = file.name.split(".").pop()?.toLowerCase() || "";
 
                             return (
                                 <li key={file.id} className="mb-1 d-flex align-items-center">
@@ -163,7 +159,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
                                         color="danger"
                                         size="sm"
                                         onClick={() => handleDeleteFile(file.id, file.isNew)}
-                                    ><i className="ni ni-basket"/>
+                                    >
+                                        <i className="ni ni-basket"/>
                                     </Button>
                                     <img
                                         alt="..."

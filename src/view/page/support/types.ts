@@ -22,6 +22,29 @@ export interface SupportList {
     regDt: string;
 }
 
+// 문의 상세 조회 인터페이스
+export interface ResSupportDetailDTO {
+    authType: string;
+    supportRequestId: number;
+    requestCompanyNm: string;
+    userCompanyId: number;
+    userCompanyNm: string;
+    requestProjectNm: string;
+    requestCd: number;
+    requestNm: string;
+    statusCd: number;
+    statusNm: string;
+    responseUserId: number;
+    responseUserNm: string;
+    requestUserNm: string;
+    requestDate: string;
+    responseDate: string;
+    supportTitle: string;
+    supportEditor: string;
+    supportResponse : supportResponse | null;
+    fileList: supportFileList[];
+}
+
 // 문의 응답 인터페이스
 export interface supportResponse {
     supportResponseId: number;

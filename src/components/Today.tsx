@@ -17,11 +17,10 @@ const Today: React.FC = () => {
         };
 
         updateDate();
-
     }, []);
 
     return (
-        <Link className="h4 mb-0 text-white d-none d-lg-inline-block" to="/admin/suport/index">
+        <Link className="h4 mb-0 text-white d-none d-lg-inline-block" to="/admin/support/list">
             <i className="ni ni-calendar-grid-58" />
             <span className="form-control-today">&nbsp;{currentDate}{" "}{currentDay}</span>
         </Link>

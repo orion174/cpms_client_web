@@ -9,36 +9,37 @@ import {
     Input,
     Row
 } from "reactstrap";
-
 import React, { useEffect, useRef, useState } from "react";
-import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
-import FileUpload from "@/components/Module/FileUpload.tsx";
-import useModalHook from "@/hook/useModal.ts";
-import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
 import { useSearchParams } from "react-router-dom";
-import { base64ToUtf8 } from "@/utils/common.ts";
-import { suportRes, suportFileList, FileItem, NewFileItem } from "@/definition/commonType.ts";
-import { callAPI } from "@/server/interceptor.ts";
 
-interface ResFormProps {
+import useModalHook from "@/hook/useModal.ts";
+import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
+import { base64ToUtf8 } from "@/utils/common.ts";
+import { apiClient } from "@/core/api/client.ts";
+
+import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
+import FileUpload from "@/components/Module/FileUpload.tsx";
+
+import { FileItem, NewFileItem } from '@/definition/common.types.ts';
+import { supportResponse, supportFileList } from "../../types.ts";
+
+interface ResponseFormProps {
     statusCd?: number | null;
-    editData?: suportRes | null;
-    resFileList?: suportFileList[];
+    editData?: supportResponse | null;
+    responseFileList?: supportFileList[];
     onCancel?: () => void;
 }
 
-const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCancel }) => {
+const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, responseFileList, onCancel }) => {
+    const [ searchParams ] = useSearchParams();
     const { openCustomModal } = useModalHook();
-    const [ searchParams] = useSearchParams();
 
-    const [ suportResId, setSuportResId ] = useState<number>(editData?.suportResId || 0);
-    const [ resStatusCd, setResStatusCd ] = useState<number>(editData?.suportResId ? statusCd || 0 : 0);
-    const [ resTitle, setResTitle ] = useState<string>(editData?.resTitle || "");
+    const [ supportResponseId, setSupportResponseId ] = useState<number>(editData?.supportResponseId || 0);
+    const [ responseStatusCd, setResponseStatusCd ] = useState<number>(editData?.supportResponseId ? statusCd || 0 : 0);
+    const [ responseTitle, setResponseTitle ] = useState<string>(editData?.responseTitle || "");
     const [ fileList, setFileList ] = useState<FileItem[]>([]);
 
-    const oEditorsRes = useRef<any[]>([]);
-
-    // SmartEditor 초기화
+    const oEditorsResponse = useRef<any[]>([]);
     useEffect(() => {
         const loadScripts = () => {
             const script = document.createElement("script");
@@ -47,10 +48,10 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
             script.charset = "utf-8";
 
             script.onload = () => {
-                initializeSmartEditor("resEditorTxt", oEditorsRes.current)
+                initializeSmartEditor("responseEditorTxt", oEditorsResponse.current)
                     .then(() => {
-                        if (editData?.resEditor) {
-                            oEditorsRes.current[0].setContents(editData.resEditor);
+                        if (editData?.responseEditor) {
+                            oEditorsResponse.current[0].setContents(editData.responseEditor);
                         }
                     })
                     .catch((error) => console.error("SmartEditor error:", error));
@@ -64,31 +65,25 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
         };
 
         loadScripts();
-
-    }, [editData]);
+    }, []);
 
     useEffect(() => {
-        if (resFileList) {
-            const existingFiles: FileItem[] = resFileList.map((file) => ({
-                id: file.suportFileId,
+        if (responseFileList) {
+            const existingFiles: FileItem[] = responseFileList.map((file) => ({
+                id: file.supportFileId,
                 name: file.fileOgNm,
                 isNew: false,
             }));
 
             setFileList(existingFiles);
         }
-    }, [resFileList]);
+    }, [responseFileList]);
 
-    // 저장버튼 클릭 이벤트
-    const handleResSave = () => {
-        let message = ``;
+    const handleSaveSupportResponse = () => {
+        let message = "";
 
-        if (!resTitle.trim()) {
-            message = `처리 내역을 입력하세요.`;
-
-        } else if (!resStatusCd) {
-            message = `처리 상태를 선택하세요.`;
-        }
+        if (!responseTitle.trim()) message = "처리 내역을 입력하세요.";
+        else if (!responseStatusCd) message = "처리 상태를 선택하세요.";
 
         if (message) {
             openCustomModal({ title: "알림", message, isConfirm: false });
@@ -98,81 +93,67 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                 title: "확인",
                 message: "저장하시겠습니까?",
                 isConfirm: true,
-                onConfirm: () => {
-                    saveSuportRes();
-                }
+                onConfirm: saveSupportResponse
             });
         }
     };
 
-    // 데이터 저장
-    const saveSuportRes = async () => {
-        const encodedId = searchParams.get("suport_page");
+    const saveSupportResponse = async () => {
+        const encodedId = searchParams.get("support_page");
 
-        if (!encodedId) {
-            console.error("suport_page parameter NaN");
-            return;
-        }
+        if (!encodedId) return;
 
         const decodedId = parseInt(base64ToUtf8(encodedId), 10);
 
         const formData = new FormData();
-        formData.append("suportReqId", decodedId.toString());
-        formData.append("resStatusCd", resStatusCd.toString());
-        formData.append("resTitle", resTitle);
-        formData.append("resEditor", getEditorContent(oEditorsRes.current));
+        formData.append("supportRequestId", decodedId.toString());
+        formData.append("responseStatusCd", responseStatusCd.toString());
+        formData.append("responseTitle", responseTitle);
+        formData.append("responseEditor", getEditorContent(oEditorsResponse.current));
 
-        if(editData) {
-            formData.append("suportResId", suportResId.toString());
-        }
+        if (editData) formData.append("supportResponseId", supportResponseId.toString());
 
-        // 첨부파일
-        fileList
-            .filter((file): file is NewFileItem => file.isNew && !!file.file)
-            .forEach((file) => {
-                if (file.file) {
-                    formData.append("resFile", file.file);
-                }
-            });
+        fileList.filter((file): file is NewFileItem => file.isNew && !!file.file)
+            .forEach((file) => file.file && formData.append("responseFile", file.file));
 
-        const endpoint
-            = editData ? `/api/suport/resUpdate` : `/api/suport/resInsert`;
+        const endPoint = editData ? `/api/support/update-response` : `/api/support/insert-response`;
 
-        const res = await callAPI.post(endpoint, formData, {
-            headers: { "Content-Type": "multipart/form-data" },
+        const response = await apiClient.postForm<null>(endPoint, formData);
+
+        openCustomModal({
+            title: "알림",
+            message: "저장이 완료되었습니다.",
+            isConfirm: false,
+            redirectUrl: `/admin/support/detail?support_page=${encodedId}`,
         });
-
-        if (res.status === 200) {
-            openCustomModal({
-                title: "알림",
-                message: "저장이 완료되었습니다.",
-                isConfirm: false,
-                redirectUrl: `/admin/suport/detail?suport_page=${encodedId}`,
-            });
-        }
     };
 
-    const handleDeleteResFile = (suportFileId: number) => {
+    const handleDeleteResponseFile = (supportFileId: number) => {
         openCustomModal({
             title: "알림",
             message: "파일을 삭제하시겠습니까?",
             isConfirm: true,
             onConfirm: async () => {
-                const endPoint = `/api/suport/fileDelete/${suportFileId}`;
-                const res = await callAPI.post(endPoint);
+                try {
+                    const endPoint = `/api/support/file/${supportFileId}/delete`;
 
-                if (res.status === 200) {
+                    await apiClient.post<null>(endPoint);
+
                     openCustomModal({
                         title: "알림",
                         message: "파일이 삭제되었습니다.",
                         isConfirm: false,
                     });
 
-                    const updatedFileList = fileList.filter(
-                        (file) => file.id !== suportFileId
-                    );
+                    setFileList(fileList.filter((file) => file.id !== supportFileId));
 
-                    setFileList(updatedFileList);
+                } catch (error) {
+                    console.error("파일 삭제 실패", error);
+                    openCustomModal({
+                        title: "오류",
+                        message: "파일 삭제 중 오류가 발생했습니다.",
+                        isConfirm: false,
+                    });
                 }
             },
         });
@@ -181,21 +162,16 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
     return (
         <div className="res-form-container">
             <Row>
-                <Col className="order-xl-2 mb-5 mb-xl-0" xl="12">
+                <Col xl="12">
                     <Card className="card-profile shadow">
                         <CardHeader className="bg-white border-0">
                             <Row className="align-items-center">
                                 <Col xs="10">
                                     <h2 className="mb-0">{editData ? "처리 내역 수정" : "처리 내역 작성"}</h2>
-                                    <Input
-                                        type="hidden"
-                                        value={suportResId}
-                                        onChange={(e) => setSuportResId(parseInt(e.target.value, 10))}
-                                    />
                                 </Col>
                             </Row>
                         </CardHeader>
-                        <CardBody className="pt-0 pt-md-4">
+                        <CardBody>
                             <Form>
                                 <div className="pl-lg-4">
                                     <Row>
@@ -204,18 +180,18 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                                                 <Input
                                                     type="text"
                                                     className="my-input-text"
-                                                    value={resTitle}
+                                                    value={responseTitle}
                                                     placeholder="처리 내역을 입력하세요"
-                                                    onChange={(e) => setResTitle(e.target.value)}
+                                                    onChange={(e) => setResponseTitle(e.target.value)}
                                                 />
                                             </FormGroup>
                                         </Col>
                                         <Col xs="2">
                                             <CommonCodeSelect
-                                                groupId="20"
-                                                selectId="resStatusCd"
-                                                value={resStatusCd}
-                                                onChange={(e) => setResStatusCd(parseInt(e.target.value, 10))}
+                                                groupCode="20"
+                                                selectId="responseStatusCd"
+                                                value={responseStatusCd}
+                                                onChange={(e) => setResponseStatusCd(parseInt(e.target.value, 10))}
                                                 classNm="my-input-text form-control"
                                                 initText="처리 상태 선택"
                                             />
@@ -226,15 +202,13 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                                     <Row>
                                         <Col xl="12">
                                             <FormGroup>
-                                                <label className="form-control-label-custom">
-                                                    처리 상세 내역
-                                                </label>
+                                                <label className="form-control-label-custom">처리 상세 내역</label>
                                                 <div id="smarteditor">
                                                     <textarea
-                                                        name="resEditorTxt"
-                                                        id="resEditorTxt"
+                                                        name="responseEditorTxt"
+                                                        id="responseEditorTxt"
                                                         rows={10}
-                                                        style={{ width: "100%" }}
+                                                        style={{width: "100%"}}
                                                     />
                                                 </div>
                                             </FormGroup>
@@ -244,19 +218,19 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
                                 <div className="pl-lg-4">
                                     <Row>
                                         <Col xl="12">
-                                            <FileUpload
+                                        <FileUpload
                                                 formType={editData ? "update" : "insert"}
                                                 onFileChange={setFileList}
                                                 initFiles={fileList}
-                                                onDeleteFiles={handleDeleteResFile}
+                                                onDeleteFiles={handleDeleteResponseFile}
                                             />
                                         </Col>
                                     </Row>
                                 </div>
                                 <div className="pl-lg-4">
                                     <Col className="text-right" xs="12">
-                                        <Button onClick={onCancel} color="danger">취소</Button>
-                                        <Button onClick={handleResSave} color="info">답변 저장</Button>
+                                        {onCancel && <Button onClick={onCancel} color="danger">취소</Button>}
+                                        <Button onClick={handleSaveSupportResponse} color="info">답변 저장</Button>
                                     </Col>
                                 </div>
                             </Form>
@@ -268,4 +242,4 @@ const ResForm: React.FC<ResFormProps> = ({ statusCd, editData, resFileList, onCa
     );
 };
 
-export default ResForm;
+export default ResponseForm;

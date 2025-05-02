@@ -1,5 +1,4 @@
-import { getCookie } from "@/utils/cookieUtils.ts";
-import { getAccessToken } from "@/utils/jwtTokenUtils.ts";
+import { rawAPI } from "@/core/api/client.ts";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";
@@ -10,7 +9,7 @@ import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
 
 interface FileList {
-    [key: string]: any; // 동적 키를 허용
+    [key: string]: any;
     fileType: string;
     filePath: string;
     fileNm: string;
@@ -19,7 +18,7 @@ interface FileList {
 
 interface FileDownProps<T extends keyof FileList> {
     fileList: FileList[];
-    idKey: T; // 동적 필드 이름을 지정
+    idKey: T;
 }
 
 const getIconByExtension = (extension: string): string => {
@@ -48,44 +47,33 @@ const getIconByExtension = (extension: string): string => {
 };
 
 const FileDown = <T extends keyof FileList>({ fileList, idKey }: FileDownProps<T>) => {
-    // 파일 다운로드
     const handleFileDownload = async (fileId: any, fileOgNm: string) => {
-        if(fileId > 0) {
-            const cookies = await getCookie() as Record<string, string | undefined>;
-            const token = await getAccessToken(cookies);
+        if (!fileId) return;
 
-            const apiUrl = `${import.meta.env.VITE_API_URL}/api/suport/fileDownload/${fileId}`;
+        try {
+            const endPoint = `/api/support/file/${fileId}/download`;
 
-            const response = await fetch(apiUrl, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: token ? `Bearer ${token}` : "",
-                }
+            const response = await rawAPI.get(endPoint, {
+                responseType: 'blob',
             });
 
-            if (!response.ok) {
-                throw new Error("첨부파일 다운로드 에러");
-            }
-
-            const blob = await response.blob();
+            const blob = response.data;
             const url = window.URL.createObjectURL(blob);
 
             const link = document.createElement("a");
-
             link.href = url;
             link.download = fileOgNm;
 
             document.body.appendChild(link);
-
             link.click();
-
             document.body.removeChild(link);
             window.URL.revokeObjectURL(url);
+
+        } catch (err) {
+            console.error("첨부파일 다운로드 에러", err);
         }
     };
 
-    // 파일 리스트가 없으면 렌더링하지 않음
     if (!fileList || fileList.length === 0) {
         return null;
     }
@@ -98,7 +86,7 @@ const FileDown = <T extends keyof FileList>({ fileList, idKey }: FileDownProps<T
 
                 return (
                     <div
-                        key={file[idKey]} // 동적으로 지정된 ID 키 사용
+                        key={file[idKey]}
                         style={{ display: "flex", alignItems: "center", gap: "5px" }}
                     >
                         {icon ? (

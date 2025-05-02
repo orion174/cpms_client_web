@@ -38,7 +38,7 @@ const Icons = () => {
       <Header />
       {/* Page content */}
       <Container className="mt--7" fluid>
-        {/* Table */}
+        {/* SupportTable */}
         <Row>
           <div className="col">
             <Card className="shadow">

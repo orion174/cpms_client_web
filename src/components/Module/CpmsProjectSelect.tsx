@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {ApiRes, ResProjectDTO} from "@/definition/commonType.ts";
-import { callAPI } from "@/server/interceptor.ts";
+
+import { ResProjectDTO } from "@/definition/common.types.ts";
+import { apiClient } from "@/core/api/client.ts";
 
 interface CpmsProjectProps  {
     companyId?: number;
@@ -11,46 +12,44 @@ interface CpmsProjectProps  {
     classNm: string;
 }
 
-const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({companyId, selectId, value, onChange, initText, classNm}) => {
+const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
+    companyId = 0,
+    selectId,
+    value,
+    onChange,
+    initText,
+    classNm
+}) => {
     const [options, setOptions] = useState<ResProjectDTO[]>([]);
 
-    // CPMS 프로젝트
-    const fetchCpmsProjectList = async (companyId: number): Promise<ApiRes<ResProjectDTO[]>> => {
-        const url = `/api/project/list`;
-
-        const jsonData = {
-            companyId: companyId ?? 0
-        }
-
-        const response = await callAPI.post<ApiRes<ResProjectDTO[]>>(url, jsonData);
-
-        return response.data;
-    }
-    
     useEffect(() => {
-        const projectOptions = async () => {
-            const response = await fetchCpmsProjectList(companyId);
-            setOptions(response.result);
+        const fetchProjects = async () => {
+            try {
+                const endPoint = `/api/setting/project/list`;
+
+                const response = await apiClient.post<ResProjectDTO[]>(endPoint, {
+                    companyId,
+                });
+
+                setOptions(response);
+            } catch (error) {
+                console.error("프로젝트 목록 조회 실패:", error);
+            }
         };
-        projectOptions();
+
+        fetchProjects();
     }, [companyId]);
 
     return (
-        <>
-            <select
-                id={selectId}
-                value={value}
-                onChange={onChange}
-                className={classNm}
-            >
-                <option value="0">{initText}</option>
-                    {options.map((option) => (
-                        <option key={option.projectId} value={option.projectId}>
-                            {option.projectNm}
-                        </option>
-                    ))}
-            </select>
-        </>
+        <select id={selectId} value={value} className={classNm} onChange={onChange}>
+            <option value="0">{initText}</option>
+
+            {options.map((option) => (
+                <option key={option.projectId} value={option.projectId}>
+                    {option.projectNm}
+                </option>
+            ))}
+        </select>
     );
 };
 

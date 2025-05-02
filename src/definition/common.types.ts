@@ -1,4 +1,4 @@
-/* 📁 common interface */
+/* 📁 common.types */
 
 // API 응답 인터페이스
 export interface ApiResponse<T = any> {
@@ -56,8 +56,14 @@ export interface NewFileItem  {
 
 export type FileItem = ExistingFileItem | NewFileItem;
 
-// 공통 코드 인터페이스
+// 공통 코드 목록 인터페이스
 export interface ResCommonCodeDTO {
     codeId: number;
     codeNm: string;
+}
+
+// CPMS 프로젝트 목록 인터페이스
+export interface ResProjectDTO {
+    projectId: number;
+    projectNm: string;
 }

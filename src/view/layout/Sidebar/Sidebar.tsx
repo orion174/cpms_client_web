@@ -19,7 +19,6 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
 import React, { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 
@@ -74,15 +73,15 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
   const createLinks = (routes: Route[]) => {
     return routes.map((prop, key) => {
 
-      const isSuportLink = prop.layout + prop.path === "/admin/suport/index";
+      const isSupportLink = prop.layout + prop.path === "/admin/support/list";
 
       return (
           <NavItem key={key}>
             <NavLink
-                to={prop.layout + prop.path} // Suport만 링크 이동
+                to={prop.layout + prop.path}
                 tag={NavLinkRRD}
                 onClick={(e) => {
-                  if (!isSuportLink) {
+                  if (!isSupportLink) {
                     e.preventDefault();
                     handleTempAlert();
 
@@ -209,7 +208,7 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
               </Row>
             </div>
 
-            {/* Form */}
+            {/* RequestForm */}
             <Form className="mt-4 mb-3 d-md-none">
               <InputGroup className="input-group-rounded input-group-merge">
                 <Input aria-label="Search" className="form-control-rounded form-control-prepended" placeholder="Search" type="search" />

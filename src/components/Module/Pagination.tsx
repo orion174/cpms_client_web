@@ -1,5 +1,4 @@
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
-
 import React from "react";
 
 interface PaginationProps {

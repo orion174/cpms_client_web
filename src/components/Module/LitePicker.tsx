@@ -1,5 +1,6 @@
 import { Input } from "reactstrap";
 import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+
 import Litepicker from "litepicker";
 
 interface LitePickerProps {
@@ -19,7 +20,6 @@ const LitePicker = forwardRef(({
   placeholder,
   onDateChange,
 }: LitePickerProps, ref) => {
-
   const pickerRef = useRef<HTMLInputElement | null>(null);
   const pickerInstanceRef = useRef<Litepicker | null>(null);
 
