@@ -9,7 +9,7 @@ import {
     Col,
     FormGroup
 } from "reactstrap";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import useModalHook from "@/hook/useModal.ts";
@@ -28,15 +28,17 @@ const SupportDetail: React.FC = () => {
     const navigate = useNavigate();
     const { openCustomModal } = useModalHook();
 
-    const [showResponseForm, setShowResponseForm] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [statusCd, setStatusCd] = useState<number | null>(null);
-    const [editData, setEditData] = useState<supportResponse | null>(null);
-    const [searchParams] = useSearchParams();
-    const [result, setResult] = useState<ResSupportDetailDTO | null>(null);
-    const [requestFileList, setRequestFileList] = useState<supportFileList[]>([]);
-    const [responseFileList, setResponseFileList] = useState<supportFileList[]>([]);
-    const [authType, setAuthType] = useState<string>("");
+    const [ showResponseForm, setShowResponseForm ] = useState(false);
+    const handleShowResponseForm = () => setShowResponseForm(true);
+
+    const [ editMode, setEditMode ] = useState(false);
+    const [ statusCd, setStatusCd ] = useState<number | null>(null);
+    const [ editData, setEditData ] = useState<supportResponse | null>(null);
+    const [ searchParams ] = useSearchParams();
+    const [ result, setResult ] = useState<ResSupportDetailDTO | null>(null);
+    const [ requestFileList, setRequestFileList ] = useState<supportFileList[]>([]);
+    const [ responseFileList, setResponseFileList ] = useState<supportFileList[]>([]);
+    const [ authType, setAuthType ] = useState<string>("");
 
     const encodedId = searchParams.get("support_page");
 
@@ -79,10 +81,12 @@ const SupportDetail: React.FC = () => {
         fetchDetail();
     }, [encodedId]);
 
+    // 문의 목록으로 돌아가기
     const handleList = () => {
         navigate("/admin/support/list");
     };
 
+    // 문의 수정
     const handleUpdateRequest = () => {
         openCustomModal({
             title: "알림",
@@ -91,8 +95,7 @@ const SupportDetail: React.FC = () => {
         });
     };
 
-    const handleShowResponseForm = () => setShowResponseForm(true);
-
+    // 답변 삭제
     const handleDeleteResponse = async () => {
         if (!result) return;
 
@@ -119,6 +122,7 @@ const SupportDetail: React.FC = () => {
         });
     };
 
+    // 문의 답변 수정
     const handleUpdateResponse = () => {
         if (result?.supportResponse) {
             setStatusCd(result.statusCd);
@@ -127,6 +131,7 @@ const SupportDetail: React.FC = () => {
         }
     };
 
+    // 문의의 답변 유무를 검사한다.
     const hasSupportResponse = (
         response: ResSupportDetailDTO | null
     ): response is ResSupportDetailDTO & { supportResponse: supportResponse } => {
@@ -135,7 +140,8 @@ const SupportDetail: React.FC = () => {
 
     return (
         <>
-            <Header />
+            <Header/>
+
             <Container className="mt--7" fluid>
                 <Row>
                     <Col xl="12">
@@ -184,13 +190,20 @@ const SupportDetail: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label-custom">처리 담당자</label>
-                                                    <div className="my-detail-text">{result?.requestUserNm ?? '-'}</div>
+                                                    <div className="my-detail-text">{result?.responseUserNm ?? '-'}</div>
                                                 </FormGroup>
                                             </Col>
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label-custom">처리 상태</label>
-                                                    <div className="my-detail-text">{result?.statusNm}</div>
+                                                    <div className="my-detail-text">
+                                                        {result?.statusNm}
+                                                        {result?.statusCd === 7 && result?.responseDate && (
+                                                            <span style={{ marginLeft: '0.5rem' }}>
+                                                                ({result.responseDate})
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -205,6 +218,7 @@ const SupportDetail: React.FC = () => {
                                             </Col>
                                         </Row>
                                     </div>
+
                                     {requestFileList.length > 0 && (
                                         <div className="pl-lg-4">
                                             <Row>
@@ -217,6 +231,7 @@ const SupportDetail: React.FC = () => {
                                             </Row>
                                         </div>
                                     )}
+
                                     <div className="pl-lg-4">
                                         <Row>
                                             <Col lg="12">
@@ -231,11 +246,13 @@ const SupportDetail: React.FC = () => {
                                             </Col>
                                         </Row>
                                     </div>
+
                                     {authType !== "USER" && !showResponseForm && !hasSupportResponse(result) && (
                                         <div className="button-right">
                                             <Button color="success" onClick={handleShowResponseForm}>답변하기</Button>
                                         </div>
                                     )}
+
                                 </Form>
                             </CardBody>
                         </Card>

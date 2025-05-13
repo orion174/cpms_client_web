@@ -34,7 +34,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
     const [ searchParams ] = useSearchParams();
     const { openCustomModal } = useModalHook();
 
-    const [ supportResponseId, setSupportResponseId ] = useState<number>(editData?.supportResponseId || 0);
+    const [ supportResponseId ] = useState<number>(editData?.supportResponseId || 0);
     const [ responseStatusCd, setResponseStatusCd ] = useState<number>(editData?.supportResponseId ? statusCd || 0 : 0);
     const [ responseTitle, setResponseTitle ] = useState<string>(editData?.responseTitle || "");
     const [ fileList, setFileList ] = useState<FileItem[]>([]);
@@ -67,6 +67,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
         loadScripts();
     }, []);
 
+    // 문의 답변 첨부파일
     useEffect(() => {
         if (responseFileList) {
             const existingFiles: FileItem[] = responseFileList.map((file) => ({
@@ -79,6 +80,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
         }
     }, [responseFileList]);
 
+    // 문의 답변을 저장한다.
     const handleSaveSupportResponse = () => {
         let message = "";
 
@@ -98,14 +100,14 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
         }
     };
 
+    // 문의 답변 저장 API
     const saveSupportResponse = async () => {
         const encodedId = searchParams.get("support_page");
-
         if (!encodedId) return;
 
+        const formData = new FormData();
         const decodedId = parseInt(base64ToUtf8(encodedId), 10);
 
-        const formData = new FormData();
         formData.append("supportRequestId", decodedId.toString());
         formData.append("responseStatusCd", responseStatusCd.toString());
         formData.append("responseTitle", responseTitle);
@@ -116,9 +118,10 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
         fileList.filter((file): file is NewFileItem => file.isNew && !!file.file)
             .forEach((file) => file.file && formData.append("responseFile", file.file));
 
-        const endPoint = editData ? `/api/support/update-response` : `/api/support/insert-response`;
+        const endPoint
+            = editData ? `/api/support/update-response` : `/api/support/insert-response`;
 
-        const response = await apiClient.postForm<null>(endPoint, formData);
+        await apiClient.postForm<null>(endPoint, formData);
 
         openCustomModal({
             title: "알림",
@@ -128,6 +131,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
         });
     };
 
+    // 문의 답변에 첨부된 파일을 삭제한다.
     const handleDeleteResponseFile = (supportFileId: number) => {
         openCustomModal({
             title: "알림",
@@ -176,6 +180,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
                                 <div className="pl-lg-4">
                                     <Row>
                                         <Col xl="10">
+                                            <label className="form-control-label-custom">처리 내역</label>
                                             <FormGroup>
                                                 <Input
                                                     type="text"
@@ -187,6 +192,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
                                             </FormGroup>
                                         </Col>
                                         <Col xs="2">
+                                            <label className="form-control-label-custom">처리 상태</label>
                                             <CommonCodeSelect
                                                 groupCode="20"
                                                 selectId="responseStatusCd"
@@ -218,20 +224,28 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
                                 <div className="pl-lg-4">
                                     <Row>
                                         <Col xl="12">
-                                        <FileUpload
-                                                formType={editData ? "update" : "insert"}
-                                                onFileChange={setFileList}
-                                                initFiles={fileList}
-                                                onDeleteFiles={handleDeleteResponseFile}
-                                            />
+                                            <FormGroup>
+                                                <FileUpload
+                                                    formType={editData ? "update" : "insert"}
+                                                    onFileChange={setFileList}
+                                                    initFiles={fileList}
+                                                    onDeleteFiles={handleDeleteResponseFile}
+                                                />
+                                            </FormGroup>
                                         </Col>
                                     </Row>
                                 </div>
+                            </Form>
+                        </CardBody>
+                        <CardBody>
+                            <Form>
                                 <div className="pl-lg-4">
-                                    <Col className="text-right" xs="12">
-                                        {onCancel && <Button onClick={onCancel} color="danger">취소</Button>}
-                                        <Button onClick={handleSaveSupportResponse} color="info">답변 저장</Button>
-                                    </Col>
+                                    <Row>
+                                        <Col className="text-right" xs="12">
+                                            {onCancel && <Button onClick={onCancel} color="danger">취소</Button>}
+                                            <Button onClick={handleSaveSupportResponse} color="info">답변 저장</Button>
+                                        </Col>
+                                    </Row>
                                 </div>
                             </Form>
                         </CardBody>

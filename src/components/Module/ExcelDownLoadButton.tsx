@@ -13,9 +13,7 @@ const ExcelDownloadButton: React.FC = () => {
     };
 
     return (
-        <Button type="button" onClick={handleExcelDownload} color="success">
-            엑셀
-        </Button>
+        <Button type="button" onClick={handleExcelDownload} color="success">엑셀</Button>
     );
 };
 

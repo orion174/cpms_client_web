@@ -20,14 +20,11 @@ import useModalHook from "@/hook/useModal.ts";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 
 import Header from "@/view/layout/Headers/Header.jsx";
-import FileUpload from "@/components/Module/FileUpload.tsx";
 import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 import CpmsCompanySelect from "@/components/Module/CpmsCompanySelect.tsx";
 import CpmsProjectSelect from "@/components/Module/CpmsProjectSelect.tsx";
-
-import RequestEditor from "./components/RequestEditor.tsx";
-import File from "./components/RequestFile.tsx";
+import RequestFile from "./components/RequestFile.tsx";
 
 import { FileItem, NewFileItem } from "@/definition/common.types.ts";
 import { apiClient } from "@/core/api/client.ts";
@@ -123,7 +120,7 @@ const RequestForm: React.FC = () => {
 
         const endPoint = `/api/support/insert`;
 
-        const result = await apiClient.postForm<null>(endPoint, data);
+        await apiClient.postForm<null>(endPoint, data);
 
         openCustomModal({
             title: "알림",
@@ -174,6 +171,7 @@ const RequestForm: React.FC = () => {
                                                         selectId="requestCompanyId"
                                                         value={formData.requestCompanyId}
                                                         onChange={(e) => handleInputChange("requestCompanyId", e.target.value)}
+                                                        initText="요청 업체 선택"
                                                         classNm="my-input-text form-control"
                                                     />
                                                 </FormGroup>
@@ -269,14 +267,11 @@ const RequestForm: React.FC = () => {
                                                 </FormGroup>
                                             </Col>
                                         </Row>
+
                                         {/*<RequestEditor editorRef={editorRef}/>*/}
                                     </div>
 
-                                    <File
-                                        formType={formType}
-                                        fileList={fileList}
-                                        setFileList={setFileList}
-                                    />
+                                    <RequestFile formType={formType} fileList={fileList} setFileList={setFileList}/>
                                 </Form>
                             </CardBody>
                         </Card>

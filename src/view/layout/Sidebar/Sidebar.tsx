@@ -69,7 +69,6 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
     return;
   };
 
-
   const createLinks = (routes: Route[]) => {
     return routes.map((prop, key) => {
 

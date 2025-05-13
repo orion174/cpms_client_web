@@ -4,11 +4,8 @@ import {
   Col,
   Nav,
   NavItem,
-  NavLink,
-  Button
+  NavLink
 } from "reactstrap";
-
-import githubIcon from "@/assets/img/icons/common/github.svg";
 
 const AuthFooter = () => {
   return (

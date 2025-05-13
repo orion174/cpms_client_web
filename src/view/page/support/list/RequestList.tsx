@@ -1,11 +1,9 @@
 import {
-  Card, CardHeader, CardFooter, Container, Row, Form, Input, InputGroup,
-  InputGroupAddon, InputGroupText, Button, Col
+  Card, CardHeader, CardFooter, Container, Row, Button, Col
 } from "reactstrap";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import useModalHook from "@/hook/useModal.ts";
 import { utf8ToBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 
@@ -16,11 +14,10 @@ import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import SupportSearchBar from "./components/SupportSearchBar.tsx";
 import SupportTable from "./components/SupportTable.tsx";
 
-import { ResSupportListDTO, SupportList } from "../../types.ts";
+import { ResSupportListDTO, SupportList } from "./../types.ts";
 
 const RequestList: React.FC = () => {
     const navigate = useNavigate();
-    const { openCustomModal } = useModalHook();
 
     const [ currentPage, setCurrentPage ] = useState(1);
     const [ data, setData ] = useState<SupportList[]>([]);
@@ -54,6 +51,7 @@ const RequestList: React.FC = () => {
         });
 
         const pickerInput = document.getElementById("searchDate") as HTMLInputElement;
+
         if (pickerInput) pickerInput.value = "";
     };
 

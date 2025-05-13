@@ -1,8 +1,6 @@
 /* 📁 client.ts */
 import axios, { AxiosRequestConfig } from 'axios';
 
-import { getAccessToken } from '@/core/auth/jwt.ts';
-import { getCookie } from '@/core/auth/cookie.ts';
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptor.ts';
 import { ApiResponse } from '@/definition/common.types.ts';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Badge } from 'reactstrap';
+import { Table } from 'reactstrap';
 
 import SupportTableRow from "./SupportTableRow.tsx";
 import { SupportList } from "../../types.ts";

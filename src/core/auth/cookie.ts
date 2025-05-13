@@ -1,7 +1,7 @@
 /* 📁 cookie.ts */
 import axios from 'axios';
 
-import { utf8ToBase64 } from "@/utils/common.ts";
+import { utf8ToBase64, base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import { ResLoginDTO} from "@/definition/common.types.ts";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -37,6 +37,22 @@ export const getCookie = async (key?: string): Promise<Record<string, string> | 
     });
 
     return key ? response.data[key] ?? null : response.data;
+};
+
+// 쿠키에서 사용자 권한을 찾는다.
+export const getUserAuthType = async (): Promise<string | null> => {
+    const value = await getCookie("authType");
+
+    if (!value || typeof value !== "string" || !isBase64(value)) {
+        return null;
+    }
+
+    try {
+        return base64ToUtf8(value); // QURNSU4= → "ADMIN"
+    } catch (e) {
+        console.error("authType 디코딩 실패:", e);
+        return null;
+    }
 };
 
 // 쿠키를 삭제한다.

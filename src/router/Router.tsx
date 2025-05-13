@@ -12,15 +12,14 @@ import SupportDetail from '@/view/page/support/detail/RequestDetail.tsx';
 import Index from "@/view/examples/Index.jsx";
 import Profile from "@/view/examples/Profile.jsx";
 import Maps from "@/view/examples/Maps.jsx";
-import Register from "@/view/examples/Register.jsx";
 import Icons from "@/view/examples/Icons.jsx";
 
 const adminRoutes = [
-    { path: "/dashboard", layout: "/admin", name: "Dashboard", icon: "ni ni-tv-2 text-primary" },
+    // { path: "/dashboard", layout: "/admin", name: "Dashboard", icon: "ni ni-tv-2 text-primary" },
     { path: "/support/list", layout: "/admin", name: "Support", icon: "ni ni-bullet-list-67 text-red" },
-    { path: "/company", layout: "/admin", name: "Company", icon: "ni ni-building text-yellow" },
-    { path: "/user-profile", layout: "/admin", name: "User", icon: "ni ni-badge text-blue" },
-    { path: "/setting", layout: "/admin", name: "Settings", icon: "ni ni-settings-gear-65 text-orange" },
+    // { path: "/company", layout: "/admin", name: "Company", icon: "ni ni-building text-yellow" },
+    // { path: "/user-profile", layout: "/admin", name: "User", icon: "ni ni-badge text-blue" },
+    // { path: "/setting", layout: "/admin", name: "Settings", icon: "ni ni-settings-gear-65 text-orange" },
 ];
 
 const Router = () => {

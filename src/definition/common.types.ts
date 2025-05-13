@@ -62,6 +62,12 @@ export interface ResCommonCodeDTO {
     codeNm: string;
 }
 
+// CPMS 업체 목록 인터페이스
+export interface ResCompanyDTO {
+    companyId: number;
+    companyNm: string;
+}
+
 // CPMS 프로젝트 목록 인터페이스
 export interface ResProjectDTO {
     projectId: number;

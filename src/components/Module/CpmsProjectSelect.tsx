@@ -20,7 +20,7 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     initText,
     classNm
 }) => {
-    const [options, setOptions] = useState<ResProjectDTO[]>([]);
+    const [ options, setOptions ] = useState<ResProjectDTO[]>([]);
 
     useEffect(() => {
         const fetchProjects = async () => {

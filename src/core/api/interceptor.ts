@@ -10,7 +10,7 @@ import { getAccessToken, refreshAccessToken, tokenError } from '@/core/auth/jwt.
 import { getCookie } from '@/core/auth/cookie.ts';
 import { ApiResponse } from '@/definition/common.types.ts';
 
-// 요청 인터셉터: 토큰 삽입
+// ✅ 요청 인터셉터: 토큰 삽입
 export const requestInterceptor = async (config: InternalAxiosRequestConfig) => {
     const cookies = await getCookie() as Record<string, string | undefined>;
     const token = await getAccessToken(cookies);
@@ -23,12 +23,16 @@ export const requestInterceptor = async (config: InternalAxiosRequestConfig) => 
     return config;
 };
 
-// 응답 인터셉터: success=false 처리 및 401 재시도
+// ✅ 응답 인터셉터: success=false 처리 및 예외적인 blob 타입은 패스
 export const responseInterceptor = async (response: AxiosResponse) => {
-    // 응답이 blob일 경우 인터셉터 무시 (파일 다운로드 등)
     const contentType = response.headers['content-type'] || '';
 
-    if (contentType.includes('application/octet-stream') || contentType.includes('application/pdf') || contentType.includes('image/') || response.request?.responseType === 'blob') {
+    if (
+        contentType.includes('application/octet-stream') ||
+        contentType.includes('application/pdf') ||
+        contentType.includes('image/') ||
+        response.request?.responseType === 'blob'
+    ) {
         return response;
     }
 
@@ -42,10 +46,12 @@ export const responseInterceptor = async (response: AxiosResponse) => {
     return response;
 };
 
+// ✅ 에러 인터셉터: 토큰 재발급 및 서버 오류 처리
 export const errorInterceptor = async (error: any) => {
     const originalRequest = error.config;
     const status = error.response?.status;
 
+    // 🔐 토큰 만료 시 리프레시 시도
     if (status === 401 && !originalRequest._retry) {
         if (originalRequest.url?.includes('/api/auth/refresh-token')) {
             tokenError();
@@ -77,33 +83,34 @@ export const errorInterceptor = async (error: any) => {
         }
     }
 
+    // ⚠️ 서버가 내려준 에러 메시지 처리
     const response = error.response?.data as ApiResponse;
     handleErrorByCode(response?.errorCode, response?.message);
 
     return Promise.reject(error);
 };
 
-// 에러 코드별 사용자 친화적 안내 처리
+// ✅ 에러 코드별 사용자 안내 처리
 export const handleErrorByCode = (code?: string, msg?: string) => {
+    const errorCode = code ?? '0000';
     const message = msg ?? '알 수 없는 오류가 발생했습니다.';
 
-    switch (code) {
-        case '1002':
-            openErrorModal('권한 없음', message, () => {
+    switch (errorCode) {
+        case '1002': // 권한 없음
+        case '1003': // 리프레시 토큰 만료
+        case '1004': // 인증되지 않음
+            openErrorModal('인증 오류', message, () => {
                 window.location.href = '/auth/login';
             });
             break;
-        case '4004':
-        case '3003':
-            openErrorModal('리소스 없음', message);
-            break;
+
         default:
-            openErrorModal('서버 오류', message);
+            openErrorModal(`오류_${errorCode}`, message);
             break;
     }
 };
 
-// 에러 모달 표시
+// ✅ 에러 모달 오픈
 const openErrorModal = (title: string, message: string, onConfirm?: () => void) => {
     const modalId = uuidv4();
 

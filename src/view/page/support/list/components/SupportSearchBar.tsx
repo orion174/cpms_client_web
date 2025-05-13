@@ -7,11 +7,12 @@ import {
   Button
 } from "reactstrap";
 
-import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
+import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx"
+import CpmsCompanySelect from "@/components/Module/CpmsCompanySelect.tsx";
 import LitePicker from "@/components/Module/LitePicker.tsx";
 
 interface SearchParams {
-    searchCompanyId: string;
+    searchCompanyId: number;
     searchRequestCd: number;
     searchStatusCd: number;
     searchStartDt: string;
@@ -38,18 +39,13 @@ const SupportSearchBar: React.FC<Props> = ({
         <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }}>
             {authType !== "USER" && (
                 <InputGroup>
-                    <Input
-                        id="searchCompanyId"
-                        type="select"
-                        className="my-input-text form-control"
+                    <CpmsCompanySelect
+                        selectId="searchCompanyId"
                         value={searchParams.searchCompanyId}
                         onChange={(e) => updateSearchParams("searchCompanyId", e.target.value)}
-                    >
-                        <option value="">업체 선택</option>
-                        <option value="1">CodeIdea</option>
-                        <option value="2">Heritage</option>
-                        <option value="3">마켓헤머</option>
-                    </Input>
+                        classNm="my-input-text form-control"
+                        initText="업체 선택"
+                    />
                 </InputGroup>
             )}
             <InputGroup>

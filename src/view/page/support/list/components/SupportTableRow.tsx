@@ -20,8 +20,9 @@ const SupportTableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         3: "warning",
         4: "info",
         5: "primary",
-        6: "success",
-        7: "danger",
+        6: "danger",
+        7: "success",
+        8: "dark",
     };
 
     // 처리기한 따라 다르게 표시
@@ -29,7 +30,7 @@ const SupportTableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         const today = new Date(); // 오늘 날짜
         today.setHours(0, 0, 0, 0); // 시간을 초기화해서 날짜 비교
 
-        const targetDate = new Date(row.reqDate); // 처리 기한 날짜
+        const targetDate = new Date(row.requestDate); // 처리 기한 날짜
         targetDate.setHours(0, 0, 0, 0); // 시간을 초기화해서 날짜 비교
 
         const diffTime = targetDate.getTime() - today.getTime(); // 밀리초 차이

@@ -2,7 +2,7 @@
 
 // 프로젝트 유지보수 문의 인터페이스
 export interface ResSupportListDTO {
-    supportCnt: number;
+    totalCnt: number;
     supportList: SupportList[];
     authType: string;
 }
@@ -12,11 +12,11 @@ export interface SupportList {
     supportRequestId: number;
     userCompanyNm: string;
     requestProjectNm: string;
+    responseUserNm: string;
     requestCd: number;
     requestNm: string;
     statusCd: number;
     statusNm: string;
-    responseUserNm: string;
     requestDate: string;
     supportTitle: string;
     regDt: string;
@@ -27,16 +27,13 @@ export interface ResSupportDetailDTO {
     authType: string;
     supportRequestId: number;
     requestCompanyNm: string;
-    userCompanyId: number;
     userCompanyNm: string;
     requestProjectNm: string;
+    responseUserNm: string;
     requestCd: number;
     requestNm: string;
     statusCd: number;
     statusNm: string;
-    responseUserId: number;
-    responseUserNm: string;
-    requestUserNm: string;
     requestDate: string;
     responseDate: string;
     supportTitle: string;
@@ -61,4 +58,3 @@ export interface supportFileList {
     fileOgNm: string;
     fileCategory : string;
 }
-

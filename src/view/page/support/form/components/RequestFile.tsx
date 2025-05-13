@@ -1,14 +1,15 @@
 import React from 'react';
+
 import FileUpload from "@/components/Module/FileUpload.tsx";
 import { FileItem } from "@/definition/common.types.ts";
 
-interface RequestFile {
+interface RequestFileProps {
     formType: "insert" | "update";
     fileList: FileItem[];
     setFileList: React.Dispatch<React.SetStateAction<FileItem[]>>;
 }
 
-const File: React.FC<FileSectionProps> = ({ formType, fileList, setFileList }) => {
+const RequestFile: React.FC<RequestFileProps> = ({ formType, fileList, setFileList }) => {
     return (
         <div className="section-space">
             <FileUpload
@@ -20,4 +21,4 @@ const File: React.FC<FileSectionProps> = ({ formType, fileList, setFileList }) =
     );
 };
 
-export default File;
+export default RequestFile;

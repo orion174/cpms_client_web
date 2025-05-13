@@ -27,6 +27,7 @@ const Login: React.FC = () => {
 
     const [ loginId, setLoginId ] = useState('');
     const [ loginPw, setLoginPw ] = useState('');
+
     const loginIdRef = useRef<HTMLInputElement>(null);
     const loginPwRef = useRef<HTMLInputElement>(null);
 
@@ -60,6 +61,7 @@ const Login: React.FC = () => {
                 if (response.data.success && response.data.data) {
                     await saveCookie(response.data.data);
                     navigate('/admin/support/list');
+
                 } else {
                     openCustomModal({
                         title: '알림',
@@ -70,7 +72,10 @@ const Login: React.FC = () => {
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                handleErrorByCode(error.response);
+                const code = error.response?.data?.errorCode as string | undefined;
+                const msg = error.response?.data?.message as string | undefined;
+
+                handleErrorByCode(code, msg);
             }
         }
     };

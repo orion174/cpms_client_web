@@ -52,7 +52,7 @@ const getIconByExtension = (extension: string) => {
     }
 };
 
-const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFiles = [], onDeleteFiles }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, initFiles = [], onDeleteFiles }) => {
     // 파일 리스트를 관리하는 상태
     const [fileList, setFileList] = useState<FileItem[]>([]);
 
@@ -118,22 +118,22 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
         <div className="pl-lg-4">
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <h3 className="heading mb-0">첨부 파일</h3>
-                <Button
-                    className="btn-icon btn-3"
-                    size="sm"
-                    color="primary"
-                    type="button"
-                    onClick={() => document.getElementById("fileInput")?.click()}
-                >
-                    <span className="btn-inner--icon">
-                        <i className="ni ni-fat-add" />
-                    </span>
-                    {fileList.length === 0 ? (
-                        <span className="btn-inner--text">첨부파일 등록</span>
-                    ) : (
-                        <span className="btn-inner--text">첨부파일 추가 등록</span>
-                    )}
-                </Button>
+                    <Button
+                        className="btn-icon btn-3"
+                        size="sm"
+                        color="primary"
+                        type="button"
+                        onClick={() => document.getElementById("fileInput")?.click()}
+                    >
+                        <span className="btn-inner--icon">
+                            <i className="ni ni-fat-add" />
+                        </span>
+                        {fileList.length === 0 ? (
+                            <span className="btn-inner--text">첨부파일 등록</span>
+                        ) : (
+                            <span className="btn-inner--text">첨부파일 추가 등록</span>
+                        )}
+                    </Button>
                 <input
                     id="fileInput"
                     type="file"
@@ -146,9 +146,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ formType, onFileChange, initFil
             <div>
                 <ul className="list-unstyled mb-0">
                     {fileList.length === 0 ? (
-                        <li className="text-muted">
-                            {formType === 'insert' ? "첨부파일 등록" : "첨부된 파일이 없습니다."}
-                        </li>
+                        <li className="text-muted">첨부된 파일이 없습니다.</li>
                     ) : (
                         fileList.map((file) => {
                             const extension = file.name.split(".").pop()?.toLowerCase() || "";

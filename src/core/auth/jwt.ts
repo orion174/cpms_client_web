@@ -1,7 +1,5 @@
 /* 📁 jwt.ts */
 import axios from 'axios';
-
-import { base64ToInteger } from "@/utils/common.ts";
 import { saveCookie, deleteCookie } from '@/core/auth/cookie.ts';
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -28,6 +26,10 @@ export const getAccessToken = async (cookies: Record<string, string | undefined>
 export const refreshAccessToken = async (refreshToken: string, loginHistoryId: string): Promise<string | null> => {
     try {
         const endPoint = `${API_URL}/api/auth/refresh-token`;
+
+        const jsonData = {
+            loginHistoryId: loginHistoryId
+        };
 
         const response
             = await axios.post(endPoint, jsonData, {
