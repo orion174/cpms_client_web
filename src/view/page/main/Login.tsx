@@ -61,7 +61,6 @@ const Login: React.FC = () => {
                 if (response.data.success && response.data.data) {
                     await saveCookie(response.data.data);
                     navigate('/admin/support/list');
-
                 } else {
                     openCustomModal({
                         title: '알림',
@@ -81,49 +80,64 @@ const Login: React.FC = () => {
     };
 
     return (
-        <Col lg="5" md="8">
-            <Card className="bg-secondary shadow border-0">
-                <CardBody className="px-lg-5 py-lg-5">
-                    <div className="text-center text-muted mb-4">
-                        <small className="custom-text">CPMS</small>
-                    </div>
-                    <Form role="form">
-                        <FormGroup className="mb-3">
-                            <InputGroup className="input-group-alternative">
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><i className="ni ni-circle-08" /></InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    type="text"
-                                    value={loginId}
-                                    placeholder="아이디"
-                                    onChange={(e) => setLoginId(e.target.value)}
-                                    onKeyDown={(e) => handleInputKeyDown(e, handleLogin)}
-                                    innerRef={loginIdRef}
-                                />
-                            </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                            <InputGroup className="input-group-alternative">
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText><i className="ni ni-lock-circle-open" /></InputGroupText>
-                                </InputGroupAddon>
-                                <Input
-                                    type="password"
-                                    placeholder="비밀번호"
-                                    onChange={(e) => setLoginPw(e.target.value)}
-                                    onKeyDown={(e) => handleInputKeyDown(e, handleLogin)}
-                                    innerRef={loginPwRef}
-                                />
-                            </InputGroup>
-                        </FormGroup>
-                        <div className="text-center">
-                            <Button onClick={handleLogin} className="my-4" color="primary" type="button">로그인</Button>
+        <>
+            <Col lg="6" md="8">
+                <Card className="bg-secondary shadow border-0">
+                    <CardBody className="px-lg-5 py-lg-5">
+                        <div className="mb-4" style={{ minHeight: "10px" }} />
+
+                        <div className="text-center text-muted mb-4">
+                            <span className="custom-text">CPMS</span>
                         </div>
-                    </Form>
-                </CardBody>
-            </Card>
-        </Col>
+
+                        <div className="mb-4" style={{ minHeight: "10px" }} />
+                        <Form role="form">
+                            <FormGroup className="mb-3">
+                                <InputGroup className="input-group-alternative">
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText><i className="ni ni-circle-08" /></InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input
+                                        type="text"
+                                        value={loginId}
+                                        placeholder="아이디"
+                                        onChange={(e) => setLoginId(e.target.value)}
+                                        onKeyDown={(e) => handleInputKeyDown(e, handleLogin)}
+                                        innerRef={loginIdRef}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <InputGroup className="input-group-alternative">
+                                    <InputGroupAddon addonType="prepend">
+                                        <InputGroupText><i className="ni ni-lock-circle-open" /></InputGroupText>
+                                    </InputGroupAddon>
+                                    <Input
+                                        type="password"
+                                        placeholder="비밀번호"
+                                        onChange={(e) => setLoginPw(e.target.value)}
+                                        onKeyDown={(e) => handleInputKeyDown(e, handleLogin)}
+                                        innerRef={loginPwRef}
+                                    />
+                                </InputGroup>
+                            </FormGroup>
+                            <div className="text-center">
+                                <Button
+                                    onClick={handleLogin}
+                                    className="my-4 w-100"
+                                    color="primary"
+                                    type="button"
+                                    style={{ paddingTop: '1rem', paddingBottom: '1rem' }}
+                                >
+                                    로그인
+                                </Button>
+                                <div className="mb-4" style={{ minHeight: "40px" }} />
+                            </div>
+                        </Form>
+                    </CardBody>
+                </Card>
+            </Col>
+        </>
     );
 };
 

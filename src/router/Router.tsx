@@ -4,6 +4,7 @@ import Auth from "@/view/layout/Auth.tsx";
 import Admin from "@/view/layout/Admin.tsx";
 
 import Login from "@/view/page/main/Login.tsx";
+import CpmsRegister from "@/view/page/main/register/CpmsRegister.tsx";
 
 import SupportList from "@/view/page/support/list/RequestList.tsx";
 import SupportForm from '@/view/page/support/form/RequestForm.tsx';
@@ -31,6 +32,7 @@ const Router = () => {
 
                 <Route path="/auth/*" element={<Auth/>}>
                     <Route path="login" element={<Login/>} />
+                    <Route path="register" element={<CpmsRegister />} />
                 </Route>
 
                 <Route path="/admin/*" element={<Admin routes={adminRoutes} />}>

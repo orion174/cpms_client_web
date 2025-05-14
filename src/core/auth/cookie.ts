@@ -17,7 +17,7 @@ export const saveCookie = async (userInfo: Partial<ResLoginDTO>): Promise<void> 
         refreshTokenExpiration: userInfo.refreshTokenExpiration,
         authType: userInfo.authType ? utf8ToBase64(userInfo.authType) : '',
         loginHistoryId: userInfo.loginHistoryId ? utf8ToBase64(userInfo.loginHistoryId) : '',
-        companyId: userInfo.companyId ? utf8ToBase64(userInfo.companyId) : '',
+        companyId: userInfo.companyId != null ? utf8ToBase64(userInfo.companyId) : '',
         userId: userInfo.userId ? utf8ToBase64(userInfo.userId) : '',
     };
 

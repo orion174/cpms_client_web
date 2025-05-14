@@ -1,4 +1,3 @@
-
 export const formatPhoneNumber = (phoneNumber: string): string => {
     if (phoneNumber.startsWith('02') && phoneNumber.length === 10) {
         // 02로 시작하는 번호 (예: 02-1234-5678)

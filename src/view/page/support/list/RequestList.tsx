@@ -26,7 +26,7 @@ const RequestList: React.FC = () => {
 
     // 검색 값
     const [ searchParams, setSearchParams ] = useState({
-        searchCompanyId: "",
+        searchCompanyId: 0,
         searchRequestCd: 0,
         searchStatusCd: 0,
         searchStartDt: "",
@@ -42,7 +42,7 @@ const RequestList: React.FC = () => {
     // 검색 초기화
     const handleClearSearch = () => {
         setSearchParams({
-            searchCompanyId: "",
+            searchCompanyId: 0,
             searchRequestCd: 0,
             searchStatusCd: 0,
             searchStartDt: "",

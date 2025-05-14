@@ -47,7 +47,7 @@ const Auth: React.FC = () => {
               </svg>
             </div>
           </div>
-          <Container className="mt--8 pb-5">
+          <Container className="mt--9 pb-6">
             <Row className="justify-content-center">
               <Outlet />
             </Row>
