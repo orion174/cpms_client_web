@@ -22,7 +22,7 @@ const SupportTableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
         5: "primary",
         6: "danger",
         7: "success",
-        8: "dark",
+        8: "default",
     };
 
     // 처리기한 따라 다르게 표시

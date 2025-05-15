@@ -4,4 +4,3 @@
 export interface ResCheckIdDTO {
     loginId: string;
 }
-

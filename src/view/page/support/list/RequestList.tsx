@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { utf8ToBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 
-import ExcelDownLoadButton from "@/components/Module/ExcelDownLoadButton.tsx";
+// import ExcelDownLoadButton from "@/components/Module/ExcelDownLoadButton.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
+import Header from "@/view/layout/Headers/Header.jsx";
 
 import SupportSearchBar from "./components/SupportSearchBar.tsx";
 import SupportTable from "./components/SupportTable.tsx";
@@ -101,7 +102,7 @@ const RequestList: React.FC = () => {
 
     return (
         <>
-            <TempHeader/>
+            {authType === "TEMP" ? <Header /> : <TempHeader />}
 
             <Container className="mt--7" fluid>
                 <Row>
@@ -120,13 +121,13 @@ const RequestList: React.FC = () => {
                                     </Col>
                                     <Col md="2">
                                         <div className="d-flex justify-content-end align-items-center gap-2">
-                                            <ExcelDownLoadButton />
+                                            {/* <ExcelDownLoadButton /> */}
                                             <Button
                                                 type="button"
                                                 color="default"
                                                 onClick={() => navigate("/admin/support/form", { state: { formType: "insert" } })}
                                             >
-                                                등록
+                                                문의등록
                                             </Button>
                                         </div>
                                     </Col>

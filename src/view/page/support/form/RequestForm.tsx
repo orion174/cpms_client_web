@@ -40,7 +40,7 @@ const RequestForm: React.FC = () => {
     const { formType } = location.state as FormType;
 
     const [ formData, setFormData ] = useState({
-        requestCompanyId: 1,
+        requestCompanyId: 0,
         requestProjectId: 0,
         requestCd: 0,
         statusCd: 3,

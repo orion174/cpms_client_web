@@ -37,7 +37,7 @@ const SupportSearchBar: React.FC<Props> = ({
 }) => {
     return (
         <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }}>
-            {authType !== "USER" && (
+            {authType !== "USER" && authType !== "TEMP" && (
                 <InputGroup>
                     <CpmsCompanySelect
                         selectId="searchCompanyId"
@@ -84,7 +84,7 @@ const SupportSearchBar: React.FC<Props> = ({
                     </InputGroupText>
                 </InputGroupAddon>
             </InputGroup>
-            <InputGroup>
+            <InputGroup className="input-title">
                 <Input
                     id="searchTitle"
                     type="text"

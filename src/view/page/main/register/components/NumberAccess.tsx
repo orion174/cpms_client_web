@@ -73,7 +73,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
 
             if (success) {
                 openCustomModal({ title: '알림', message, isConfirm: false });
-                setIsVerified(true); // ✅ 상태 변경
+                setIsVerified(true);
                 onSuccess(); // 외부 상태 변경
             }
         } catch (error) {

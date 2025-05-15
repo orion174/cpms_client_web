@@ -26,14 +26,14 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
         const fetchCompanys = async () => {
             try {
                 const endPoint = `/api/setting/company/list`;
-
                 const jsonData = {
                     companyId: companyId ?? 0
                 }
 
                 const response = await apiClient.post<ResCompanyDTO[]>(endPoint, jsonData);
 
-                setOptions(response)
+                setOptions(response);
+
             } catch (error) {
                 console.error("업체 조회 실패: ", error);
             }
@@ -41,6 +41,17 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
 
         fetchCompanys();
     }, [companyId]);
+
+    // 옵션이 하나뿐이면 자동 선택
+    useEffect(() => {
+        if (options.length === 1) {
+            const fakeEvent = {
+                target: { value: options[0].companyId.toString() }
+            } as React.ChangeEvent<HTMLSelectElement>;
+
+            onChange(fakeEvent);
+        }
+    }, [options, onChange]);
 
     return (
         <select id={selectId} value={value} className={classNm} onChange={onChange}>

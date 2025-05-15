@@ -88,6 +88,13 @@
     max-width: 210px; /* 최대 가로폭 설정 */
 }
 
+.input-title {
+    display: flex;
+    align-items: center;
+    flex-grow: 0.1; /* 가로폭을 더 줄임 */
+    max-width: 250px; /* 최대 가로폭 설정 */
+}
+
 .text-editor__wrapper {
     width: 100% !important; /* 가로 너비를 유지 */
     height: auto; /* 높이를 내용에 따라 유동적으로 변경 */

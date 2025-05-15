@@ -17,7 +17,7 @@ interface PhoneVerifyBlockProps {
     phone: string;
     setPhone: (value: string) => void;
     onVerified: () => void;
-    isVerified: boolean; // ✅ 추가
+    isVerified: boolean;
 }
 
 const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, onVerified, isVerified }) => {
@@ -31,10 +31,6 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, on
             openCustomModal({ title: '알림', message: '전화번호는 숫자 11자리만 입력해주세요.', isConfirm: false });
             return;
         }
-
-        // setPhoneLocked(true);
-        // openCustomModal({ title: '알림', message: '테스트', isConfirm: false });
-        // onVerified();
 
         try {
             const endPoint = `${import.meta.env.VITE_API_URL}/api/user/verify/send-sms`;
@@ -64,7 +60,6 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, on
         }
     };
 
-
     return (
         <Row>
             <Col xs="8">
@@ -78,7 +73,9 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, on
                         placeholder="휴대폰 번호"
                         disabled={phoneLocked}
                         value={formatPhoneNumber(phone)}
-                        onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, '').slice(0, 11))}
+                        onChange={(e) => setPhone(
+                            e.target.value.replace(/[^\d]/g, '').slice(0, 11)
+                        )}
                     />
                 </InputGroup>
             </Col>
