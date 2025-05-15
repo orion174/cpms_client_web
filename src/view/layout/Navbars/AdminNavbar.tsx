@@ -15,33 +15,52 @@ import {
   Media,
 } from "reactstrap";
 import React from "react";
-import { useNavigate } from "react-router-dom";
 // import { Link } from "react-router-dom";
-// import { useEffect, useState  } from "react";
+import { useEffect, useState  } from "react";
+
+import { logOut, getUserAuthInfo } from '@/utils/common.ts';
+import useModalHook from "@/hook/useModal.ts";
+import Today from "@/components/Today.tsx";
 
 import tempUser from "@/assets/img/icons/temp_user.png";
 // import argonReact from "@/assets/img/brand/argon-react.png";
-import useModalHook from "@/hook/useModal.ts";
-import Today from "@/components/Today.tsx";
 
 interface AdminNavbarProps {
   onLogout?: () => void;
 }
 
 const AdminNavbar: React.FC<AdminNavbarProps> = () => {
-  const navigate = useNavigate();
   const { openCustomModal } = useModalHook();
-
-  const handleTempAlert = () => {
-    openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
-    return;
-  };
+  // const handleTempAlert = () => {
+  //   openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
+  //   return;
+  // };
 
   const handleLogOut = () => {
-    navigate(`/auth/login`);
+    openCustomModal({
+      title: "알림"
+      , message: "로그아웃 하시겠습니까?"
+      , isConfirm: true
+      , onConfirm: () => {
+        logOut();
+      }
+    });
   };
 
-  return (
+    const [loginId, setLoginId] = useState<string | null>(null);
+
+    useEffect(() => {
+      const fetchLoginId = async () => {
+        const userInfo = await getUserAuthInfo();
+        if (userInfo?.loginId) {
+          setLoginId(userInfo.loginId);
+        }
+      };
+
+      fetchLoginId();
+    }, []);
+
+    return (
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
 
@@ -72,28 +91,28 @@ const AdminNavbar: React.FC<AdminNavbarProps> = () => {
                   </span>
                   <Media className="ml-2 d-none d-lg-block">
                     <span className="mb-0 text-sm font-weight-bold">
-                      CPMS Admin
+                      {loginId}님
                     </span>
                   </Media>
                 </Media>
               </DropdownToggle>
 
               <DropdownMenu className="dropdown-menu-arrow" right>
-                <DropdownItem className="noti-title" header tag="div">
-                  <h6 className="text-overflow m-0">Welcome!</h6>
-                </DropdownItem>
-                <DropdownItem onClick={handleTempAlert}>
-                  <i className="ni ni-single-02" />
-                  <span>My profile</span>
-                </DropdownItem>
-                <DropdownItem onClick={handleTempAlert}>
-                  <i className="ni ni-settings-gear-65" />
-                  <span>Settings</span>
-                </DropdownItem>
-                <DropdownItem divider />
+                {/*<DropdownItem className="noti-title" header tag="div">*/}
+                {/*  <h6 className="text-overflow m-0">Welcome!</h6>*/}
+                {/*</DropdownItem>*/}
+                {/*<DropdownItem onClick={handleTempAlert}>*/}
+                {/*  <i className="ni ni-single-02" />*/}
+                {/*  <span>My profile</span>*/}
+                {/*</DropdownItem>*/}
+                {/*<DropdownItem onClick={handleTempAlert}>*/}
+                {/*  <i className="ni ni-settings-gear-65" />*/}
+                {/*  <span>Settings</span>*/}
+                {/*</DropdownItem>*/}
+                {/*<DropdownItem divider />*/}
                 <DropdownItem onClick={handleLogOut}>
                   <i className="ni ni-user-run" />
-                  <span>Logout</span>
+                  <span>Log out</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>

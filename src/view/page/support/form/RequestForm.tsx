@@ -33,13 +33,22 @@ interface FormType {
     formType: "insert" | "update";
 }
 
+interface RequestFormData {
+    requestCompanyId: number;
+    requestProjectId: number;
+    requestCd: number;
+    statusCd: number;
+    supportTitle: string;
+    requestDate: string;
+}
+
 const RequestForm: React.FC = () => {
     const location = useLocation();
     const { openCustomModal } = useModalHook();
 
     const { formType } = location.state as FormType;
-
-    const [ formData, setFormData ] = useState({
+    const [ fileList, setFileList ] = useState<FileItem[]>([]);
+    const [ formData, setFormData ] = useState<RequestFormData>({
         requestCompanyId: 0,
         requestProjectId: 0,
         requestCd: 0,
@@ -72,8 +81,6 @@ const RequestForm: React.FC = () => {
 
         loadScripts();
     }, []);
-
-    const [ fileList, setFileList ] = useState<FileItem[]>([]);
 
     // 폼 데이터 매핑
     const handleInputChange = (key: keyof typeof formData, value: string) => {

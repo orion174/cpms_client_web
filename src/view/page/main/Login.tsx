@@ -16,7 +16,6 @@ import axios from 'axios';
 
 import useModalHook from '@/hook/useModal';
 import { handleInputKeyDown } from '@/utils/common.ts'
-import { saveCookie } from "@/core/auth/cookie.ts";
 import { handleErrorByCode } from '@/core/api/interceptor.ts';
 
 import { ApiResponse, ResLoginDTO } from '@/definition/common.types.ts';
@@ -54,30 +53,30 @@ const Login: React.FC = () => {
 
             const response = await axios.post<ApiResponse<ResLoginDTO>>(url, jsonData, {
                 headers: { 'Content-Type': 'application/json' },
-                withCredentials: true,
+                withCredentials: true
             });
 
-            if (response.status === 200) {
-                if (response.data.success && response.data.data) {
-                    await saveCookie(response.data.data);
-                    navigate('/admin/support/list');
-                } else {
-                    openCustomModal({
-                        title: '알림',
-                        message: response.data.message ?? '로그인 실패',
-                        isConfirm: false
-                    });
-                }
+            const { success, message, data } = response.data;
+
+            if (success && data?.accessToken) {
+                navigate('/admin/support/list');
+
+            } else {
+                openCustomModal({
+                    title: '알림',
+                    message: message ?? '로그인 실패',
+                    isConfirm: false
+                });
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const code = error.response?.data?.errorCode as string | undefined;
                 const msg = error.response?.data?.message as string | undefined;
-
                 handleErrorByCode(code, msg);
             }
         }
     };
+
 
     return (
         <>

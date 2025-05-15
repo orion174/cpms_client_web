@@ -1,4 +1,61 @@
 import React, {DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { jwtDecode } from 'jwt-decode';
+
+import { getCookie, deleteCookie } from "@/core/auth/cookie.ts";
+
+interface JwtPayload {
+    authType: string;
+    [key: string]: any;
+}
+
+// 로그아웃
+export const logOut = async () => {
+    await deleteCookie();
+    window.location.href = '/auth/login';
+};
+
+// 사용자 정보 조회
+export const getUserAuthInfo = async (): Promise<{ authType: string; loginId: string } | null> => {
+    const cookies = await getCookie() as Record<string, string | undefined>;
+    const accessToken = cookies?.accessToken;
+
+    if (!accessToken) return null;
+
+    try {
+        const decoded = jwtDecode<JwtPayload>(accessToken);
+        const authType = decoded.authType ?? null;
+        const loginId = decoded.loginId ?? null;
+
+        if (!authType || !loginId) return null;
+
+        return { authType, loginId };
+    } catch (e) {
+        console.error("JWT 디코딩 실패:", e);
+        return null;
+    }
+};
+
+// 사용자 권한 조회
+export const getUserAuthType = async (): Promise<string | null> => {
+    const cookies = await getCookie() as Record<string, string | undefined>;
+    const accessToken = cookies?.accessToken;
+
+    if (!accessToken) return null;
+
+    try {
+        const decoded = jwtDecode<JwtPayload>(accessToken);
+        return decoded.authType ?? null;
+    } catch (e) {
+        console.error("JWT 디코딩 실패:", e);
+        return null;
+    }
+};
+
+export const tokenError = () => {
+    deleteCookie().then(() => {
+        window.location.href = '/auth/login';
+    });
+};
 
 export const isBase64 = (str: string): boolean => {
     if (!str || str.trim() === "") return false;

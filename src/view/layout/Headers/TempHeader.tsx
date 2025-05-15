@@ -21,7 +21,7 @@ const Header = () => {
                                           신규 등록
                                         </CardTitle>
                                         <span className="h2 font-weight-bold mb-0">
-                                          897
+                                          0
                                         </span>
                                       </div>
                                       <Col className="col-auto">
@@ -32,7 +32,7 @@ const Header = () => {
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-success mr-2">
-                                        <i className="fa fa-arrow-up" /> 136 건
+                                        <i className="fa fa-arrow-up" /> 0 건
                                       </span>{" "}
                                       <span className="text-nowrap">어제 보다</span>
                                     </p>
@@ -50,7 +50,7 @@ const Header = () => {
                                         >
                                           신규 접수
                                         </CardTitle>
-                                        <span className="h2 font-weight-bold mb-0">1056</span>
+                                        <span className="h2 font-weight-bold mb-0">0</span>
                                       </div>
                                       <Col className="col-auto">
                                         <div className="icon icon-shape bg-warning text-white rounded-circle shadow">
@@ -60,7 +60,7 @@ const Header = () => {
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-danger mr-2">
-                                        <i className="fas fa-arrow-down" /> 34 건
+                                        <i className="fas fa-arrow-down" /> 0 건
                                       </span>{" "}
                                       <span className="text-nowrap">어제 보다</span>
                                     </p>
@@ -78,7 +78,7 @@ const Header = () => {
                                         >
                                           처리 완료
                                         </CardTitle>
-                                        <span className="h2 font-weight-bold mb-0">924</span>
+                                        <span className="h2 font-weight-bold mb-0">0</span>
                                       </div>
                                       <Col className="col-auto">
                                         <div className="icon icon-shape bg-green text-white rounded-circle shadow">
@@ -88,7 +88,7 @@ const Header = () => {
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-warning mr-2">
-                                        <i className="fas fa-arrow-down" /> 11 건
+                                        <i className="fas fa-arrow-down" /> 0 건
                                       </span>{" "}
                                       <span className="text-nowrap">어제 보다</span>
                                     </p>
@@ -106,7 +106,7 @@ const Header = () => {
                                         >
                                           전체 처리율
                                         </CardTitle>
-                                        <span className="h2 font-weight-bold mb-0">59,6%</span>
+                                        <span className="h2 font-weight-bold mb-0">0%</span>
                                       </div>
                                       <Col className="col-auto">
                                         <div className="icon icon-shape bg-info text-white rounded-circle shadow">
@@ -116,7 +116,7 @@ const Header = () => {
                                     </Row>
                                     <p className="mt-3 mb-0 text-muted text-sm">
                                       <span className="text-success mr-2">
-                                        <i className="fas fa-arrow-up" /> 12%
+                                        <i className="fas fa-arrow-up" /> 0%
                                       </span>{" "}
                                       <span className="text-nowrap">어제 보다</span>
                                     </p>

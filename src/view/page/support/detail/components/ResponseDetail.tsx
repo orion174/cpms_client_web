@@ -81,7 +81,7 @@ const ResponseDetail: React.FC<ResponseDetailProps> = (
                                         </Col>
                                     )}
 
-                                    {authType !== "USER" && (
+                                    {authType == "ADMIN" && (
                                         <Col className="text-right" xs="12">
                                             <Button onClick={onResponseDelete} color="danger" outline>답변삭제</Button>
                                             <Button onClick={onResponseUpdate} color="info" outline>답변수정</Button>

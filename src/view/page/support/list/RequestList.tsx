@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { utf8ToBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
+import { getUserAuthType } from '@/utils/common.ts';
 
 // import ExcelDownLoadButton from "@/components/Module/ExcelDownLoadButton.tsx";
 import PaginationComponent from "@/components/Module/Pagination.tsx";
@@ -17,16 +18,25 @@ import SupportTable from "./components/SupportTable.tsx";
 
 import { ResSupportListDTO, SupportList } from "./../types.ts";
 
+interface SupportSearchParams {
+    searchCompanyId: number;
+    searchRequestCd: number;
+    searchStatusCd: number;
+    searchStartDt: string;
+    searchEndDt: string;
+    searchTitle: string;
+}
+
 const RequestList: React.FC = () => {
     const navigate = useNavigate();
 
-    const [ currentPage, setCurrentPage ] = useState(1);
+    const [ authType, setAuthType ] = useState<string | null>(null);
+    const [ currentPage, setCurrentPage ] = useState<number>(1);
     const [ data, setData ] = useState<SupportList[]>([]);
-    const [ totalCnt, setTotalCnt ] = useState(0);
-    const [ authType, setAuthType ] = useState("");
+    const [ totalCnt, setTotalCnt ] = useState<number>(0);
 
     // 검색 값
-    const [ searchParams, setSearchParams ] = useState({
+    const [ searchParams, setSearchParams ] = useState<SupportSearchParams>({
         searchCompanyId: 0,
         searchRequestCd: 0,
         searchStatusCd: 0,
@@ -69,15 +79,26 @@ const RequestList: React.FC = () => {
 
             setTotalCnt(result.totalCnt);
             setData(result.supportList);
-            setAuthType(result.authType);
         } catch (error) {
             console.error("유지보수 목록 조회 실패:", error);
         }
     }, [searchParams, currentPage]);
 
     useEffect(() => {
-        fetchSupportList();
-    },  [fetchSupportList]);
+        const init = async () => {
+            const type = await getUserAuthType();
+
+            if (!type) {
+                navigate("/auth/login");
+                return;
+            }
+
+            setAuthType(type);
+            await fetchSupportList();
+        };
+
+        init();
+    }, [fetchSupportList]);
 
     // 접수대기인 게시글을 클릭하여 상세 페이지로 이동 전, 접수완료로 자동 업데이트 처리한다.
     const handleRowClick = useCallback(async (supportRequestId: number, statusCd: number) => {
@@ -100,7 +121,7 @@ const RequestList: React.FC = () => {
         }
     }, [navigate]);
 
-    return (
+    return authType === null ? null : (
         <>
             {authType === "TEMP" ? <Header /> : <TempHeader />}
 

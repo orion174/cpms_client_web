@@ -8,35 +8,31 @@ export interface ApiResponse<T = any> {
     errorCode?: string;
 }
 
+// 쿠키
+export interface ResCookieDTO {
+    cookies: Record<string, string>;
+}
+
+// 리프레쉬 토큰 응답 인터페이스
+export interface ResRefreshTokenDTO {
+    accessToken: string;
+    accessTokenExpiration: number;
+}
+
 // 로그인 응답 인터페이스
 export interface ResLoginDTO {
-    accessToken: string;
-    refreshToken: string;
-    accessTokenExpiration: number;
-    refreshTokenExpiration: number;
     authType: string;
     loginHistoryId: number;
     userId: number;
+    userNm: string;
     companyId: number;
     loginId: string;
     loginPw: string;
     useYn: string;
-    option: string;
-}
-
-// Jwt 토큰 인터페이스
-export interface JwtDto {
-    grantType: string;
     accessToken: string;
     refreshToken: string;
     accessTokenExpiration: number;
     refreshTokenExpiration: number;
-    authType: string;
-    loginHistoryId: number;
-    userId: number;
-    companyId: number;
-    loginId: string;
-    loginPw: string;
 }
 
 // 파일 인터페이스

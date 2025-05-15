@@ -6,8 +6,10 @@ import store from '@/store';
 import { openModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
 
-import { getAccessToken, refreshAccessToken, tokenError } from '@/core/auth/jwt.ts';
+import { getAccessToken, refreshAccessToken } from '@/core/auth/jwt.ts';
 import { getCookie } from '@/core/auth/cookie.ts';
+import { tokenError } from '@/utils/common.ts';
+
 import { ApiResponse } from '@/definition/common.types.ts';
 
 // ✅ 요청 인터셉터: 토큰 삽입
@@ -65,7 +67,7 @@ export const errorInterceptor = async (error: any) => {
 
         if (refreshToken && loginHistoryId) {
             try {
-                const newAccessToken = await refreshAccessToken(refreshToken, loginHistoryId);
+                const newAccessToken = await refreshAccessToken(loginHistoryId, refreshToken);
 
                 if (newAccessToken) {
                     originalRequest.headers = {

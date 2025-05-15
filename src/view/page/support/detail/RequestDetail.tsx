@@ -15,6 +15,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import useModalHook from "@/hook/useModal.ts";
 import { base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
+import { getUserAuthType } from '@/utils/common.ts';
 
 import Header from "@/view/layout/Headers/Header.jsx";
 import FileDown from "@/components/Module/FileDownload.tsx";
@@ -51,7 +52,6 @@ const SupportDetail: React.FC = () => {
                     isConfirm: false,
                     redirectUrl: "/admin/support/list",
                 });
-
                 return;
             }
 
@@ -59,14 +59,15 @@ const SupportDetail: React.FC = () => {
             if (isNaN(decodedId)) return;
 
             try {
-                const endPoint = `/api/support/detail`;
+                const [type, result] = await Promise.all([
+                    getUserAuthType(),
+                    apiClient.post<ResSupportDetailDTO>("/api/support/detail", {
+                        supportRequestId: decodedId,
+                    }),
+                ]);
 
-                const result = await apiClient.post<ResSupportDetailDTO>(endPoint, {
-                    supportRequestId: decodedId,
-                });
-
+                setAuthType(type ?? ""); // fallback
                 setResult(result);
-                setAuthType(result.authType);
 
                 const requestFiles = result.fileList?.filter(f => f.fileType === "REQ") ?? [];
                 const responseFiles = result.fileList?.filter(f => f.fileType === "RES") ?? [];
@@ -247,7 +248,7 @@ const SupportDetail: React.FC = () => {
                                         </Row>
                                     </div>
 
-                                    {authType !== "USER" && !showResponseForm && !hasSupportResponse(result) && (
+                                    {authType == "ADMIN" && !showResponseForm && !hasSupportResponse(result) && (
                                         <div className="button-right">
                                             <Button color="success" onClick={handleShowResponseForm}>답변하기</Button>
                                         </div>
