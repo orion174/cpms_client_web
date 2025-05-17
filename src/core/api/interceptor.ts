@@ -1,31 +1,33 @@
 /* 📁 interceptor.ts */
-import type { AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import type {
+    AxiosResponse,
+    InternalAxiosRequestConfig,
+    AxiosRequestHeaders,
+} from 'axios';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 import store from '@/store';
 import { openModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
 
-import { getAccessToken, refreshAccessToken } from '@/core/auth/jwt.ts';
-import { getCookie } from '@/core/auth/cookie.ts';
-import { tokenError } from '@/utils/common.ts';
+import { getAccessToken, refreshAccessToken } from '@/core/auth/jwt';
+import { tokenError } from '@/core/auth/jwt';
 
-import { ApiResponse } from '@/definition/common.types.ts';
+import { ApiResponse } from '@/definition/common.types';
 
-// ✅ 요청 인터셉터: 토큰 삽입
-export const requestInterceptor = async (config: InternalAxiosRequestConfig) => {
-    const cookies = await getCookie() as Record<string, string | undefined>;
-    const token = await getAccessToken(cookies);
-
+// 요청 인터셉터 – 세션스토리지 accessToken 삽입
+export const requestInterceptor = async (config: InternalAxiosRequestConfig,) => {
+    const token = getAccessToken();
     if (token) {
         config.headers = (config.headers ?? {}) as AxiosRequestHeaders;
-        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;
 };
 
-// ✅ 응답 인터셉터: success=false 처리 및 예외적인 blob 타입은 패스
+// 응답 인터셉터 – success=false 처리 (blob 등 예외는 통과)
 export const responseInterceptor = async (response: AxiosResponse) => {
     const contentType = response.headers['content-type'] || '';
 
@@ -48,51 +50,38 @@ export const responseInterceptor = async (response: AxiosResponse) => {
     return response;
 };
 
-// ✅ 에러 인터셉터: 토큰 재발급 및 서버 오류 처리
+// 에러 인터셉터 – 401 시 토큰 재발급
 export const errorInterceptor = async (error: any) => {
     const originalRequest = error.config;
     const status = error.response?.status;
 
-    // 🔐 토큰 만료 시 리프레시 시도
+    // 🔐 AccessToken 만료 → 재발급 시도
     if (status === 401 && !originalRequest._retry) {
-        if (originalRequest.url?.includes('/api/auth/refresh-token')) {
-            tokenError();
-            return Promise.reject(error);
-        }
-
         originalRequest._retry = true;
 
-        const cookies = await getCookie() as Record<string, string | undefined>;
-        const { refreshToken, loginHistoryId } = cookies;
+        const newToken = await refreshAccessToken();
 
-        if (refreshToken && loginHistoryId) {
-            try {
-                const newAccessToken = await refreshAccessToken(loginHistoryId, refreshToken);
+        if (newToken) {
+            originalRequest.headers = {
+                ...(originalRequest.headers ?? {}),
+                Authorization: `Bearer ${newToken}`,
+            };
 
-                if (newAccessToken) {
-                    originalRequest.headers = {
-                        ...(originalRequest.headers ?? {}),
-                        Authorization: `Bearer ${newAccessToken}`,
-                    };
-
-                    return await import('@/core/api/client.ts').then(({ callAPI }) => callAPI(originalRequest));
-                }
-            } catch {
-                tokenError();
-            }
-        } else {
-            tokenError();
+            originalRequest.withCredentials = true;
+            return axios.request(originalRequest);
         }
+
+        tokenError();
     }
 
-    // ⚠️ 서버가 내려준 에러 메시지 처리
+    /* ⚠️ 서버가 내려준 에러 메시지 처리 */
     const response = error.response?.data as ApiResponse;
     handleErrorByCode(response?.errorCode, response?.message);
 
     return Promise.reject(error);
 };
 
-// ✅ 에러 코드별 사용자 안내 처리
+// 에러 코드별 모달 처리
 export const handleErrorByCode = (code?: string, msg?: string) => {
     const errorCode = code ?? '0000';
     const message = msg ?? '알 수 없는 오류가 발생했습니다.';
@@ -105,25 +94,27 @@ export const handleErrorByCode = (code?: string, msg?: string) => {
                 window.location.href = '/auth/login';
             });
             break;
-
         default:
             openErrorModal(`오류_${errorCode}`, message);
             break;
     }
 };
 
-// ✅ 에러 모달 오픈
-const openErrorModal = (title: string, message: string, onConfirm?: () => void) => {
+// 에러 모달 오픈 헬퍼
+const openErrorModal = (
+    title: string,
+    message: string,
+    onConfirm?: () => void,
+) => {
     const modalId = uuidv4();
+    if (onConfirm) callbackStore.setCallback(modalId, onConfirm);
 
-    if (onConfirm) {
-        callbackStore.setCallback(modalId, onConfirm);
-    }
-
-    store.dispatch(openModal({
-        title,
-        message,
-        isConfirm: !!onConfirm,
-        modalId,
-    }));
+    store.dispatch(
+        openModal({
+            title,
+            message,
+            isConfirm: !!onConfirm,
+            modalId,
+        }),
+    );
 };

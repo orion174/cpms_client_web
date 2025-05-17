@@ -40,16 +40,16 @@
 		let webUrl;
 
 		switch (true) {
-			case hostName.includes('운영서버'):
-				webUrl = '운영서버';
+			case hostName.includes('cpms-prod84952.duckdns.org'):
+				webUrl = 'https://cpms-api69522.duckdns.org';
 				break;
 			default:
 				webUrl = 'http://localhost:8081';
 				break;
 		}
 
-		return webUrl
-	}
+		return webUrl;
+	};
 
 	const WEB_URL = getEditorWebUrl();
 	

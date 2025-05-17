@@ -30,28 +30,24 @@ interface AdminNavbarProps {
 }
 
 const AdminNavbar: React.FC<AdminNavbarProps> = () => {
-  const { openCustomModal } = useModalHook();
-  // const handleTempAlert = () => {
-  //   openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
-  //   return;
-  // };
+    const { openCustomModal } = useModalHook();
 
-  const handleLogOut = () => {
-    openCustomModal({
-      title: "알림"
-      , message: "로그아웃 하시겠습니까?"
-      , isConfirm: true
-      , onConfirm: () => {
-        logOut();
-      }
-    });
-  };
+    const handleLogOut = () => {
+      openCustomModal({
+        title: "알림"
+        , message: "로그아웃 하시겠습니까?"
+        , isConfirm: true
+        , onConfirm: () => {
+          logOut();
+        }
+      });
+    };
 
     const [loginId, setLoginId] = useState<string | null>(null);
 
     useEffect(() => {
       const fetchLoginId = async () => {
-        const userInfo = await getUserAuthInfo();
+        const userInfo = getUserAuthInfo();
         if (userInfo?.loginId) {
           setLoginId(userInfo.loginId);
         }
@@ -63,9 +59,7 @@ const AdminNavbar: React.FC<AdminNavbarProps> = () => {
     return (
       <Navbar className="navbar-top navbar-dark" expand="md" id="navbar-main">
         <Container fluid>
-
           <Today />
-
           {/* TODO 전체 헤더 검색 기능 구현 */}
           {/*<RequestForm className="navbar-search navbar-search-dark form-inline mr-3 d-none d-md-flex ml-lg-auto">*/}
           {/*  <FormGroup className="mb-0">*/}
@@ -82,7 +76,6 @@ const AdminNavbar: React.FC<AdminNavbarProps> = () => {
 
           <Nav className="align-items-center d-none d-md-flex" navbar>
             <UncontrolledDropdown nav>
-
               {/* TODO 사용자 계정 별 정보 세팅 */}
               <DropdownToggle className="pr-0" nav>
                 <Media className="align-items-center">
@@ -110,14 +103,15 @@ const AdminNavbar: React.FC<AdminNavbarProps> = () => {
                 {/*  <span>Settings</span>*/}
                 {/*</DropdownItem>*/}
                 {/*<DropdownItem divider />*/}
+
                 <DropdownItem onClick={handleLogOut}>
                   <i className="ni ni-user-run" />
                   <span>Log out</span>
                 </DropdownItem>
               </DropdownMenu>
+
             </UncontrolledDropdown>
           </Nav>
-
         </Container>
       </Navbar>
   );

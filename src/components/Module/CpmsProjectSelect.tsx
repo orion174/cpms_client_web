@@ -21,6 +21,7 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     classNm
 }) => {
     const [ options, setOptions ] = useState<ResProjectDTO[]>([]);
+    const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
     useEffect(() => {
         const fetchProjects = async () => {
@@ -44,12 +45,13 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
 
     // 옵션이 하나만 있을 경우 자동 선택
     useEffect(() => {
-        if (options.length === 1) {
+        if (options.length === 1 && !hasAutoSelected) {
             const fakeEvent = {
                 target: { value: options[0].projectId.toString() }
             } as React.ChangeEvent<HTMLSelectElement>;
 
             onChange(fakeEvent);
+            setHasAutoSelected(true);
         }
     }, [options, onChange]);
 

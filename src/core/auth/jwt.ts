@@ -1,57 +1,51 @@
 /* 📁 jwt.ts */
 import axios from 'axios';
-import { tokenError, base64ToUtf8 } from '@/utils/common.ts';
 import { ApiResponse, ResRefreshTokenDTO } from '@/definition/common.types';
+import {deleteCookie} from "@/core/auth/cookie.ts";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const ACCESS_KEY = 'accessToken';
+const LOGIN_HISTORY_KEY = 'loginHistoryId';
 
-// Acess 토큰을 조회한다.
-export const getAccessToken = async (cookies: Record<string, string | undefined>): Promise<string | null> => {
-    let accessToken = cookies?.accessToken ?? null;
-    const refreshToken = cookies?.refreshToken ?? null;
-    const loginHistoryId = cookies?.loginHistoryId ?? null;
+// AccessToken 조회
+export const getAccessToken = (): string | null => sessionStorage.getItem(ACCESS_KEY);
 
-    if (!loginHistoryId || !refreshToken) return null;
-
-    if (!accessToken) {
-        accessToken = await refreshAccessToken(loginHistoryId, refreshToken);
-    }
-
-    return accessToken;
-};
-
-// 토큰을 갱신한다.
-export const refreshAccessToken = async (
-    loginHistoryId: string,
-    refreshToken: string
-): Promise<string | null> => {
+// 토큰 갱신
+export const refreshAccessToken = async (): Promise<string | null> => {
     try {
-        const endPoint = `${API_URL}/api/auth/refresh-token`;
-        const decodedLoginHistoryId = Number(base64ToUtf8(loginHistoryId));
+        const loginHistoryId = sessionStorage.getItem(LOGIN_HISTORY_KEY);
+        if (!loginHistoryId) return null;
 
-        const response = await axios.post<ApiResponse<ResRefreshTokenDTO>>(
+        const endPoint = `${API_URL}/api/auth/refresh-token`;
+
+        const { data } = await axios.post<ApiResponse<ResRefreshTokenDTO>>(
             endPoint,
-            { loginHistoryId: decodedLoginHistoryId },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Refresh-Token': refreshToken,
-                },
-                withCredentials: true,
-            }
+            { loginHistoryId: Number(loginHistoryId) },
+            { withCredentials: true }
         );
 
-        const { success, data } = response.data;
+        if (data.success && data.data?.accessToken) {
+            const { accessToken } = data.data;
+            sessionStorage.setItem(ACCESS_KEY, accessToken);
 
-        if (success && data?.accessToken) {
-            return data.accessToken;
-        } else {
-            tokenError();
-            return null;
+            return accessToken;
         }
-    } catch (error) {
-        console.error('refreshAccessToken error:', error);
+
+        tokenError();
+        return null;
+    } catch (err) {
+        console.error('refreshAccessToken error:', err);
         tokenError();
         return null;
     }
+};
+
+export const tokenError = () => {
+    sessionStorage.clear();
+
+    deleteCookie()
+        .catch(err => console.warn('deleteCookie failed:', err))
+        .finally(() => {
+            window.location.replace('/auth/login');
+        });
 };

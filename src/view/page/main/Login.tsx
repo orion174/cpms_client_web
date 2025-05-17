@@ -44,39 +44,47 @@ const Login: React.FC = () => {
         }
 
         try {
-            const jsonData = {
-                loginId: loginId,
-                loginPw: loginPw
-            };
-
             const url = `${import.meta.env.VITE_API_URL}/api/auth/login`;
-
-            const response = await axios.post<ApiResponse<ResLoginDTO>>(url, jsonData, {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            });
+            const response = await axios.post<ApiResponse<ResLoginDTO>>(
+                url,
+                { loginId, loginPw },
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    // refreshToken 쿠키를 심어야 하므로 유지
+                    withCredentials: true,
+                },
+            );
 
             const { success, message, data } = response.data;
 
             if (success && data?.accessToken) {
-                navigate('/admin/support/list');
+                /* ───────────────────────────────
+                 * ① 토큰 & 메타데이터 저장
+                 *    accessToken  : 세션스토리지
+                 *    accessExpire : (선택) 만료값
+                 *    loginHistoryId : refresh 호출 때 사용
+                 * ─────────────────────────────── */
+                sessionStorage.setItem('accessToken', data.accessToken);
+                sessionStorage.setItem('accessExp', String(data.accessTokenExpiration));
+                sessionStorage.setItem('loginHistoryId', String(data.loginHistoryId));
 
+                navigate('/admin/support/list');
             } else {
                 openCustomModal({
                     title: '알림',
                     message: message ?? '로그인 실패',
-                    isConfirm: false
+                    isConfirm: false,
                 });
             }
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                const code = error.response?.data?.errorCode as string | undefined;
-                const msg = error.response?.data?.message as string | undefined;
-                handleErrorByCode(code, msg);
+                handleErrorByCode(
+                    error.response?.data?.errorCode as string | undefined,
+                    error.response?.data?.message as string | undefined,
+                );
             }
         }
     };
-
 
     return (
         <>

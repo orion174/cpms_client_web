@@ -40,7 +40,7 @@ nhn.husky.SE2M_AttachQuickPhoto = jindo.$Class({
 		// 복수 업로드시에 순서가 바뀜
 		// [SMARTEDITORSUS-1698]
 		this.oApp.exec('FOCUS', [true]);
-		// --[SMARTEDITORSUS-1698]
+		// --[SMARTEDITORSUS-1698]sadsd
 		return (!!this.oPopupWindow ? true : false);
 	},
 	

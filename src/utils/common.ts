@@ -1,7 +1,6 @@
 import React, {DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { jwtDecode } from 'jwt-decode';
-
-import { getCookie, deleteCookie } from "@/core/auth/cookie.ts";
+import { deleteCookie } from "@/core/auth/cookie.ts";
 
 interface JwtPayload {
     authType: string;
@@ -9,36 +8,35 @@ interface JwtPayload {
 }
 
 // 로그아웃
-export const logOut = async () => {
-    await deleteCookie();
-    window.location.href = '/auth/login';
+export const logOut = () => {
+    sessionStorage.clear();
+    deleteCookie()
+        .catch(err => console.warn('deleteCookie failed:', err))
+        .finally(() => {
+            window.location.replace('/auth/login');
+        });
 };
 
 // 사용자 정보 조회
-export const getUserAuthInfo = async (): Promise<{ authType: string; loginId: string } | null> => {
-    const cookies = await getCookie() as Record<string, string | undefined>;
-    const accessToken = cookies?.accessToken;
-
+export const getUserAuthInfo = (): { authType: string; loginId: string } | null => {
+    const accessToken = sessionStorage.getItem('accessToken');
     if (!accessToken) return null;
 
     try {
         const decoded = jwtDecode<JwtPayload>(accessToken);
-        const authType = decoded.authType ?? null;
-        const loginId = decoded.loginId ?? null;
+        const { authType, loginId } = decoded;
 
-        if (!authType || !loginId) return null;
-
-        return { authType, loginId };
+        return authType && loginId ? { authType, loginId } : null;
     } catch (e) {
-        console.error("JWT 디코딩 실패:", e);
+        console.error('JWT 디코딩 실패:', e);
         return null;
     }
 };
 
 // 사용자 권한 조회
 export const getUserAuthType = async (): Promise<string | null> => {
-    const cookies = await getCookie() as Record<string, string | undefined>;
-    const accessToken = cookies?.accessToken;
+    const accessToken = sessionStorage.getItem('accessToken');
+    if (!accessToken) return null;
 
     if (!accessToken) return null;
 
@@ -49,12 +47,6 @@ export const getUserAuthType = async (): Promise<string | null> => {
         console.error("JWT 디코딩 실패:", e);
         return null;
     }
-};
-
-export const tokenError = () => {
-    deleteCookie().then(() => {
-        window.location.href = '/auth/login';
-    });
 };
 
 export const isBase64 = (str: string): boolean => {

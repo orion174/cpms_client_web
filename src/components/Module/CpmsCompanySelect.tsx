@@ -21,6 +21,7 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
     classNm
 }) => {
     const [ options, setOptions ] = useState<ResCompanyDTO[]>([]);
+    const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
     useEffect(() => {
         const fetchCompanys = async () => {
@@ -42,16 +43,17 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
         fetchCompanys();
     }, [companyId]);
 
-    // 옵션이 하나뿐이면 자동 선택
+    // 옵션이 하나뿐이면 자동 선택 (단 한 번만 실행)
     useEffect(() => {
-        if (options.length === 1) {
+        if (options.length === 1 && !hasAutoSelected) {
             const fakeEvent = {
                 target: { value: options[0].companyId.toString() }
             } as React.ChangeEvent<HTMLSelectElement>;
 
             onChange(fakeEvent);
+            setHasAutoSelected(true);
         }
-    }, [options, onChange]);
+    }, [options, hasAutoSelected, onChange]);
 
     return (
         <select id={selectId} value={value} className={classNm} onChange={onChange}>
