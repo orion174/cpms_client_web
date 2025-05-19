@@ -1,4 +1,3 @@
-/* 📁 interceptor.ts */
 import type {
     AxiosResponse,
     InternalAxiosRequestConfig,
@@ -11,19 +10,27 @@ import store from '@/store';
 import { openModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
 
-import { getAccessToken, refreshAccessToken } from '@/core/auth/jwt';
-import { tokenError } from '@/core/auth/jwt';
-
+import { getAccessToken, refreshAccessToken, tokenError } from '@/core/auth/jwt';
 import { ApiResponse } from '@/definition/common.types';
 
+// 상태 변수: refresh 중 여부
+let isRefreshing = false;
+
+// 재시도할 요청들을 저장할 큐
+let failedQueue: ((token: string) => void)[] = [];
+
+const processQueue = (token: string) => {
+    failedQueue.forEach((cb) => cb(token));
+    failedQueue = [];
+};
+
 // 요청 인터셉터 – 세션스토리지 accessToken 삽입
-export const requestInterceptor = async (config: InternalAxiosRequestConfig,) => {
+export const requestInterceptor = async (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
     if (token) {
         config.headers = (config.headers ?? {}) as AxiosRequestHeaders;
         config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
 };
 
@@ -50,31 +57,45 @@ export const responseInterceptor = async (response: AxiosResponse) => {
     return response;
 };
 
-// 에러 인터셉터 – 401 시 토큰 재발급
+// 에러 인터셉터 – 401 시 토큰 재발급 (중복 요청 방지 포함)
 export const errorInterceptor = async (error: any) => {
     const originalRequest = error.config;
     const status = error.response?.status;
 
-    // 🔐 AccessToken 만료 → 재발급 시도
     if (status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
-        const newToken = await refreshAccessToken();
+        if (!isRefreshing) {
+            isRefreshing = true;
 
-        if (newToken) {
-            originalRequest.headers = {
-                ...(originalRequest.headers ?? {}),
-                Authorization: `Bearer ${newToken}`,
-            };
+            try {
+                const newToken = await refreshAccessToken();
+                if (newToken) {
+                    processQueue(newToken);
+                    isRefreshing = false;
 
-            originalRequest.withCredentials = true;
-            return axios.request(originalRequest);
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    originalRequest.withCredentials = true;
+                    return axios.request(originalRequest);
+                } else {
+                    tokenError();
+                }
+            } catch (err) {
+                tokenError();
+            } finally {
+                isRefreshing = false;
+            }
         }
 
-        tokenError();
+        return new Promise((resolve) => {
+            failedQueue.push((token: string) => {
+                originalRequest.headers.Authorization = `Bearer ${token}`;
+                originalRequest.withCredentials = true;
+                resolve(axios.request(originalRequest));
+            });
+        });
     }
 
-    /* ⚠️ 서버가 내려준 에러 메시지 처리 */
     const response = error.response?.data as ApiResponse;
     handleErrorByCode(response?.errorCode, response?.message);
 
