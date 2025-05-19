@@ -29,22 +29,22 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   return (
     <Pagination className="pagination mb-0">
 
-      <PaginationItem disabled={startPage === 1}>
-        <PaginationLink onClick={() => handlePageChange(startPage - 1)}>
+      <PaginationItem disabled={currentPage === 1}>
+        <PaginationLink onClick={() => handlePageChange(currentPage - 1)}>
           <i className="fas fa-angle-left" />
         </PaginationLink>
       </PaginationItem>
 
       {Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).map(
-        (page) => (
-          <PaginationItem key={page} active={page === currentPage}>
-            <PaginationLink onClick={() => handlePageChange(page)}>{page}</PaginationLink>
-          </PaginationItem>
-        )
+          (page) => (
+              <PaginationItem key={page} active={page === currentPage}>
+                <PaginationLink onClick={() => handlePageChange(page)}>{page}</PaginationLink>
+              </PaginationItem>
+          )
       )}
 
-      <PaginationItem disabled={endPage === totalPages}>
-        <PaginationLink onClick={() => handlePageChange(endPage + 1)}>
+      <PaginationItem disabled={currentPage === totalPages}>
+        <PaginationLink onClick={() => handlePageChange(currentPage + 1)}>
           <i className="fas fa-angle-right" />
         </PaginationLink>
       </PaginationItem>

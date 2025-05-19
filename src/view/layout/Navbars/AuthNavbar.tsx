@@ -52,16 +52,16 @@ const AuthNavbar = () => {
                     <span className="nav-link-inner--text">회원가입</span>
                   </NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink
-                      className="nav-link-icon"
-                      to="/test"
-                      tag={Link}
-                  >
-                    <i className="ni ni-key-25" />
-                    <span className="nav-link-inner--text">계정찾기</span>
-                  </NavLink>
-                </NavItem>
+                {/*<NavItem>*/}
+                {/*  <NavLink*/}
+                {/*      className="nav-link-icon"*/}
+                {/*      to="/test"*/}
+                {/*      tag={Link}*/}
+                {/*  >*/}
+                {/*    <i className="ni ni-key-25" />*/}
+                {/*    <span className="nav-link-inner--text">계정찾기</span>*/}
+                {/*  </NavLink>*/}
+                {/*</NavItem>*/}
               </Nav>
             </UncontrolledCollapse>
           </Container>

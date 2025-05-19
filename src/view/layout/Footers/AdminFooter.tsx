@@ -24,11 +24,11 @@ const Footer = () => {
                 GitHub
               </NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink href="https://orion174.github.io/" target="_blank">
-                About me
-              </NavLink>
-            </NavItem>
+            {/*<NavItem>*/}
+            {/*  <NavLink href="https://orion174.github.io/" target="_blank">*/}
+            {/*    About me*/}
+            {/*  </NavLink>*/}
+            {/*</NavItem>*/}
           </Nav>
         </Col>
       </Row>
