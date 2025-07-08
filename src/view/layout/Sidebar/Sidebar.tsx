@@ -23,7 +23,6 @@ import React, { useState } from "react";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 
 import team1Image from "@/assets/img/theme/team-1-800x800.jpg";
-import useModalHook from "@/hook/useModal.ts";
 
 interface Route {
   path: string;
@@ -62,31 +61,16 @@ const Sidebar: React.FC<SidebarProps> = ({ routes, logo }) => {
     setCollapseOpen(false);
   };
 
-  const { openCustomModal } = useModalHook();
-
-  const handleTempAlert = () => {
-    openCustomModal({ title: "알림", message: "해당 기능은 준비 중입니다.", isConfirm: false });
-    return;
-  };
-
   const createLinks = (routes: Route[]) => {
     return routes.map((prop, key) => {
-
-      const isSupportLink = prop.layout + prop.path === "/admin/support/list";
 
       return (
           <NavItem key={key}>
             <NavLink
                 to={prop.layout + prop.path}
                 tag={NavLinkRRD}
-                onClick={(e) => {
-                  if (!isSupportLink) {
-                    e.preventDefault();
-                    handleTempAlert();
-
-                  } else {
-                    closeCollapse();
-                  }
+                onClick={() => {
+                  closeCollapse();
                 }}
                 className={activeRoute(prop.layout + prop.path)}
             >
