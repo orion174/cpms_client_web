@@ -10,7 +10,7 @@ import {
 import React from "react";
 
 import { isValidHtmlContent } from "@/utils/common.ts";
-import FileDown from "@/components/Module/FileDownload.tsx";
+import FileDown from "@/components/CommonModule/FileDownload.tsx";
 import { supportResponse, supportFileList } from "../../types.ts";
 
 interface ResponseDetailProps {

@@ -8,8 +8,7 @@ import { utf8ToBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 import { getUserAuthType } from '@/utils/common.ts';
 
-// import ExcelDownLoadButton from "@/components/Module/ExcelDownLoadButton.tsx";
-import PaginationComponent from "@/components/Module/Pagination.tsx";
+import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import Header from "@/view/layout/Headers/Header.jsx";
 
@@ -68,20 +67,16 @@ const RequestList: React.FC = () => {
 
     // 유지보수 목록 데이터를 가져온다.
     const fetchSupportList = useCallback(async () => {
-        try {
-            const endPoint = `/api/support/list`;
-            
-            const result = await apiClient.post<ResSupportListDTO>(endPoint, {
-                ...searchParams,
-                pageNo: currentPage,
-                pageSize: 10,
-            });
+        const endPoint = `/api/support/list`;
 
-            setTotalCnt(result.totalCnt);
-            setData(result.supportList);
-        } catch (error) {
-            console.error("유지보수 목록 조회 실패:", error);
-        }
+        const result = await apiClient.post<ResSupportListDTO>(endPoint, {
+            ...searchParams,
+            pageNo: currentPage,
+            pageSize: 10,
+        });
+
+        setTotalCnt(result.totalCnt);
+        setData(result.supportList);
     }, [searchParams, currentPage]);
 
     useEffect(() => {
@@ -142,9 +137,7 @@ const RequestList: React.FC = () => {
                                     </Col>
                                     <Col md="2">
                                         <div className="d-flex justify-content-end align-items-center gap-2">
-                                            {/* <ExcelDownLoadButton /> */}
-                                            <Button
-                                                type="button"
+                                            <Button type="button"
                                                 color="default"
                                                 onClick={() => navigate("/admin/support/form", { state: { formType: "insert" } })}
                                             >
@@ -165,21 +158,13 @@ const RequestList: React.FC = () => {
                                 }}
                             />
 
-                            <CardFooter className="py-4">
-                                <Row className="align-items-center">
-                                    <Col md="6">
-                                        <h4 className="mb-0">총 <span>{totalCnt}</span> 건</h4>
-                                    </Col>
-                                    <Col md="6" className="d-flex justify-content-end">
-                                        <PaginationComponent
-                                            totalCnt={totalCnt}
-                                            currentPage={currentPage}
-                                            pageSize={10}
-                                            onPageChange={(page) => setCurrentPage(page)}
-                                        />
-                                    </Col>
-                                </Row>
-                            </CardFooter>
+                            {/* 페이징 */}
+                            <PaginationComponent
+                                totalCnt={totalCnt}
+                                currentPage={currentPage}
+                                pageSize={10}
+                                onPageChange={(page) => setCurrentPage(page)}
+                            />
                         </Card>
                     </div>
                 </Row>

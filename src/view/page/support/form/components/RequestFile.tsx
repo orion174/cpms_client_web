@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FileUpload from "@/components/Module/FileUpload.tsx";
+import FileUpload from "@/components/CommonModule/FileUpload.tsx";
 import { FileItem } from "@/definition/common.types.ts";
 
 interface RequestFileProps {

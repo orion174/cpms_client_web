@@ -18,7 +18,7 @@ import { apiClient } from "@/core/api/client.ts";
 import { getUserAuthType } from '@/utils/common.ts';
 
 import Header from "@/view/layout/Headers/Header.jsx";
-import FileDown from "@/components/Module/FileDownload.tsx";
+import FileDown from "@/components/CommonModule/FileDownload.tsx";
 
 import ResponseForm from "./components/ResponseForm.tsx";
 import ResponseDetail from "./components/ResponseDetail.tsx";

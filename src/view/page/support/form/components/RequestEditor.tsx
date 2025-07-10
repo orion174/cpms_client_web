@@ -1,7 +1,7 @@
 import React from "react";
 import { Row, Col, FormGroup } from "reactstrap";
 
-import SmartEditor from "@/components/Module/SmartEditor.tsx";
+import SmartEditor from "@/components/CommonModule/SmartEditor.tsx";
 
 interface EditorSectionProps {
     editorRef: React.MutableRefObject<never[]>;

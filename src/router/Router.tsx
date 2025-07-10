@@ -1,18 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AuthGuard from "@/core/auth/AuthGuard.tsx";
 
+/* 로그인 및 회원가입 */
 import Auth from "@/view/layout/Auth.tsx";
-import Admin from "@/view/layout/Admin.tsx";
-
 import Login from "@/view/page/main/Login.tsx";
 import CpmsRegister from "@/view/page/main/register/CpmsRegister.tsx";
-
+/* CPMS 주요 기능 */
+import Admin from "@/view/layout/Admin.tsx";
 import SupportList from "@/view/page/support/list/RequestList.tsx";
 import SupportForm from '@/view/page/support/form/RequestForm.tsx';
 import SupportDetail from '@/view/page/support/detail/RequestDetail.tsx';
-
-import UserList from '@/view/page/setting/user/list/UserList.tsx';
-import UserInfo from '@/view/page/setting/user/form/UserInfo.tsx';
-
+import SettingPage from '@/view/page/setting/SettingPage.tsx';
+/* 템플릿 임시 페이지 */
 import Index from "@/view/examples/Index.jsx";
 import Profile from "@/view/examples/Profile.jsx";
 import Maps from "@/view/examples/Maps.jsx";
@@ -39,13 +38,19 @@ const Router = () => {
                     <Route path="register" element={<CpmsRegister />} />
                 </Route>
 
-                <Route path="/admin/*" element={<Admin routes={adminRoutes} />}>
+                <Route path="/admin/*"
+                    element={
+                        <AuthGuard>
+                            <Admin routes={adminRoutes} />
+                        </AuthGuard>
+                    }
+                >
+
                     <Route path="support/list" element={<SupportList/>} />
                     <Route path="support/form" element={<SupportForm/>} />
                     <Route path="support/detail" element={<SupportDetail/>} />
+                    <Route path="setting/*" element={<SettingPage />} />
 
-                    <Route path="setting/user/list" element={<UserList />} />
-                    <Route path="setting/user/info" element={<UserInfo />} />
 
                     <Route path="index" element={<Index />} />
                     <Route path="icons" element={<Icons />} />

@@ -14,7 +14,7 @@ import {
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
 import team4Image from '@/assets/img/theme/team-4-800x800.jpg';
 
-const UserInfo = () => {
+const UserForm:React.FC = () => {
     return (
         <>
             <TempHeader />
@@ -308,4 +308,4 @@ const UserInfo = () => {
     );
 };
 
-export default UserInfo;
+export default UserForm;

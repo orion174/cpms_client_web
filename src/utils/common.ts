@@ -1,6 +1,15 @@
 import React, {DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { jwtDecode } from 'jwt-decode';
 import { deleteCookie } from "@/core/auth/cookie.ts";
+import { PageResponse } from "@/definition/common.types.ts";
+
+export const defaultPage = <T>(): PageResponse<T> => ({
+    content: [],
+    totalElements: 0,
+    totalPages: 0,
+    size: 0,
+    number: 0,
+});
 
 interface JwtPayload {
     authType: string;

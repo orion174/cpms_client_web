@@ -17,8 +17,8 @@ import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js"
 import { base64ToUtf8 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 
-import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
-import FileUpload from "@/components/Module/FileUpload.tsx";
+import CommonCodeSelect from "@/components/CommonModule/CommonCodeSelect.tsx";
+import FileUpload from "@/components/CommonModule/FileUpload.tsx";
 
 import { FileItem, NewFileItem } from '@/definition/common.types.ts';
 import { supportResponse, supportFileList } from "../../types.ts";

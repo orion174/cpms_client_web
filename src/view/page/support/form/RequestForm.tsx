@@ -20,10 +20,10 @@ import useModalHook from "@/hook/useModal.ts";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 
 import Header from "@/view/layout/Headers/Header.jsx";
-import CommonCodeSelect from "@/components/Module/CommonCodeSelect.tsx";
-import LitePicker from "@/components/Module/LitePicker.tsx";
-import CpmsCompanySelect from "@/components/Module/CpmsCompanySelect.tsx";
-import CpmsProjectSelect from "@/components/Module/CpmsProjectSelect.tsx";
+import CommonCodeSelect from "@/components/CommonModule/CommonCodeSelect.tsx";
+import LitePicker from "@/components/CommonModule/LitePicker.tsx";
+import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
+import CpmsProjectSelect from "@/components/CommonModule/CpmsProjectSelect.tsx";
 import RequestFile from "./components/RequestFile.tsx";
 
 import { FileItem, NewFileItem } from "@/definition/common.types.ts";

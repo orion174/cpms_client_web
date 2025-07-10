@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { Container } from "reactstrap";
 
+import Sidebar from "@/view/layout/Sidebar/Sidebar.tsx";
 import AdminNavbar from "@/view/layout/Navbars/AdminNavbar.tsx";
 import AdminFooter from "@/view/layout/Footers/AdminFooter.tsx";
-import Sidebar from "@/view/layout/Sidebar/Sidebar.tsx";
 
 import logoImage from '@/assets/img/brand/main_logo.png';
 
@@ -33,14 +33,14 @@ const Admin: React.FC<AdminProps> = ({ routes }) => {
 
     return (
         <>
-            <Sidebar
-                routes={routes}
+            <Sidebar routes={routes}
                 logo={{
                     innerLink: "/admin/support/list",
                     imgSrc: logoImage,
                     imgAlt: "...",
                 }}
             />
+
             <div className="main-content" ref={mainContent}>
                 <AdminNavbar />
 

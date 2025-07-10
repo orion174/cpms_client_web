@@ -8,9 +8,15 @@ export interface ApiResponse<T = any> {
     errorCode?: string;
 }
 
-// 쿠키
-export interface ResCookieDTO {
-    cookies: Record<string, string>;
+export interface PageResponse<T = any> {
+    content: T[];
+    totalElements: number;
+    totalPages: number;
+    size: number;
+    number: number;
+    first?: boolean;
+    last?: boolean;
+    empty?: boolean;
 }
 
 // 리프레쉬 토큰 응답 인터페이스
