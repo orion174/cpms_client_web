@@ -140,7 +140,6 @@ const Login: React.FC = () => {
                                 </Button>
                                 <div className="mb-4" style={{ minHeight: "40px" }} />
                             </div>
-                            테스트계정 ID: test / PW: test
                         </Form>
                     </CardBody>
                 </Card>

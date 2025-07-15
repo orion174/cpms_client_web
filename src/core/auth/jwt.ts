@@ -1,9 +1,9 @@
 /* 📁 jwt.ts */
-import axios from 'axios';
 import { ApiResponse, ResRefreshTokenDTO } from '@/definition/common.types';
-import {deleteCookie} from "@/core/auth/cookie.ts";
+import { deleteCookie } from "@/core/auth/cookie.ts";
+import axios from "axios";
+import { handleErrorByCode } from "@/core/api/interceptor.ts";
 
-const API_URL = import.meta.env.VITE_API_URL;
 const ACCESS_KEY = 'accessToken';
 const LOGIN_HISTORY_KEY = 'loginHistoryId';
 
@@ -14,28 +14,33 @@ export const getAccessToken = (): string | null => sessionStorage.getItem(ACCESS
 export const refreshAccessToken = async (): Promise<string | null> => {
     try {
         const loginHistoryId = sessionStorage.getItem(LOGIN_HISTORY_KEY);
+
         if (!loginHistoryId) return null;
 
-        const endPoint = `${API_URL}/api/auth/refresh-token`;
+        const response
+            = await axios.post<ApiResponse<ResRefreshTokenDTO>>(
+            `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`
+                , { loginHistoryId: Number(loginHistoryId) }
+                , { withCredentials: true }
+            );
 
-        const { data } = await axios.post<ApiResponse<ResRefreshTokenDTO>>(
-            endPoint,
-            { loginHistoryId: Number(loginHistoryId) },
-            { withCredentials: true }
-        );
+        const { success, data } = response.data;
 
-        if (data.success && data.data?.accessToken) {
-            const { accessToken } = data.data;
-            sessionStorage.setItem(ACCESS_KEY, accessToken);
-
-            return accessToken;
+        if (success && data?.accessToken) {
+            sessionStorage.setItem(ACCESS_KEY, data.accessToken);
+            return data.accessToken;
         }
 
-        tokenError();
         return null;
-    } catch (err) {
-        console.error('refreshAccessToken error:', err);
-        tokenError();
+
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            handleErrorByCode(
+                error.response?.data?.errorCode as string | undefined,
+                error.response?.data?.message as string | undefined,
+            );
+        }
+
         return null;
     }
 };

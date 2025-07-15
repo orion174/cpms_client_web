@@ -1,6 +1,5 @@
 /* 📁 client.ts */
 import axios, { AxiosRequestConfig } from 'axios';
-
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptor.ts';
 import { ApiResponse } from '@/definition/common.types.ts';
 

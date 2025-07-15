@@ -9,8 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import store from '@/store';
 import { openModal } from '@/store/modalSlice';
 import callbackStore from '@/store/callbackStore';
-
-import { getAccessToken, refreshAccessToken, tokenError } from '@/core/auth/jwt';
+import { getAccessToken, refreshAccessToken } from '@/core/auth/jwt';
 import { ApiResponse } from '@/definition/common.types';
 
 // 상태 변수: refresh 중 여부
@@ -24,40 +23,41 @@ const processQueue = (token: string) => {
     failedQueue = [];
 };
 
-// 요청 인터셉터 – 세션스토리지 accessToken 삽입
+// 요청 인터셉터: accessToken 삽입
 export const requestInterceptor = async (config: InternalAxiosRequestConfig) => {
     const token = getAccessToken();
+
     if (token) {
         config.headers = (config.headers ?? {}) as AxiosRequestHeaders;
         config.headers.Authorization = `Bearer ${token}`;
     }
+
     return config;
 };
 
-// 응답 인터셉터 – success=false 처리 (blob 등 예외는 통과)
+// 응답 인터셉터: success=false 처리 (blob등 예외는 통과)
 export const responseInterceptor = async (response: AxiosResponse) => {
     const contentType = response.headers['content-type'] || '';
 
-    if (
-        contentType.includes('application/octet-stream') ||
-        contentType.includes('application/pdf') ||
-        contentType.includes('image/') ||
-        response.request?.responseType === 'blob'
-    ) {
+    // blob등 예외는 통과
+    if (contentType.includes('application/octet-stream') || contentType.includes('application/pdf') ||
+        contentType.includes('image/') || response.request?.responseType === 'blob') {
         return response;
     }
 
+    // 그 외 API 응답
     const { success, message, errorCode } = response.data;
 
     if (!success) {
+        // 실패 시, 에러모달 호출
         handleErrorByCode(errorCode, message);
-        return Promise.reject(new Error(message || 'API 처리 실패'));
+        return Promise.reject(new Error(message || 'API 오류'));
     }
 
     return response;
 };
 
-// 에러 인터셉터 – 401 시 토큰 재발급 (중복 요청 방지 포함)
+// 에러 인터셉터: '401'시 토큰 재발급 (중복 요청 방지 포함)
 export const errorInterceptor = async (error: any) => {
     const originalRequest = error.config;
     const status = error.response?.status;
@@ -65,23 +65,24 @@ export const errorInterceptor = async (error: any) => {
     if (status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
 
+        // 현재 토큰을 갱신 중인지 여부 확인
         if (!isRefreshing) {
-            isRefreshing = true;
+            isRefreshing = true; // 동시 여러 요청에서 401이 발생해도 한번만 refresh 요청을 보냄
 
             try {
                 const newToken = await refreshAccessToken();
+
                 if (newToken) {
                     processQueue(newToken);
                     isRefreshing = false;
 
                     originalRequest.headers.Authorization = `Bearer ${newToken}`;
                     originalRequest.withCredentials = true;
+
                     return axios.request(originalRequest);
-                } else {
-                    tokenError();
                 }
             } catch (err) {
-                tokenError();
+                console.error('refresh AccessToken error : ', err);
             } finally {
                 isRefreshing = false;
             }
@@ -102,6 +103,7 @@ export const errorInterceptor = async (error: any) => {
     return Promise.reject(error);
 };
 
+
 // 에러 코드별 모달 처리
 export const handleErrorByCode = (code?: string, msg?: string) => {
     const errorCode = code ?? '0000';
@@ -114,6 +116,7 @@ export const handleErrorByCode = (code?: string, msg?: string) => {
             openErrorModal('인증 오류', message, () => {
                 window.location.href = '/auth/login';
             });
+
             break;
         default:
             openErrorModal(`오류_${errorCode}`, message);
@@ -123,9 +126,7 @@ export const handleErrorByCode = (code?: string, msg?: string) => {
 
 // 에러 모달 오픈 헬퍼
 const openErrorModal = (
-    title: string,
-    message: string,
-    onConfirm?: () => void,
+    title: string, message: string, onConfirm?: () => void
 ) => {
     const modalId = uuidv4();
     if (onConfirm) callbackStore.setCallback(modalId, onConfirm);
