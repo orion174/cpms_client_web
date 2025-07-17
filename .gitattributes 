@@ -1,0 +1,10 @@
+# node_modules 등 외부 코드는 언어 통계에서 제외
+node_modules/** linguist-vendored
+
+# 스타일 파일은 통계 제외
+*.css linguist-vendored
+*.scss linguist-vendored
+
+# JSX/TSX는 JavaScript로 강제 지정
+*.jsx linguist-language=JavaScript
+*.tsx linguist-language=TypeScript
