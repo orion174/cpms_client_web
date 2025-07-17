@@ -1,10 +1,15 @@
-# node_modules 등 외부 코드는 언어 통계에서 제외
+# 1. 외부 라이브러리 제외
 node_modules/** linguist-vendored
 
-# 스타일 파일은 통계 제외
+# 2. 스타일 파일 제외
 *.css linguist-vendored
 *.scss linguist-vendored
+*.sass linguist-vendored
+*.less linguist-vendored
 
-# JSX/TSX는 JavaScript로 강제 지정
+# 3. SmartEditor 등 에디터 관련 파일 전체 제외
+/public/smarteditor/** linguist-vendored
+
+# 4. JSX/TSX 명시적 언어 지정
 *.jsx linguist-language=JavaScript
 *.tsx linguist-language=TypeScript
