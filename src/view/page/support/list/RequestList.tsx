@@ -1,5 +1,5 @@
 import {
-  Card, CardHeader, CardFooter, Container, Row, Button, Col
+  Card, CardHeader, Container, Row, Button, Col
 } from "reactstrap";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import { getUserAuthType } from '@/utils/common.ts';
 
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
 import TempHeader from "@/view/layout/Headers/TempHeader.tsx";
-import Header from "@/view/layout/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.tsx";
 
 import SupportSearchBar from "./components/SupportSearchBar.tsx";
 import SupportTable from "./components/SupportTable.tsx";
@@ -110,7 +110,8 @@ const RequestList: React.FC = () => {
             }
 
             const encodeId = utf8ToBase64(supportRequestId.toString());
-            navigate(`/admin/support/detail?support_page=${encodeId}`);
+            navigate(`/admin/support/view?support_page=${encodeId}`);
+
         } catch (error) {
             console.error("상태 업데이트 실패", error);
         }
@@ -153,7 +154,6 @@ const RequestList: React.FC = () => {
                                 onRowClick={(supportRequestId: number) => {
                                     const row
                                         = data.find((item) => item.supportRequestId === supportRequestId);
-
                                     if (row) handleRowClick(row.supportRequestId, row.statusCd);
                                 }}
                             />

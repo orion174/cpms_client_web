@@ -23,7 +23,7 @@ export interface SupportList {
 }
 
 // 문의 상세 조회 인터페이스
-export interface ResSupportDetailDTO {
+export interface ResSupportViewDTO {
     authType: string;
     supportRequestId: number;
     requestCompanyNm: string;

@@ -24,14 +24,14 @@ import { ApiResponse } from '@/definition/common.types.ts';
 const CpmsRegister = () => {
     const { openCustomModal } = useModalHook();
 
-    const [showAccess, setShowAccess] = useState(false);
-    const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-    const [isIdVerified, setIsIdVerified] = useState(false);
+    const [ showAccess, setShowAccess ] = useState(false);
+    const [ isPhoneVerified, setIsPhoneVerified ] = useState(false);
+    const [ isIdVerified, setIsIdVerified ] = useState(false);
 
-    const [phone, setPhone] = useState('');
-    const [loginId, setLoginId] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [ phone, setPhone ] = useState('');
+    const [ loginId, setLoginId ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [ confirmPassword, setConfirmPassword ] = useState('');
 
     const handleSubmit = () => {
         if (!isPhoneVerified) {

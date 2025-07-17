@@ -13,7 +13,7 @@ import { isValidHtmlContent } from "@/utils/common.ts";
 import FileDown from "@/components/CommonModule/FileDownload.tsx";
 import { supportResponse, supportFileList } from "../../types.ts";
 
-interface ResponseDetailProps {
+interface ResponseViewProps {
     supportResponse: supportResponse;
     authType: string;
     responseFileList: supportFileList[];
@@ -21,7 +21,7 @@ interface ResponseDetailProps {
     onResponseUpdate: () => void;
 }
 
-const ResponseDetail: React.FC<ResponseDetailProps> = (
+const ResponseView: React.FC<ResponseViewProps> = (
     { supportResponse, authType, responseFileList, onResponseDelete, onResponseUpdate }
 ) => {
     const hasValidTitle = supportResponse.responseTitle && supportResponse.responseTitle.trim() !== "";
@@ -97,4 +97,4 @@ const ResponseDetail: React.FC<ResponseDetailProps> = (
     );
 };
 
-export default ResponseDetail;
+export default ResponseView;

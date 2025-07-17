@@ -21,7 +21,7 @@ import React from "react";
 import { Card, Container, Row } from "reactstrap";
 
 // core components
-import Header from "@/view/layout/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.tsx";
 
 const MapWrapper = () => {
   const mapRef = React.useRef(null);

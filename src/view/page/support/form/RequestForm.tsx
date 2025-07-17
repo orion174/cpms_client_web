@@ -19,11 +19,11 @@ import { useLocation } from "react-router-dom";
 import useModalHook from "@/hook/useModal.ts";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 
-import Header from "@/view/layout/Headers/Header.jsx";
-import CommonCodeSelect from "@/components/CommonModule/CommonCodeSelect.tsx";
+import Header from "@/view/layout/Headers/Header.tsx";
+import CommonCodeSelect from "@/components/SelectModule/CommonCodeSelect.tsx";
 import LitePicker from "@/components/CommonModule/LitePicker.tsx";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import CpmsProjectSelect from "@/components/CommonModule/CpmsProjectSelect.tsx";
+import CpmsProjectSelect from "@/components/SelectModule/CpmsProjectSelect.tsx";
 import RequestFile from "./components/RequestFile.tsx";
 
 import { FileItem, NewFileItem } from "@/definition/common.types.ts";
@@ -179,7 +179,7 @@ const RequestForm: React.FC = () => {
                                                         value={formData.requestCompanyId}
                                                         onChange={(e) => handleInputChange("requestCompanyId", e.target.value)}
                                                         initText="요청 업체 선택"
-                                                        classNm="my-input-text form-control"
+                                                        classNm="my-custom-select form-control"
                                                     />
                                                 </FormGroup>
                                             </Col>
@@ -190,7 +190,7 @@ const RequestForm: React.FC = () => {
                                                         selectId="requestProjectId"
                                                         value={formData.requestProjectId}
                                                         onChange={(e) => handleInputChange("requestProjectId", e.target.value)}
-                                                        classNm="my-input-text form-control"
+                                                        classNm="my-custom-select form-control"
                                                         initText="프로젝트 선택"
                                                     />
                                                 </FormGroup>
@@ -203,7 +203,7 @@ const RequestForm: React.FC = () => {
                                                         selectId="requestCd"
                                                         value={formData.requestCd}
                                                         onChange={(e) => handleInputChange("requestCd", e.target.value)}
-                                                        classNm="my-input-text form-control"
+                                                        classNm="my-custom-select form-control"
                                                         initText="요청 유형 선택"
                                                     />
                                                 </FormGroup>
@@ -235,7 +235,7 @@ const RequestForm: React.FC = () => {
                                                         selectId="statusCd"
                                                         value={formData.statusCd}
                                                         onChange={(e) => handleInputChange("statusCd", e.target.value)}
-                                                        classNm="my-input-text form-control"
+                                                        classNm="my-custom-select form-control"
                                                         initText="처리 상태 선택"
                                                     />
                                                 </FormGroup>

@@ -1,6 +1,5 @@
 import { CardHeader, Nav, NavItem, NavLink } from "reactstrap";
 import classnames from "classnames";
-import { useState } from "react";
 
 interface SettingSelectBarProps {
     activeTab: number;
@@ -16,10 +15,8 @@ const tabLabels = [
 const SettingSelectBar: React.FC<SettingSelectBarProps> = ({ activeTab, onChangeTab }) => {
     return (
         <>
-            <CardHeader className="bg-transparent">
+            <CardHeader className="border-0">
                 <div className="d-flex justify-content-between align-items-center">
-                    <h3 className="fw-bold">{tabLabels[activeTab - 1]}</h3>
-
                     <Nav className="p-0" pills>
                         {[1, 2, 3].map((index) => (
                             <NavItem key={index}>

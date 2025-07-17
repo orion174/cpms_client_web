@@ -1,5 +1,4 @@
 declare global {
-
     interface AddressData {
         zonecode: string;
         address: string;
@@ -7,6 +6,7 @@ declare global {
 
     interface DaumPostcodeOptions {
         oncomplete?: (data: AddressData) => void;
+        onclose?: () => void;
     }
 
     namespace daum {

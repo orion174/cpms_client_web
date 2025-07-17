@@ -17,15 +17,15 @@ import { base64ToUtf8, isBase64 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 import { getUserAuthType } from '@/utils/common.ts';
 
-import Header from "@/view/layout/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.tsx";
 import FileDown from "@/components/CommonModule/FileDownload.tsx";
 
 import ResponseForm from "./components/ResponseForm.tsx";
-import ResponseDetail from "./components/ResponseDetail.tsx";
+import ResponseView from "./components/ResponseView.tsx";
 
-import { ResSupportDetailDTO, supportResponse, supportFileList } from "../types.ts";
+import { ResSupportViewDTO, supportResponse, supportFileList } from "../types.ts";
 
-const SupportDetail: React.FC = () => {
+const SupportView: React.FC = () => {
     const navigate = useNavigate();
     const { openCustomModal } = useModalHook();
 
@@ -36,7 +36,7 @@ const SupportDetail: React.FC = () => {
     const [ statusCd, setStatusCd ] = useState<number | null>(null);
     const [ editData, setEditData ] = useState<supportResponse | null>(null);
     const [ searchParams ] = useSearchParams();
-    const [ result, setResult ] = useState<ResSupportDetailDTO | null>(null);
+    const [ result, setResult ] = useState<ResSupportViewDTO | null>(null);
     const [ requestFileList, setRequestFileList ] = useState<supportFileList[]>([]);
     const [ responseFileList, setResponseFileList ] = useState<supportFileList[]>([]);
     const [ authType, setAuthType ] = useState<string>("");
@@ -44,7 +44,7 @@ const SupportDetail: React.FC = () => {
     const encodedId = searchParams.get("support_page");
 
     useEffect(() => {
-        const fetchDetail = async () => {
+        const fetchSupportView = async () => {
             if (!encodedId || !isBase64(encodedId)) {
                 openCustomModal({
                     title: "오류",
@@ -61,7 +61,7 @@ const SupportDetail: React.FC = () => {
             try {
                 const [type, result] = await Promise.all([
                     getUserAuthType(),
-                    apiClient.post<ResSupportDetailDTO>("/api/support/detail", {
+                    apiClient.post<ResSupportViewDTO>("/api/support/view", {
                         supportRequestId: decodedId,
                     }),
                 ]);
@@ -79,7 +79,7 @@ const SupportDetail: React.FC = () => {
             }
         };
 
-        fetchDetail();
+        fetchSupportView();
     }, [encodedId]);
 
     // 문의 목록으로 돌아가기
@@ -134,8 +134,8 @@ const SupportDetail: React.FC = () => {
 
     // 문의의 답변 유무를 검사한다.
     const hasSupportResponse = (
-        response: ResSupportDetailDTO | null
-    ): response is ResSupportDetailDTO & { supportResponse: supportResponse } => {
+        response: ResSupportViewDTO | null
+    ): response is ResSupportViewDTO & { supportResponse: supportResponse } => {
         return !!response?.supportResponse && response.supportResponse.supportResponseId > 0;
     };
 
@@ -261,7 +261,7 @@ const SupportDetail: React.FC = () => {
                 </Row>
 
                 {!editMode && hasSupportResponse(result) && (
-                    <ResponseDetail
+                    <ResponseView
                         supportResponse={result.supportResponse}
                         authType={authType}
                         responseFileList={responseFileList}
@@ -285,4 +285,4 @@ const SupportDetail: React.FC = () => {
     );
 };
 
-export default SupportDetail;
+export default SupportView;

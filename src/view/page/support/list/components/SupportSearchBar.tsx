@@ -7,7 +7,7 @@ import {
   Button
 } from "reactstrap";
 
-import CommonCodeSelect from "@/components/CommonModule/CommonCodeSelect.tsx"
+import CommonCodeSelect from "@/components/SelectModule/CommonCodeSelect.tsx"
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import LitePicker from "@/components/CommonModule/LitePicker.tsx";
 
@@ -43,7 +43,7 @@ const SupportSearchBar: React.FC<Props> = ({
                         selectId="searchCompanyId"
                         value={searchParams.searchCompanyId}
                         onChange={(e) => updateSearchParams("searchCompanyId", e.target.value)}
-                        classNm="my-input-text form-control"
+                        classNm="my-custom-select"
                         initText="업체 선택"
                     />
                 </InputGroup>
@@ -54,7 +54,7 @@ const SupportSearchBar: React.FC<Props> = ({
                     selectId="searchRequestCd"
                     value={searchParams.searchRequestCd}
                     onChange={(e) => updateSearchParams("searchRequestCd", e.target.value)}
-                    classNm="my-input-text form-control"
+                    classNm="my-custom-select"
                     initText="요청 선택"
                 />
             </InputGroup>
@@ -64,7 +64,7 @@ const SupportSearchBar: React.FC<Props> = ({
                     selectId="searchStatusCd"
                     value={searchParams.searchStatusCd}
                     onChange={(e) => updateSearchParams("searchStatusCd", e.target.value)}
-                    classNm="my-input-text form-control"
+                    classNm="my-custom-select"
                     initText="처리상태 선택"
                 />
             </InputGroup>

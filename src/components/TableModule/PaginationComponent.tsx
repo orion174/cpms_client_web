@@ -11,9 +11,7 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 };
 
-const PaginationComponent:React.FC<PaginationProps> = (
-    { totalCnt, currentPage, pageSize, onPageChange }
-) => {
+const PaginationComponent:React.FC<PaginationProps> = ({ totalCnt, currentPage, pageSize, onPageChange }) => {
     return (
         <>
             <CardFooter className="py-4">
@@ -26,7 +24,7 @@ const PaginationComponent:React.FC<PaginationProps> = (
                             totalCnt={totalCnt}
                             currentPage={currentPage}
                             pageSize={pageSize}
-                            onPageChange={(page) => setCurrentPage(page)}
+                            onPageChange={onPageChange}
                         />
                     </Col>
                 </Row>

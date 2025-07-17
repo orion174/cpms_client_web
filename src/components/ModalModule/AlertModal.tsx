@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { RootState } from '@/store';
-import { closeModal } from '@/store/modalSlice';
-import callbackStore from '@/store/callbackStore';
+import { closeModal } from '@/store/modalSlice.ts';
+import callbackStore from '@/store/callbackStore.ts';
 
 const AlertModal: React.FC = () => {
     const dispatch = useDispatch();
@@ -50,10 +50,24 @@ const AlertModal: React.FC = () => {
 
     return (
         <Modal isOpen={currentModal.isOpen || false} toggle={handleClose} backdrop="static" centered>
-            <ModalHeader toggle={handleClose} className="my-modal-header-text">{currentModal.title || ''}</ModalHeader>
-            <ModalBody className="my-modal-info-text">{currentModal.message || ''}</ModalBody>
+            <ModalHeader toggle={handleClose} className="my-modal-header-text">
+                {currentModal.title || ''}
+            </ModalHeader>
+
+            <ModalBody className="my-modal-info-text">
+                {typeof currentModal.message === 'string'
+                    ? currentModal.message.split('\n').map((line, idx) => (
+                        <React.Fragment key={idx}>
+                            {line}
+                            <br />
+                        </React.Fragment>
+                    ))
+                    : currentModal.message}
+            </ModalBody>
+
             <ModalFooter>
                 <Button color="primary" onClick={handleConfirm}>확인</Button>
+
                 {currentModal.isConfirm && (
                     <Button color="secondary" onClick={handleClose}>취소</Button>
                 )}

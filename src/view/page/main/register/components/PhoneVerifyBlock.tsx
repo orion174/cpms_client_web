@@ -22,7 +22,6 @@ interface PhoneVerifyBlockProps {
 
 const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, onVerified, isVerified }) => {
     const { openCustomModal } = useModalHook();
-
     const [ phoneLocked, setPhoneLocked ] = useState(false);
 
     // 입력된 휴대폰 번호로 인증 문자를 전송한다.

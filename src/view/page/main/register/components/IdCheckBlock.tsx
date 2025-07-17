@@ -15,8 +15,7 @@ interface Props {
 
 const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
     const { openCustomModal } = useModalHook();
-
-    const [isValid, setIsValid] = useState(false);
+    const [ isValid, setIsValid ] = useState(false);
 
     const handleChange = (value: string) => {
         // 변경되면 상태 초기화

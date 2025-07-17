@@ -36,7 +36,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // core components
-import Header from "@/view/layout/Headers/Header.jsx";
+import Header from "@/view/layout/Headers/Header.tsx";
 
 import bootstrapIcon from "@/assets/img/icons/common/google.svg";
 import googleIcon from "@/assets/img/icons/common/google.svg";

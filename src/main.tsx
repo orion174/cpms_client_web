@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 
 import { Provider } from 'react-redux';
 import App from './App';
-import AlertModal from "@/components/CommonModule/AlertModal";
+import AlertModal from "@/components/ModalModule/AlertModal.tsx";
 import store from '@/store';
 
 const container = document.getElementById('root');

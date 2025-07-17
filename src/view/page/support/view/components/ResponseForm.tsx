@@ -17,7 +17,7 @@ import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js"
 import { base64ToUtf8 } from "@/utils/common.ts";
 import { apiClient } from "@/core/api/client.ts";
 
-import CommonCodeSelect from "@/components/CommonModule/CommonCodeSelect.tsx";
+import CommonCodeSelect from "@/components/SelectModule/CommonCodeSelect.tsx";
 import FileUpload from "@/components/CommonModule/FileUpload.tsx";
 
 import { FileItem, NewFileItem } from '@/definition/common.types.ts';
@@ -127,7 +127,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
             title: "알림",
             message: "저장이 완료되었습니다.",
             isConfirm: false,
-            redirectUrl: `/admin/support/detail?support_page=${encodedId}`,
+            redirectUrl: `/admin/support/view?support_page=${encodedId}`,
         });
     };
 
@@ -198,7 +198,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({ statusCd, editData, respons
                                                 selectId="responseStatusCd"
                                                 value={responseStatusCd}
                                                 onChange={(e) => setResponseStatusCd(parseInt(e.target.value, 10))}
-                                                classNm="my-input-text form-control"
+                                                classNm="my-custom-select form-control"
                                                 initText="처리 상태 선택"
                                             />
                                         </Col>

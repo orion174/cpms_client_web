@@ -3,7 +3,8 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface ModalState {
     isOpen: boolean;
     title: string;
-    message: string;
+    message?: string;
+    formComponent?: React.ReactNode;
     isConfirm: boolean;
     modalId: string | null;
     redirectUrl?: string;
@@ -25,6 +26,7 @@ const modalSlice = createSlice({
     reducers: {
         openModal: (state, action: PayloadAction<Omit<ModalState, 'isOpen'>>) => {
             const modal = { ...action.payload, isOpen: true };
+
             if (!state.currentModal) {
                 state.currentModal = modal;
             } else {

@@ -32,6 +32,38 @@
     margin-right: 10px;
 }
 
+.check-button {
+    padding: 0.5rem 1rem;      /* 패딩 조절 */
+    line-height: 1;            /* 텍스트 높이 정리 */
+    white-space: nowrap;       /* 줄바꿈 방지 */
+    font-weight: 500;
+    font-size: 14px;
+    border-radius: 0.5rem;     /* 디자인 커스터마이징 */
+}
+
+.my-custom-select {
+    appearance: none; /* 브라우저 기본 스타일 제거 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    padding: 8px 30px 8px 12px; /* ← 오른쪽 여백 40px으로 충분히 확보 */
+    font-family: "Pretendard Variable", Pretendard, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1E1E1E;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='8' viewBox='0 0 14 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23333' stroke-width='2' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 10px;
+
+    cursor: pointer;
+}
+
 .my-input-text {
     font-family: "Pretendard Variable", Pretendard, sans-serif;
     font-size: 14px;
@@ -51,6 +83,10 @@
     font-weight: 500 !important;
     color:#4299E1 !important;
     text-align: center;
+}
+
+.table-flush .col-type {
+    font-size: 14px !important;
 }
 
 .my-input-text-tbody {
@@ -205,4 +241,9 @@
     color: #6c757d !important;
     border: 0px solid #ced4da !important;
     pointer-events: none;
+}
+
+.modal-dialog-custom {
+    max-width: 850px;
+    width: 100%;
 }

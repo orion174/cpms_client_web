@@ -1,6 +1,6 @@
 import React from "react";
 
-interface AuthSelectProps {
+interface UseYnSelectProps {
     selectId: string;
     value: string;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
@@ -8,12 +8,10 @@ interface AuthSelectProps {
     classNm: string;
 };
 
-const CpmsAuthSelect: React.FC<AuthSelectProps> = ({ selectId, value, onChange, initText, classNm }) => {
-    // TODO 관리자 기능 고도화 하여, 공통코드로 관리되게 개발하기
-    const authCode = [
-        { codeId: "ADMIN", codeNm: "관리자" },
-        { codeId: "USER", codeNm: "일반" },
-        { codeId: "TEMP", codeNm: "임시" }
+const CmmnUseYnSelect: React.FC<UseYnSelectProps> = ({ selectId, value, onChange, initText, classNm }) => {
+    const useYnCode = [
+        { codeId: "Y", codeNm: "사용" },
+        { codeId: "N", codeNm: "미사용" }
     ];
 
     return (
@@ -21,7 +19,7 @@ const CpmsAuthSelect: React.FC<AuthSelectProps> = ({ selectId, value, onChange, 
             <select id={selectId} value={value} className={classNm} onChange={onChange}>
                 <option value="">{initText}</option>
 
-                {authCode.map((option) => (
+                {useYnCode.map((option) => (
                     <option key={option.codeId} value={option.codeId}>
                         {option.codeNm}
                     </option>
@@ -31,4 +29,4 @@ const CpmsAuthSelect: React.FC<AuthSelectProps> = ({ selectId, value, onChange, 
     );
 };
 
-export default CpmsAuthSelect;
+export default CmmnUseYnSelect;
