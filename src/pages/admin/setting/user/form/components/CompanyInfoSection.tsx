@@ -3,7 +3,7 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import SectionBorder from "@/components/FormModule/SectionBorder.tsx";
 
-import { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface CompanyInfoSectionProps {
     reqUserDTO: ReqUserDTO;
@@ -11,6 +11,7 @@ interface CompanyInfoSectionProps {
 };
 
 const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ reqUserDTO, handleChange }) => {
+
     return (
         <>
             <h6 className="heading-small text-muted mb-4">소속 회사 정보</h6>
@@ -23,7 +24,10 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ reqUserDTO, han
                                 소속업체 <span style={{ color: "red" }}>*</span>
                             </label>
 
-                            <CpmsCompanySelect selectId="companyId" classNm="my-custom-select form-control" initText="회사 선택"
+                            <CpmsCompanySelect
+                                selectId="companyId"
+                                classNm="my-custom-select form-control"
+                                initText="회사 선택"
                                 value={reqUserDTO.companyId}
                                 onChange={(e) => handleChange('companyId', e.target.value)}
                             />
@@ -33,7 +37,11 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ reqUserDTO, han
                         <FormGroup>
                             <label className="form-control-label">부서</label>
 
-                            <Input type="text" className="form-control-alternative" placeholder="부서명을 입력하세요." maxLength={30}
+                            <Input
+                                type="text"
+                                className="form-control-alternative"
+                                placeholder="부서명을 입력하세요."
+                                maxLength={30}
                                 value={reqUserDTO.userDept}
                                 onChange={(e) => handleChange('userDept', e.target.value)}
                             />
@@ -43,7 +51,11 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ reqUserDTO, han
                         <FormGroup>
                             <label className="form-control-label">직급</label>
 
-                            <Input type="text" className="form-control-alternative" placeholder="직급을 입력하세요." maxLength={30}
+                            <Input
+                                type="text"
+                                className="form-control-alternative"
+                                placeholder="직급을 입력하세요."
+                                maxLength={30}
                                 value={reqUserDTO.userPos}
                                 onChange={(e) => handleChange('userPos', e.target.value)}
                             />

@@ -22,6 +22,28 @@ export interface SupportList {
     regDt: string;
 }
 
+// 문의 리스트 요청 인터페이스
+export interface ReqSupportListDTO {
+    pageNo: number;
+    pageSize: number;
+    searchCompanyId: number;
+    searchRequestCd: number;
+    searchStatusCd: number;
+    searchStartDt: string;
+    searchEndDt: string;
+    searchTitle: string;
+};
+
+// 문의 등록 인터페이스
+export interface ReqSupportDTO {
+    requestCompanyId: number;
+    requestProjectId: number;
+    requestCd: number;
+    statusCd: number;
+    supportTitle: string;
+    requestDate: string;
+};
+
 // 문의 상세 조회 인터페이스
 export interface ResSupportViewDTO {
     authType: string;

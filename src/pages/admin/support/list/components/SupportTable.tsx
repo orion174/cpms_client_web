@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'reactstrap';
 
 import SupportTableRow from "./SupportTableRow.tsx";
-import { SupportList } from "../../types.ts";
+import type { SupportList } from "../../types.ts";
 
 interface TableProps {
     data: SupportList[];

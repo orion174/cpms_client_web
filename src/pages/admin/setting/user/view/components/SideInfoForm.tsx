@@ -2,7 +2,7 @@ import { Button, Card, CardBody, CardHeader, Col, Row } from "reactstrap";
 
 import team4Image from "@/assets/img/theme/team-4-800x800.jpg";
 
-const SideInfoForm:React.FC<{}> = () => {
+const SideInfoForm: React.FC = () => {
     return (
         <>
             <Card className="card-profile shadow">

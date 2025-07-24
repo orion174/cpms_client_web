@@ -1,10 +1,10 @@
 import { Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import useModalHook from "@/hook/useModal.ts";
-import { useCancelNavigation } from "@/hook/customHook.ts";
+import useModalHook from "@/hooks/useModal.ts";
+import { useCancelNavigation } from "@/hooks/customHook.ts";
 
 import { saveUser } from "@/core/api/setting/userService.ts";
-import { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface UserFormButtonPrps {
     reqUserDTO: ReqUserDTO;
@@ -12,6 +12,7 @@ interface UserFormButtonPrps {
 };
 
 const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO }) => {
+
     const { openCustomModal } = useModalHook();
     const confirmCancel = useCancelNavigation();
     const navigate = useNavigate();
@@ -25,11 +26,16 @@ const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO })
     };
 
     // 계정 정보 저장
-    const handSave = () => {
+    const handSave = (): void => {
         const message = validate();
 
         if (message) {
-            openCustomModal({ title: "알림", message, isConfirm: false });
+            openCustomModal({
+                title: "알림",
+                message,
+                isConfirm: false
+            });
+
             return;
         }
 
@@ -52,7 +58,9 @@ const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO })
 
     return (
         <>
-            <Button color="default" onClick={confirmCancel}>등록 취소</Button>
+            <Button color="default" onClick={confirmCancel}>
+                등록 취소
+            </Button>
             <Button color="success" onClick={handSave}>
                 {isEditMode ? "수정 완료" : "사용자 등록"}
             </Button>

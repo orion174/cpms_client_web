@@ -3,14 +3,14 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptor.ts';
 import type { ApiResponse } from '@/types/cmmn.ts';
 
-// 📌 일반 JSON 요청용 인스턴스
+// 일반 JSON 요청용 인스턴스
 const callAPI = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     headers: { 'Content-Type': 'application/json' },
     withCredentials: true,
 });
 
-// 📌 FormData/raw 요청용 인스턴스 (예: 파일 업로드)
+// FormData/raw 요청용 인스턴스 (예: 파일 업로드)
 const rawAPI = axios.create({
     baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
@@ -24,7 +24,7 @@ rawAPI.interceptors.request.use(requestInterceptor, errorInterceptor);
 callAPI.interceptors.response.use(responseInterceptor, errorInterceptor);
 rawAPI.interceptors.response.use(responseInterceptor, errorInterceptor);
 
-/* 📌 API 호출 헬퍼 */
+/* API 호출 헬퍼 */
 
 const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     const response = await callAPI.get<ApiResponse<T>>(url, config);

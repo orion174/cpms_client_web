@@ -1,5 +1,5 @@
-import React from "react";
 import { Col, FormGroup, Input, Row } from "reactstrap";
+import React from "react";
 
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import type { ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
@@ -18,7 +18,6 @@ const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleCh
                     <FormGroup>
                         <label className="form-control-label">업체 선택</label>
                         <CpmsCompanySelect
-                            selectId="companyId"
                             value={formState.companyId}
                             onChange={(e) => handleChange("companyId", e.target.value)}
                             initText="업체 선택"

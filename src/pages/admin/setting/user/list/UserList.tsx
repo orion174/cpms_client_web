@@ -1,15 +1,16 @@
-import { useCallback, useState, useEffect } from "react";
 import { CardHeader, Col, Row } from "reactstrap";
+import { useCallback, useState, useEffect } from "react";
 
 import { apiClient } from "@/core/api/client.ts";
-import { useSearchParams } from "@/hook/customHook.ts";
+import { useSearchParams } from "@/hooks/customHook.ts";
+
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
 import UserSearchBar from "@/pages/admin/setting/user/list/components/UserSearchBar.tsx";
 import UserDataTable from "@/pages/admin/setting/user/list/components/UserDataTable.tsx";
 import CreateUserButton from "@/pages/admin/setting/user/list/components/CreateUserButton.tsx";
 
-import { PageResponse } from "@/types/cmmn.ts";
-import { ReqUserListDTO, ResUserListDTO, defaultUserListParams } from "@/pages/admin/setting/user/types.ts";
+import type { PageResponse } from "@/types/cmmn.ts";
+import type { ReqUserListDTO, ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
 
 /* 📁 사용자 데이터 목록 */
 const UserList: React.FC = () => {
@@ -20,19 +21,20 @@ const UserList: React.FC = () => {
     const { updateSearchParams, resetSearchParams } = useSearchParams(setSearchParams, defaultUserListParams());
 
     // API 호출 데이터
-    const fetchUserList = useCallback(async () => {
+    const fetchUserList = useCallback(async (): Promise<void> => {
         const request = {
-            ...searchParams, pageNo: currentPage
+            ...searchParams,
+            pageNo: currentPage
         };
 
         const response
-            = await apiClient.post<PageResponse<ResUserListDTO>>(`/api/user/list`, request);
+            = await apiClient.post<PageResponse<ResUserListDTO>>('/api/user/list', request);
 
         setUserList(response.content);
         setTotalCnt(response.totalElements);
     }, [searchParams, currentPage]);
 
-    useEffect(() => {
+    useEffect((): void => {
         fetchUserList();
     }, [fetchUserList]);
 
@@ -69,5 +71,14 @@ const UserList: React.FC = () => {
         </>
     );
 };
+
+const defaultUserListParams = (): ReqUserListDTO => ({
+    pageNo: 1,
+    pageSize: 10,
+    searchCompanyId: 0,
+    searchAuthType: "",
+    searchUseYn: "",
+    searchUserNm: "",
+});
 
 export default UserList;

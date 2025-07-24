@@ -1,12 +1,12 @@
 import { Card, CardBody, CardHeader, Col, Container, Form, Row } from "reactstrap";
 
-import { useFormState } from "@/hook/customHook.ts";
+import { useFormState } from "@/hooks/customHook.ts";
 import Empty from "@/pages/layout/StatusArea/Empty.tsx";
 import CompanyFormButton from "@/pages/admin/setting/company/form/components/CompanyFormButton.tsx";
 import BasicInfoSection from "./components/BasicInfoSection.tsx";
-
-import { getInitCompany, ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
 import EtcInfoSection from "@/pages/admin/setting/company/form/components/EtcInfoSection.tsx";
+
+import type { ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
 
 const CompanyForm: React.FC = () => {
     const isEditMode = new URLSearchParams(location.search).has("companyId");
@@ -54,5 +54,16 @@ const CompanyForm: React.FC = () => {
         </>
     );
 };
+
+const getInitCompany = (): ReqCompanyDTO => ({
+    authType: 'USER',
+    companyNm: '',
+    zipCode: '',
+    address: '',
+    extraAddress: '',
+    homepage: '',
+    companyInfo: '',
+    adminNote: ''
+});
 
 export default CompanyForm;

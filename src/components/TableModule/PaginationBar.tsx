@@ -1,4 +1,4 @@
-import {Pagination, PaginationItem, PaginationLink} from "reactstrap";
+import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 import React from "react";
 
 interface PaginationProps {
@@ -11,9 +11,12 @@ interface PaginationProps {
 // 한 번에 표시할 페이지 수
 const maxVisiblePages = 5;
 
-const PaginationBar: React.FC<PaginationProps> = (
-    {totalCnt, currentPage, pageSize, onPageChange}
-) => {
+const PaginationBar: React.FC<PaginationProps> = ({
+    totalCnt,
+    currentPage,
+    pageSize,
+    onPageChange
+}) => {
     const totalPages = Math.ceil(totalCnt / pageSize); // 총 페이지 수
     const startPage = Math.floor((currentPage - 1) / maxVisiblePages) * maxVisiblePages + 1;
     const endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);

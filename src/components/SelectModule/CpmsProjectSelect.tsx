@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-
-import { ResProjectDTO } from "@/types/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";
+import type { ResProjectDTO } from "@/types/cmmn.ts";
 
 interface CpmsProjectProps  {
     companyId?: number;
-    selectId: string;
+    selectId?: string;
     value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -24,20 +23,15 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
     useEffect(() => {
-        const fetchProjects = async () => {
-            try {
-                const endPoint = `/api/setting/project/list`;
-                const jsonData = {
-                    companyId: companyId ?? 0
-                }
+        const fetchProjects = async (): Promise<void> => {
+            const jsonData = {
+                companyId: companyId ?? 0
+            };
 
-                const response = await apiClient.post<ResProjectDTO[]>(endPoint, jsonData);
+            const response
+                = await apiClient.post<ResProjectDTO[]>('/api/setting/project/list', jsonData);
 
-                setOptions(response);
-
-            } catch (error) {
-                console.error("프로젝트 목록 조회 실패:", error);
-            }
+            setOptions(response);
         };
 
         fetchProjects();
@@ -56,7 +50,12 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     }, [options, onChange]);
 
     return (
-        <select id={selectId} value={value} className={classNm} onChange={onChange}>
+        <select
+            id={selectId}
+            value={value}
+            className={classNm}
+            onChange={onChange}
+        >
             <option value="">{initText}</option>
 
             {options.map((option) => (

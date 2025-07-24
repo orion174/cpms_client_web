@@ -12,7 +12,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 
 import { logOut, getUserAuthInfo } from '@/utils/cmmn.ts';
-import useModalHook from "@/hook/useModal.ts";
+import useModalHook from "@/hooks/useModal.ts";
 import Today from "@/components/Today.tsx";
 
 import tempUser from "@/assets/img/icons/temp_user.png";

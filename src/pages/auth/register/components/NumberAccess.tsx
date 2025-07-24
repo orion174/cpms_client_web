@@ -2,15 +2,16 @@ import { Row, Col, Input, Button, InputGroup, InputGroupAddon, InputGroupText, F
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import useModalHook from '@/hook/useModal.ts';
+import useModalHook from '@/hooks/useModal.ts';
 
 interface Props {
     originPhone: string;
     onSuccess: () => void;
-}
+};
 
 const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
-    const { openCustomModal } = useModalHook();
+
+    const { openCustomModal, openErrorModal } = useModalHook();
 
     const [ code, setCode ] = useState('');
     const [ timeLeft, setTimeLeft ] = useState(300); // 인증 유효기간 5분
@@ -26,7 +27,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
     }, [timeLeft]);
 
     // 인증번호 만료기간 UI
-    const formatTime = (seconds: number) => {
+    const formatTime = (seconds: number): string => {
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
 
@@ -34,7 +35,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
     };
 
     // 6자리 숫자만 입력가능
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const input = e.target.value;
 
         if (/^\d{0,6}$/.test(input)) {
@@ -50,7 +51,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
     };
 
     // 인증번호 검사
-    const handleVerify = async () => {
+    const handleVerify = async (): Promise<void> => {
         if (code.length !== 6) {
             openCustomModal({
                 title: '인증 오류',
@@ -62,21 +63,30 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
         }
 
         try {
-            const endPoint = `${import.meta.env.VITE_API_URL}/api/user/verify/identity-code`;
+            const endPoint = `
+                ${import.meta.env.VITE_API_URL}/api/user/verify/identity-code
+            `;
 
-            const response = await axios.post(endPoint, {
+            const jsonData = {
                 originPhone: originPhone.replace(/-/g, ''),
                 checkCode: code
-            });
+            };
+
+
+            const response = await axios.post(endPoint, jsonData);
 
             const { success, message } = response.data;
 
             if (success) {
-                openCustomModal({ title: '알림', message, isConfirm: false });
+                openCustomModal({
+                    title: '알림',
+                    message,
+                    isConfirm: false
+                });
                 setIsVerified(true);
                 onSuccess(); // 외부 상태 변경
             }
-        } catch (error) {
+        } catch (error: any) {
             if (axios.isAxiosError(error)) {
                 const { message, errorCode } = error.response?.data || {};
 
@@ -92,14 +102,11 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
                         window.location.reload();
                     }, 1500);
                 } else {
-                    openCustomModal({
-                        title: `오류 (${errorCode})`,
-                        message: message,
-                        isConfirm: false
+                    openErrorModal({
+                        errorCode: errorCode ?? '0000',
+                        message: message ?? 'API 오류'
                     });
                 }
-            } else {
-                openCustomModal({ title: '알림', message: '알 수 없는 오류가 발생했습니다.', isConfirm: false });
             }
         }
     };

@@ -4,7 +4,7 @@ import { Table } from 'reactstrap';
 import TableEmpty from "@/components/TableModule/TableEmpty.tsx";
 import CompanyDataRow from "@/pages/admin/setting/company/list/components/CompanyDataRow.tsx";
 
-import { ResCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ResCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
 
 interface CompanyListProps {
     companyList: ResCompanyListDTO[];

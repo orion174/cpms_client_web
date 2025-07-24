@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Today: React.FC = () => {
-    const [currentDate, setCurrentDate] = useState("");
-    const [currentDay, setCurrentDay] = useState(""); // 요일만 저장
+    const [ currentDate, setCurrentDate ] = useState("");
+    const [ currentDay, setCurrentDay ] = useState(""); // 요일만 저장
 
     useEffect(() => {
         const updateDate = () => {

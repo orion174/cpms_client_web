@@ -9,7 +9,7 @@ export const deleteCookie = async (): Promise<void> => {
             null,
             {
                 headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
+                withCredentials: true,
             }
         );
     } catch (error) {
@@ -19,10 +19,7 @@ export const deleteCookie = async (): Promise<void> => {
 
 export const clearCookie = () => {
     sessionStorage.clear();
-
-    deleteCookie()
-        .catch(err => console.warn('deleteCookie failed:', err))
-        .finally(() => {
-            window.location.replace('/auth/login');
-        });
+    deleteCookie().finally(() => {
+        window.location.replace('/auth/login');
+    });
 };

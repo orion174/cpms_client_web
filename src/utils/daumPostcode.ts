@@ -3,7 +3,7 @@ let isPostcodeOpen = false;
 export const loadDaumPostCodeModal = (
     setZoneCode: (value: string) => void,
     setAddress: (value: string) => void
-) => {
+): void => {
     if (!window.daum?.Postcode) {
         return;
     }

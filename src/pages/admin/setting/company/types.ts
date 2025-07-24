@@ -27,22 +27,3 @@ export interface ReqCompanyDTO {
     companyInfo: string;
     adminNote: string;
 };
-
-// 회사 리스트 검색 초기값
-export const defaultCompanyListParams = (): ReqCompanyListDTO => ({
-    pageNo: 1,
-    pageSize: 10,
-    companyNm: "",
-    useYn: ""
-});
-
-export const getInitCompany = (): ReqCompanyDTO => ({
-    authType: 'USER',
-    companyNm: '',
-    zipCode: '',
-    address: '',
-    extraAddress: '',
-    homepage: '',
-    companyInfo: '',
-    adminNote: ''
-});

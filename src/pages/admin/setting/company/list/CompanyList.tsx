@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import { CardHeader, Col, Row } from "reactstrap";
 
-import { useSearchParams } from "@/hook/customHook.ts";
+import { useSearchParams } from "@/hooks/customHook.ts";
 import { fetchAdminCompanyList } from "@/core/api/setting/companyService.ts";
 
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
@@ -9,18 +9,17 @@ import CompanySearchBar from "@/pages/admin/setting/company/list/components/Comp
 import ManagementButton from "@/pages/admin/setting/company/list/components/ManagementButton.tsx";
 import CompanyDataTable from "@/pages/admin/setting/company/list/components/CompanyDataTable.tsx";
 
-import { ResCompanyListDTO, ReqCompanyListDTO, defaultCompanyListParams } from "@/pages/admin/setting/company/types.ts";
+import type { ResCompanyListDTO, ReqCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
 
 /* 📁 CPMS 관리 업체 데이터 목록 */
 const CompanyList: React.FC = () => {
-
     const [ companyList, setCompanyList ] = useState<ResCompanyListDTO[]>([]);
     const [ currentPage, setCurrentPage ] = useState<number>(1);
     const [ totalCnt, setTotalCnt ] = useState<number>(0);
     const [ searchParams, setSearchParams ] = useState<ReqCompanyListDTO>(defaultCompanyListParams());
     const { updateSearchParams, resetSearchParams } = useSearchParams(setSearchParams, defaultCompanyListParams());
 
-    const fetchCompanyList = useCallback(async () => {
+    const fetchCompanyList = useCallback(async (): Promise<void> => {
         const request = {
             ...searchParams
             , pageNo: currentPage
@@ -32,7 +31,7 @@ const CompanyList: React.FC = () => {
         setTotalCnt(response.totalElements);
     }, [searchParams, currentPage]);
 
-    useEffect(() => {
+    useEffect((): void => {
         fetchCompanyList();
     }, [fetchCompanyList]);
 
@@ -69,5 +68,12 @@ const CompanyList: React.FC = () => {
         </>
     );
 };
+
+const defaultCompanyListParams = (): ReqCompanyListDTO => ({
+    pageNo: 1,
+    pageSize: 10,
+    companyNm: "",
+    useYn: ""
+});
 
 export default CompanyList;

@@ -13,7 +13,7 @@ import {
 import { useState } from 'react';
 import axios from 'axios';
 
-import useModalHook from '@/hook/useModal.ts';
+import useModalHook from '@/hooks/useModal.ts';
 
 import PhoneVerifyBlock from './components/PhoneVerifyBlock.tsx';
 import NumberAccess from './components/NumberAccess.tsx';
@@ -22,7 +22,7 @@ import IdCheckBlock from './components/IdCheckBlock.tsx';
 import type { ApiResponse } from '@/types/cmmn.ts';
 
 const CpmsRegister: React.FC = () => {
-    const { openCustomModal } = useModalHook();
+    const { openCustomModal, openErrorModal } = useModalHook();
 
     const [ showAccess, setShowAccess ] = useState(false);
     const [ isPhoneVerified, setIsPhoneVerified ] = useState(false);
@@ -32,30 +32,31 @@ const CpmsRegister: React.FC = () => {
     const [ password, setPassword ] = useState('');
     const [ confirmPassword, setConfirmPassword ] = useState('');
 
-    const handleSubmit = () => {
-        if (!isPhoneVerified) {
-            openCustomModal({ title: '알림', message: '휴대폰 인증을 완료해 주세요.', isConfirm: false });
-            return;
-        }
+    const validate = (): string => {
+        if (!isPhoneVerified) return '휴대폰 인증을 완료해 주세요.';
+        if (!isIdVerified) return '아이디 중복검사를 완료해주세요.';
+        if (!password || !confirmPassword) return '비밀번호 또는 비밀번호 확인을 입력하세요.';
+        if (password !== confirmPassword) return '비밀번호가 일치하지 않습니다.';
 
-        if (!isIdVerified) {
-            openCustomModal({ title: '알림', message: '아이디 중복검사를 완료해주세요.', isConfirm: false });
-            return;
-        }
+        return "";
+    };
 
-        if (!password || !confirmPassword) {
-            openCustomModal({ title: '알림', message: '비밀번호 또는 비밀번호 확인을 입력하세요.', isConfirm: false });
-            return;
-        }
+    const handleSubmit = (): void => {
+        const message = validate();
 
-        if (password !== confirmPassword) {
-            openCustomModal({ title: '알림', message: '비밀번호가 일치하지 않습니다.', isConfirm: false });
+        if (message) {
+            openCustomModal({
+                title: "알림",
+                message,
+                isConfirm: false
+            });
+
             return;
         }
 
         openCustomModal({
             title: '확인',
-            message: '입력한 정보로 계정을 생성하시겠습니까?',
+            message: '계정을 생성하시겠습니까?',
             isConfirm: true,
             onConfirm: async () => {
                 try {
@@ -85,19 +86,12 @@ const CpmsRegister: React.FC = () => {
                             }
                         });
                     }
-                } catch (error) {
+                } catch (error: any) {
                     if (axios.isAxiosError(error)) {
                         const errorRes = error.response?.data as ApiResponse;
-                        openCustomModal({
-                            title: `오류${errorRes?.errorCode ? ` (${errorRes.errorCode})` : ''}`,
+                        openErrorModal({
+                            errorCode: errorRes.errorCode ?? '0000',
                             message: errorRes?.message ?? '회원가입 중 오류가 발생했습니다.',
-                            isConfirm: false
-                        });
-                    } else {
-                        openCustomModal({
-                            title: '알림',
-                            message: '알 수 없는 오류가 발생했습니다.',
-                            isConfirm: false
                         });
                     }
                 }
@@ -112,7 +106,6 @@ const CpmsRegister: React.FC = () => {
                     <div className="text-center mb-4 h2">CPMS 계정을 등록합니다.</div>
 
                     <Form role="form">
-
                         {/* 문자전송 */}
                         <PhoneVerifyBlock
                             phone={phone}

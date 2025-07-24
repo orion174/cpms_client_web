@@ -2,7 +2,7 @@ import { Button, Form, Input, InputGroup } from "reactstrap";
 
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import { ReqProjectListDTO } from "@/pages/admin/setting/project/types.ts";
+import type { ReqProjectListDTO } from "@/pages/admin/setting/project/types.ts";
 
 interface ProjectSearchProps {
     searchParams: ReqProjectListDTO;
@@ -12,14 +12,16 @@ interface ProjectSearchProps {
 };
 
 const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
-    searchParams, updateSearchParams, resetSearchParams, onSearch
+    searchParams,
+    updateSearchParams,
+    resetSearchParams,
+    onSearch
 }) => {
     return (
         <>
             <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()} >
                 <InputGroup>
                     <CpmsCompanySelect
-                        selectId="companyId"
                         value={searchParams.companyId}
                         onChange={(e) => updateSearchParams("companyId", e.target.value)}
                         classNm="my-custom-select"
@@ -28,7 +30,6 @@ const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
                 </InputGroup>
                 <InputGroup>
                     <CmmnUseYnSelect
-                        selectId="progressYn"
                         value={searchParams.progressYn}
                         onChange={(e) => updateSearchParams("progressYn", e.target.value)}
                         classNm="my-custom-select"
@@ -47,8 +48,12 @@ const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
                 </InputGroup>
 
                 <div className="d-flex gap-2">
-                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">검색</Button>
-                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">초기화</Button>
+                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">
+                        검색
+                    </Button>
+                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">
+                        초기화
+                    </Button>
                 </div>
             </Form>
         </>

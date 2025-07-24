@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useModalHook from "@/hook/useModal.ts";
+
+import useModalHook from "@/hooks/useModal.ts";
 
 export const useCancelNavigation = () => {
     const navigate = useNavigate();
@@ -20,20 +21,19 @@ export const useCancelNavigation = () => {
 
 // 제네릭 타입을 통해 유연하게 사용 가능
 export const useSearchParams = <T extends object>(
-    setSearchParams: React.Dispatch<React.SetStateAction<T>>
-    , defaultParams: T
+    setSearchParams: React.Dispatch<React.SetStateAction<T>>,
+    defaultParams: T
 ) => {
-
     const updateSearchParams = useCallback(
-        (key: keyof T, value: string) => {
+        (key: keyof T, value: any) => {
             setSearchParams((prev) => ({
                 ...prev,
                 [key]: value,
             }));
-        }, [setSearchParams]
+        },
+        [setSearchParams]
     );
 
-    // 초기화
     const resetSearchParams = useCallback(() => {
         setSearchParams(defaultParams);
     }, [setSearchParams, defaultParams]);

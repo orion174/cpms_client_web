@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import useModalHook from "@/hook/useModal.ts";
+import useModalHook from "@/hooks/useModal.ts";
 import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
 import { base64ToUtf8 } from "@/utils/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";

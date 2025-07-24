@@ -1,7 +1,7 @@
 import { Button } from "reactstrap";
 import React, { useState, ChangeEvent, useEffect } from "react";
 
-import { FileItem, NewFileItem } from "@/types/cmmn.ts";
+import type { FileItem, NewFileItem } from "@/types/cmmn.ts";
 
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";
@@ -18,64 +18,32 @@ interface FileUploadProps {
     onDeleteFiles?: (fileId: number) => void; // 파일 삭제 API 콜백
 }
 
-const ALLOWED_EXTENSIONS = [
-    'xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'
-];
-
-// 파일 확장자에 따른 아이콘 반환 함수
-const getIconByExtension = (extension: string) => {
-    switch (extension) {
-        case "xlsx":
-            return excelIcon;
-        case "xls":
-            return excelIcon;
-        case "hwp":
-            return hwpIcon;
-        case "jpg":
-            return jpgIcon;
-        case "jpeg":
-            return jpgIcon;
-        case "pdf":
-            return pdfIcon;
-        case "png":
-            return pngIcon;
-        case "ppt":
-            return pptIcon;
-        case "pptx":
-            return pptIcon;
-        case "doc":
-            return wordIcon;
-        case "docx":
-            return wordIcon;
-        default:
-            return "";
-    }
-};
-
-const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, initFiles = [], onDeleteFiles }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+    onFileChange,
+    initFiles = [],
+    onDeleteFiles
+}) => {
     // 파일 리스트를 관리하는 상태
-    const [fileList, setFileList] = useState<FileItem[]>([]);
+    const [ fileList, setFileList ] = useState<FileItem[]>([]);
 
-    useEffect(() => {
+    useEffect((): void => {
         setFileList(initFiles.map((file) => ({ ...file})));
     }, [initFiles]);
 
     // 파일 추가 이벤트 핸들러
-    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const files
-            = Array.from(e.target.files || [])
-                   .filter((file) => {
-                       const extension
-                           = file.name.split(".").pop()?.toLowerCase()
-                                || "";
-
-                           return ALLOWED_EXTENSIONS.includes(extension);
-                       }
-                   );
+            = Array
+                .from(e.target.files || [])
+                .filter((file) => {
+                    const extension= file.name.split(".").pop()?.toLowerCase() || "";
+                    return ALLOWED_EXTENSIONS.includes(extension);
+                });
 
         // 최대 5개 제한
         const newFiles: NewFileItem[]
-            = files.map((file, index) => ({
+            = files
+                .map((file, index) => ({
                     id: Date.now() + index,
                     file,
                     name: file.name,
@@ -100,7 +68,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, initFiles = [], o
     };
 
     // 파일 삭제 이벤트 핸들러
-    const handleDeleteFile = (fileId: number, isNew: boolean) => {
+    const handleDeleteFile = (fileId: number, isNew: boolean): void => {
         if (isNew) {
             const updatedFileList = fileList.filter((file) => file.id !== fileId);
 
@@ -137,8 +105,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, initFiles = [], o
                 <input
                     id="fileInput"
                     type="file"
-                    multiple
-                    accept={ALLOWED_EXTENSIONS.map(ext => `.${ext}`).join(",")} // 허용된 확장자만 설정
+                    multiple accept={ALLOWED_EXTENSIONS.map(ext => `.${ext}`).join(",")} // 허용된 확장자만 설정
                     onChange={handleFileChange}
                     style={{ display: "none" }}
                 />
@@ -174,6 +141,40 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileChange, initFiles = [], o
             </div>
         </div>
     );
+};
+
+const ALLOWED_EXTENSIONS = [
+    'xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'
+];
+
+// 파일 확장자에 따른 아이콘 반환 함수
+const getIconByExtension = (extension: string): string => {
+    switch (extension) {
+        case "xlsx":
+            return excelIcon;
+        case "xls":
+            return excelIcon;
+        case "hwp":
+            return hwpIcon;
+        case "jpg":
+            return jpgIcon;
+        case "jpeg":
+            return jpgIcon;
+        case "pdf":
+            return pdfIcon;
+        case "png":
+            return pngIcon;
+        case "ppt":
+            return pptIcon;
+        case "pptx":
+            return pptIcon;
+        case "doc":
+            return wordIcon;
+        case "docx":
+            return wordIcon;
+        default:
+            return "";
+    }
 };
 
 export default FileUpload;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "reactstrap";
 
-import { SupportList } from "../../types.ts";
+import type { SupportList } from "../../types.ts";
 
 interface RowProps {
     row: SupportList;

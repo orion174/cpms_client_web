@@ -1,6 +1,6 @@
 /* 📁 페이징 모듈 - 테이블 타입 */
-import React from "react";
 import { CardFooter, Col, Row } from "reactstrap";
+import React from "react";
 
 import PaginationBar from "@/components/TableModule/PaginationBar.tsx";
 
@@ -11,7 +11,12 @@ interface PaginationProps {
     onPageChange: (page: number) => void;
 };
 
-const PaginationComponent:React.FC<PaginationProps> = ({ totalCnt, currentPage, pageSize, onPageChange }) => {
+const PaginationComponent:React.FC<PaginationProps> = ({
+    totalCnt,
+    currentPage,
+    pageSize,
+    onPageChange
+}) => {
     return (
         <>
             <CardFooter className="py-4">

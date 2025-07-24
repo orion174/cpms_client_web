@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Button } from "reactstrap";
-
-import ProjectModalForm from "../../modal/ProjectModalForm.tsx";
-import { useFormState } from "@/hook/customHook.ts";
-import { saveProject } from "@/core/api/setting/projectService.ts";
-import { getInitProject, ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
 import { useNavigate } from "react-router-dom";
+
+import useModalHook from "@/hooks/useModal.ts";
+import { useFormState } from "@/hooks/customHook.ts";
+import { saveProject } from "@/core/api/setting/projectService.ts";
+import ProjectModalForm from "../../modal/ProjectModalForm.tsx";
 import FormModal from "@/components/ModalModule/FormModal.tsx";
-import useModalHook from "@/hook/useModal.ts";
+
+import type { ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
 
 const ManagementButton: React.FC = () => {
     const { openCustomModal } = useModalHook();
@@ -16,11 +17,11 @@ const ManagementButton: React.FC = () => {
     const [ isOpen, setIsOpen ] = useState(false);
     const { formState, handleChange, resetForm } = useFormState<ReqProjectDTO>(getInitProject());
 
-    const handleOpen = () => {
+    const handleOpen = (): void => {
         setIsOpen(true);
     };
 
-    const handleClose = () => {
+    const handleClose = (): void => {
         setIsOpen(false);
         resetForm();
     };
@@ -28,15 +29,20 @@ const ManagementButton: React.FC = () => {
     const validate = (): string => {
         if (!formState.companyId) return "프로젝트 소속 업체를 선택하세요.";
         if (!formState.projectNm) return "프로젝트 명을 입력하세요.";
+
         return "";
     };
 
-    const handleSubmit = async () => {
-
+    const handleSubmit = async (): Promise<void> => {
         const message = validate();
 
         if (message) {
-            openCustomModal({ title: "알림", message, isConfirm: false });
+            openCustomModal({
+                title: "알림",
+                message,
+                isConfirm: false
+            });
+
             return;
         }
 
@@ -44,7 +50,7 @@ const ManagementButton: React.FC = () => {
             title: "확인",
             message: "저장하시겠습니까?",
             isConfirm: true,
-            onConfirm: async () => {
+            onConfirm: async (): Promise<void> => {
 
                 await saveProject(formState);
 
@@ -55,7 +61,7 @@ const ManagementButton: React.FC = () => {
                     message: "저장이 완료되었습니다.",
                     isConfirm: true,
                     onConfirm: () => navigate(
-                        "/admin/setting/project/list"
+                        '/admin/setting/project/list'
                         , { state: { reload: true } }
                     )
                 });
@@ -88,5 +94,11 @@ const ManagementButton: React.FC = () => {
         </>
     );
 };
+
+const getInitProject = (): ReqProjectDTO => ({
+    companyId: 0
+    , projectNm: ''
+    , projectInfo: ''
+});
 
 export default ManagementButton;

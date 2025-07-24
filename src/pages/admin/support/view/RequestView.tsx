@@ -10,24 +10,25 @@ import {
     FormGroup
 } from "reactstrap";
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-import useModalHook from "@/hook/useModal.ts";
+import useModalHook from "@/hooks/useModal.ts";
+import { useCancelNavigation } from "@/hooks/customHook.ts";
 import { base64ToUtf8, isBase64 } from "@/utils/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";
 import { getUserAuthType } from '@/utils/cmmn.ts';
 
 import Empty from "@/pages/layout/StatusArea/Empty.tsx";
 import FileDown from "@/components/CmmnModule/FileDownload.tsx";
-
 import ResponseForm from "./components/ResponseForm.tsx";
 import ResponseView from "./components/ResponseView.tsx";
 
-import { ResSupportViewDTO, supportResponse, supportFileList } from "../types.ts";
+import type { ResSupportViewDTO, supportResponse, supportFileList } from "../types.ts";
+
 
 const SupportView: React.FC = () => {
-    const navigate = useNavigate();
     const { openCustomModal } = useModalHook();
+    const confirmCancel = useCancelNavigation();
 
     const [ showResponseForm, setShowResponseForm ] = useState(false);
     const handleShowResponseForm = () => setShowResponseForm(true);
@@ -43,8 +44,9 @@ const SupportView: React.FC = () => {
 
     const encodedId = searchParams.get("support_page");
 
-    useEffect(() => {
-        const fetchSupportView = async () => {
+    useEffect((): void => {
+        const fetchSupportView = async (): Promise<void> => {
+
             if (!encodedId || !isBase64(encodedId)) {
                 openCustomModal({
                     title: "오류",
@@ -52,39 +54,80 @@ const SupportView: React.FC = () => {
                     isConfirm: false,
                     redirectUrl: "/admin/support/list",
                 });
+
                 return;
             }
 
             const decodedId = parseInt(base64ToUtf8(encodedId), 10);
             if (isNaN(decodedId)) return;
 
-            try {
-                const [type, result] = await Promise.all([
+            const [ type, result ]
+                = await Promise.all([
                     getUserAuthType(),
-                    apiClient.post<ResSupportViewDTO>("/api/support/view", {
-                        supportRequestId: decodedId,
-                    }),
+                    apiClient.post<ResSupportViewDTO>("/api/support/view", { supportRequestId: decodedId })
                 ]);
 
-                setAuthType(type ?? ""); // fallback
-                setResult(result);
+            setAuthType(type ?? "");
+            setResult(result);
 
-                const requestFiles = result.fileList?.filter(f => f.fileType === "REQ") ?? [];
-                const responseFiles = result.fileList?.filter(f => f.fileType === "RES") ?? [];
+            const requestFiles
+                = result.fileList?.filter(f => f.fileType === "REQ") ?? [];
 
-                setRequestFileList(requestFiles);
-                setResponseFileList(responseFiles);
-            } catch (error) {
-                console.error("유지보수 상세 조회 실패", error);
-            }
+            const responseFiles
+                = result.fileList?.filter(f => f.fileType === "RES") ?? [];
+
+            setRequestFileList(requestFiles);
+            setResponseFileList(responseFiles);
         };
 
         fetchSupportView();
     }, [encodedId]);
 
-    // 문의 목록으로 돌아가기
-    const handleList = () => {
-        navigate("/admin/support/list");
+    // 답변 삭제
+    const handleDeleteResponse = async (): Promise<void> => {
+        if (!result) return;
+
+        const supportRequestId = result.supportRequestId;
+
+        openCustomModal({
+            title: "알림",
+            message: "정말 삭제하시겠습니까?",
+            isConfirm: true,
+            onConfirm: async () => {
+                await apiClient.post<null>('/api/support/delete-response', supportRequestId);
+
+                openCustomModal({
+                    title: "알림",
+                    message: "답변이 삭제되었습니다.",
+                    isConfirm: false,
+                });
+
+                setResult({
+                    ...result,
+                    supportResponse: null
+                });
+
+                setResponseFileList([]);
+            },
+        });
+    };
+
+    // 문의 답변 수정
+    const handleUpdateResponse = (): void => {
+        if (result?.supportResponse) {
+            setStatusCd(result.statusCd);
+            setEditData(result.supportResponse);
+            setEditMode(true);
+        }
+    };
+
+    // 문의의 답변 유무를 검사한다.
+    const hasSupportResponse
+        = (response: ResSupportViewDTO | null): response is ResSupportViewDTO
+            & { supportResponse: supportResponse } => {
+
+        return !!response?.supportResponse
+            && response.supportResponse.supportResponseId > 0;
     };
 
     // 문의 수정
@@ -94,49 +137,6 @@ const SupportView: React.FC = () => {
             message: "해당 기능은 준비중입니다.",
             isConfirm: false,
         });
-    };
-
-    // 답변 삭제
-    const handleDeleteResponse = async () => {
-        if (!result) return;
-
-        openCustomModal({
-            title: "알림",
-            message: "정말 삭제하시겠습니까?",
-            isConfirm: true,
-            onConfirm: async () => {
-                const endPoint = `/api/support/delete-response`;
-
-                await apiClient.post<null>(endPoint, {
-                    supportRequestId: result.supportRequestId,
-                });
-
-                openCustomModal({
-                    title: "알림",
-                    message: "답변이 삭제되었습니다.",
-                    isConfirm: false,
-                });
-
-                setResult({ ...result, supportResponse: null });
-                setResponseFileList([]);
-            },
-        });
-    };
-
-    // 문의 답변 수정
-    const handleUpdateResponse = () => {
-        if (result?.supportResponse) {
-            setStatusCd(result.statusCd);
-            setEditData(result.supportResponse);
-            setEditMode(true);
-        }
-    };
-
-    // 문의의 답변 유무를 검사한다.
-    const hasSupportResponse = (
-        response: ResSupportViewDTO | null
-    ): response is ResSupportViewDTO & { supportResponse: supportResponse } => {
-        return !!response?.supportResponse && response.supportResponse.supportResponseId > 0;
     };
 
     return (
@@ -153,7 +153,7 @@ const SupportView: React.FC = () => {
                                         <h2 className="mb-0">프로젝트 문의</h2>
                                     </Col>
                                     <Col className="text-right" xs="4">
-                                        <Button color="default" onClick={handleList}>목록</Button>
+                                        <Button color="default" onClick={confirmCancel}>목록</Button>
                                         <Button color="info" onClick={handleUpdateRequest}>문의수정</Button>
                                     </Col>
                                 </Row>
@@ -240,19 +240,26 @@ const SupportView: React.FC = () => {
                                                     <label className="form-control-label-custom">상세 내용</label>
                                                     <div className="text-editor__wrapper">
                                                         <div className="my-detail-text-editor"
-                                                             dangerouslySetInnerHTML={{ __html: result?.supportEditor || "" }}
-                                                        ></div>
+                                                            dangerouslySetInnerHTML={{ __html: result?.supportEditor || "" }}
+                                                        >
+                                                        </div>
                                                     </div>
                                                 </FormGroup>
                                             </Col>
                                         </Row>
                                     </div>
 
-                                    {authType == "ADMIN" && !showResponseForm && !hasSupportResponse(result) && (
-                                        <div className="button-right">
-                                            <Button color="success" onClick={handleShowResponseForm}>답변하기</Button>
-                                        </div>
-                                    )}
+                                    {authType == "ADMIN"
+                                        && !showResponseForm
+                                        && !hasSupportResponse(result)
+                                        && (
+                                            <div className="button-right">
+                                                <Button color="success" onClick={handleShowResponseForm}>
+                                                    답변하기
+                                                </Button>
+                                            </div>
+                                        )
+                                    }
 
                                 </Form>
                             </CardBody>
@@ -260,14 +267,16 @@ const SupportView: React.FC = () => {
                     </Col>
                 </Row>
 
-                {!editMode && hasSupportResponse(result) && (
-                    <ResponseView
-                        supportResponse={result.supportResponse}
-                        authType={authType}
-                        responseFileList={responseFileList}
-                        onResponseDelete={handleDeleteResponse}
-                        onResponseUpdate={handleUpdateResponse}
-                    />
+                {!editMode
+                    && hasSupportResponse(result)
+                    && (
+                        <ResponseView
+                            authType={authType}
+                            supportResponse={result.supportResponse}
+                            responseFileList={responseFileList}
+                            onResponseDelete={handleDeleteResponse}
+                            onResponseUpdate={handleUpdateResponse}
+                        />
                 )}
 
                 {showResponseForm && <ResponseForm />}

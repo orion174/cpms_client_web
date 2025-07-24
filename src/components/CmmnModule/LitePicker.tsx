@@ -3,7 +3,6 @@ import { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 import Litepicker from "litepicker";
 
 interface LitePickerProps {
-    inputId: string;
     singleMode?: boolean;
     format?: string;
     delimiter?: string;
@@ -12,8 +11,7 @@ interface LitePickerProps {
 }
 
 const LitePicker = forwardRef(({
-    inputId
-    , singleMode = true
+    singleMode = true
     , format = "YYYY-MM-DD"
     , delimiter = " ~ "
     , placeholder
@@ -61,7 +59,6 @@ const LitePicker = forwardRef(({
 
     return (
         <Input
-            id={inputId}
             type="text"
             className="my-litepicker"
             placeholder={placeholder}

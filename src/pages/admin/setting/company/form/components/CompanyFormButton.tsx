@@ -1,7 +1,7 @@
 import { Button } from "reactstrap";
 import { useNavigate } from "react-router-dom";
-import useModalHook from "@/hook/useModal.ts";
-import { useCancelNavigation } from "@/hook/customHook.ts";
+import useModalHook from "@/hooks/useModal.ts";
+import { useCancelNavigation } from "@/hooks/customHook.ts";
 
 import { saveCompany } from "@/core/api/setting/companyService.ts";
 import { ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
@@ -27,7 +27,12 @@ const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCom
         const message = validate();
 
         if (message) {
-            openCustomModal({ title: "알림", message, isConfirm: false });
+            openCustomModal({
+                title: "알림",
+                message,
+                isConfirm: false
+            });
+
             return;
         }
 

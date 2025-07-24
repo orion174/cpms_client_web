@@ -17,7 +17,7 @@ import BasicInfoSection from "@/pages/admin/setting/user/form/components/BasicIn
 import CompanyInfoSection from "@/pages/admin/setting/user/form/components/CompanyInfoSection.tsx";
 import EtcInfoSection from "@/pages/admin/setting/user/form/components/EtcInfoSection.tsx";
 
-import { getInitUser, ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
 
 const UserForm:React.FC = () => {
     const location = useLocation();
@@ -26,7 +26,7 @@ const UserForm:React.FC = () => {
     const [ isIdVerified, setIsIdVerified ] = useState<boolean>(false); // 아아디 중복검사 통과여부
     const [ reqUserDTO, setReqUserDTO ] = useState<ReqUserDTO>(getInitUser());
 
-    const handleChange = (field: keyof ReqUserDTO, value: string | number) => {
+    const handleChange = (field: keyof ReqUserDTO, value: string | number): void => {
         setReqUserDTO((prev) => ({
             ...prev,
             [field]: value,
@@ -96,5 +96,18 @@ const UserForm:React.FC = () => {
         </>
     );
 };
+
+const getInitUser = (): ReqUserDTO => ({
+    loginId: '',
+    userNm: '',
+    authType: '',
+    userPhone: '',
+    userEmail: '',
+    companyId: 0,
+    userDept: '',
+    userPos: '',
+    userInfo: '',
+    userNote: '',
+});
 
 export default UserForm;

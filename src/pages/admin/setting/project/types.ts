@@ -22,17 +22,3 @@ export interface ReqProjectDTO {
     projectNm: string;
     projectInfo: string;
 };
-
-export const defaultProjectListParams = (): ReqProjectListDTO => ({
-    pageNo: 1,
-    pageSize: 10,
-    companyId: 0,
-    progressYn: "",
-    projectNm: ""
-});
-
-export const getInitProject = (): ReqProjectDTO => ({
-    companyId: 0
-    , projectNm: ''
-    , projectInfo: ''
-});

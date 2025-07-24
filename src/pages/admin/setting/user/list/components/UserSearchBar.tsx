@@ -4,7 +4,7 @@ import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
 
-import { ReqUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserListDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface UserSearchProps {
     searchParams: ReqUserListDTO;
@@ -13,7 +13,12 @@ interface UserSearchProps {
     onSearch: () => void;
 };
 
-const UserSearchBar:React.FC<UserSearchProps> = ({ searchParams, updateSearchParams, resetSearchParams, onSearch }) => {
+const UserSearchBar:React.FC<UserSearchProps> = ({
+    searchParams,
+    updateSearchParams,
+    resetSearchParams,
+    onSearch
+}) => {
     return (
         <>
             <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()}>
@@ -56,8 +61,12 @@ const UserSearchBar:React.FC<UserSearchProps> = ({ searchParams, updateSearchPar
                 </InputGroup>
 
                 <div className="d-flex gap-2">
-                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">검색</Button>
-                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">초기화</Button>
+                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">
+                        검색
+                    </Button>
+                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">
+                        초기화
+                    </Button>
                 </div>
             </Form>
         </>

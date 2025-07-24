@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-
-import { ResCompanyDTO } from "@/types/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";
+import type { ResCompanyDTO } from "@/types/cmmn.ts";
 
 interface CpmsCompanyProps {
     companyId?: number;
-    selectId: string;
+    selectId?: string;
     value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -24,15 +23,13 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
     const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
     useEffect(() => {
-        const fetchCompanys = async () => {
-
-            const endPoint = `/api/setting/company/list`;
-
+        const fetchCompanys = async (): Promise<void> => {
             const jsonData = {
                 companyId: companyId ?? 0
-            }
+            };
 
-            const response = await apiClient.post<ResCompanyDTO[]>(endPoint, jsonData);
+            const response
+                = await apiClient.post<ResCompanyDTO[]>('/api/setting/company/list', jsonData);
 
             setOptions(response);
         };
@@ -54,7 +51,12 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
     }, [options, hasAutoSelected, onChange]);
 
     return (
-        <select id={selectId} value={value} className={classNm} onChange={onChange}>
+        <select
+            id={selectId}
+            value={value}
+            className={classNm}
+            onChange={onChange}
+        >
             <option value="">{initText}</option>
 
             {options.map((option) => (

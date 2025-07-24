@@ -1,10 +1,10 @@
-import React from 'react';
 import { Table } from 'reactstrap';
+import React from 'react';
 
 import TableEmpty from "@/components/TableModule/TableEmpty.tsx";
 import UserDataRow from "@/pages/admin/setting/user/list/components/UserDataRow.tsx";
 
-import { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface UserListProps {
     userList: ResUserListDTO[];

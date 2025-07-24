@@ -20,7 +20,6 @@ export interface ReqUserListDTO {
     searchUserNm: string;
 };
 
-// CPMS 사용자 등록 인터페이스
 export interface ReqUserDTO {
     loginId: string;
     userNm: string;
@@ -33,27 +32,3 @@ export interface ReqUserDTO {
     userInfo: string;
     userNote: string;
 };
-
-// 검색 초기값
-export const defaultUserListParams = (): ReqUserListDTO => ({
-    pageNo: 1,
-    pageSize: 10,
-    searchCompanyId: 0,
-    searchAuthType: "",
-    searchUseYn: "",
-    searchUserNm: "",
-});
-
-// 계정 등록 초기값
-export const getInitUser = (): ReqUserDTO => ({
-    loginId: '',
-    userNm: '',
-    authType: '',
-    userPhone: '',
-    userEmail: '',
-    companyId: 0,
-    userDept: '',
-    userPos: '',
-    userInfo: '',
-    userNote: '',
-});

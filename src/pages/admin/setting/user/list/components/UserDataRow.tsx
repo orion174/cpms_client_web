@@ -1,7 +1,7 @@
-import React from "react";
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
+import React from "react";
 
-import { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface UserRowProps {
     index: number;
@@ -57,6 +57,7 @@ const UserDataRow: React.FC<UserRowProps> = ({ rowData, index }) => {
 
 // TODO 공통코드 기능 고도화 개발 후, 하드코딩 제거하기
 const getAuthBadge = (authType: string) => {
+
     switch (authType) {
         case "ADMIN":
             return (

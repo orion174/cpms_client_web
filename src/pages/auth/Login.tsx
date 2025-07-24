@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
 import axios from 'axios';
 
-import useModalHook from '@/hook/useModal.ts';
+import useModalHook from '@/hooks/useModal.ts';
 import { handleInputKeyDown } from '@/utils/cmmn.ts'
 import { userLogin } from "@/core/api/auth/loginService";
 
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
                     message: message ?? '로그인 실패'
                 });
             }
-        } catch (error) {
+        } catch (error: any) {
             if (axios.isAxiosError(error)) {
                 openErrorModal({
                     errorCode: error.response?.data?.errorCode ?? '',

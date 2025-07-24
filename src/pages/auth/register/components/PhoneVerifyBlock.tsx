@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Row,
     Col,
@@ -8,10 +7,11 @@ import {
     Input,
     Button,
 } from 'reactstrap';
+import { useState } from 'react';
 import axios from 'axios';
 
 import { formatPhoneNumber } from '@/utils/format.ts';
-import useModalHook from '@/hook/useModal.ts';
+import useModalHook from '@/hooks/useModal.ts';
 
 interface PhoneVerifyBlockProps {
     phone: string;
@@ -20,41 +20,54 @@ interface PhoneVerifyBlockProps {
     isVerified: boolean;
 }
 
-const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({ phone, setPhone, onVerified, isVerified }) => {
-    const { openCustomModal } = useModalHook();
+const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({
+    phone,
+    setPhone,
+    onVerified,
+    isVerified
+}) => {
+    const { openCustomModal, openErrorModal } = useModalHook();
     const [ phoneLocked, setPhoneLocked ] = useState(false);
 
     // 입력된 휴대폰 번호로 인증 문자를 전송한다.
-    const handlePhoneVerify = async () => {
+    const handlePhoneVerify = async (): Promise<void> => {
         if (!/^\d{11}$/.test(phone)) {
-            openCustomModal({ title: '알림', message: '전화번호는 숫자 11자리만 입력해주세요.', isConfirm: false });
+            openCustomModal({
+                title: '알림',
+                message: '전화번호는 숫자 11자리만 입력해주세요.',
+                isConfirm: false
+            });
+
             return;
         }
 
         try {
-            const endPoint = `${import.meta.env.VITE_API_URL}/api/user/verify/send-sms`;
+            const endPoint = `
+                ${import.meta.env.VITE_API_URL}/api/user/verify/send-sms
+            `;
 
-            const response = await axios.post(endPoint, {
-                receiver: phone.replace(/-/g, '')
-            });
+            const response
+                = await axios.post(endPoint, { receiver: phone.replace(/-/g, '') });
 
             const { success, message } = response.data;
 
             if (success) {
                 setPhoneLocked(true);
-                openCustomModal({ title: '알림', message, isConfirm: false });
-                onVerified(); // 인증번호 입력창 열기 외부에 알림
-            }
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const { message, errorCode } = error.response?.data || {};
+
                 openCustomModal({
-                    title: `오류${errorCode ? ` (${errorCode})` : ''}`,
-                    message: message ?? 'SMS 전송 중 오류가 발생했습니다.',
+                    title: '알림',
+                    message,
                     isConfirm: false
                 });
-            } else {
-                openCustomModal({ title: '알림', message: '알 수 없는 오류가 발생했습니다.', isConfirm: false });
+
+                onVerified(); // 인증번호 입력창 열기 외부에 알림
+            }
+        } catch (error: any) {
+            if (axios.isAxiosError(error)) {
+                openErrorModal({
+                    errorCode: error?.response?.data?.errorCode ?? '0000',
+                    message: error?.response?.data?.message ?? 'SMS 전송 중 오류가 발생했습니다.'
+                });
             }
         }
     };

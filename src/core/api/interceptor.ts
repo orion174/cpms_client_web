@@ -35,9 +35,10 @@ export const responseInterceptor = async (response: AxiosResponse) => {
     const contentType = response.headers['content-type'] || '';
 
     // blob 등 해당 예외는 통과
-    if (contentType.includes('application/octet-stream') || contentType.includes('application/pdf')
-        || contentType.includes('image/') || response.request?.responseType === 'blob'
-    ) {
+    if (contentType.includes('application/octet-stream')
+        || contentType.includes('application/pdf')
+        || contentType.includes('image/')
+        || response.request?.responseType === 'blob') {
         return response;
     }
 

@@ -5,7 +5,7 @@ import SectionBorder from "@/components/FormModule/SectionBorder.tsx"
 import IdCheckModule from "@/components/CmmnModule/IdCheckModule.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 
-import { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
 
 interface BasicInfoSectionProps {
     reqUserDTO: ReqUserDTO;
@@ -15,9 +15,11 @@ interface BasicInfoSectionProps {
 };
 
 const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
-    reqUserDTO, handleChange, isIdVerified, setIsIdVerified
+    reqUserDTO,
+    handleChange,
+    isIdVerified,
+    setIsIdVerified
 }) => {
-
     return (
         <>
             <h6 className="heading-small text-muted mb-4">기본 정보</h6>
@@ -31,7 +33,10 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                             </label>
 
                             <div className="d-flex" style={{ gap: "1rem" }}>
-                                <Input type="text" className="form-control-alternative" placeholder="6글자이상의 아이디를 입력하세요."
+                                <Input
+                                    type="text"
+                                    className="form-control-alternative"
+                                    placeholder="6글자이상의 아이디를 입력하세요."
                                     disabled={isIdVerified}
                                     value={reqUserDTO.loginId}
                                     onChange={(e) => handleChange('loginId', e.target.value)}
@@ -53,8 +58,12 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                                 이름 <span style={{ color: "red" }}>*</span>
                             </label>
 
-                            <Input className="form-control-alternative" type="text" placeholder="이름을 입력하세요." maxLength={20}
-                                   value={reqUserDTO.userNm}
+                            <Input
+                                className="form-control-alternative"
+                                type="text"
+                                placeholder="이름을 입력하세요."
+                                maxLength={20}
+                                value={reqUserDTO.userNm}
                                 onChange={(e) => handleChange('userNm', e.target.value)}
                             />
                         </FormGroup>
@@ -66,7 +75,10 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                                 시스템 권한 <span style={{ color: "red" }}>*</span>
                             </label>
 
-                            <CpmsAuthSelect selectId="authType" classNm="my-custom-select form-control" initText="권한 선택"
+                            <CpmsAuthSelect
+                                selectId="authType"
+                                classNm="my-custom-select form-control"
+                                initText="권한 선택"
                                 value={reqUserDTO.authType}
                                 onChange={(e) => handleChange('authType', e.target.value)}
                             />

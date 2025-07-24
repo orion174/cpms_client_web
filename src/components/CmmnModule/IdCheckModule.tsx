@@ -2,7 +2,7 @@ import { Button } from 'reactstrap';
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import useModalHook from '@/hook/useModal';
+import useModalHook from '@/hooks/useModal';
 
 import { ApiResponse } from '@/types/cmmn.ts';
 import { ResCheckIdDTO } from '@/pages/auth/types';

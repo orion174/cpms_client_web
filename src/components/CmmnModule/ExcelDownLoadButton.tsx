@@ -1,5 +1,5 @@
 import { Button } from "reactstrap";
-import useModalHook from "@/hook/useModal";
+import useModalHook from "@/hooks/useModal";
 
 const ExcelDownloadButton: React.FC = () => {
 

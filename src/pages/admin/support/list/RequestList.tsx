@@ -1,30 +1,19 @@
-import {
-  Card, CardHeader, Container, Row, Button, Col
-} from "reactstrap";
+import { Card, CardHeader, Container, Row, Button, Col } from "reactstrap";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { utf8ToBase64 } from "@/utils/cmmn.ts";
-import { apiClient } from "@/core/api/client.ts";
-import { getUserAuthType } from '@/utils/cmmn.ts';
+import { utf8ToBase64 } from "@/utils/cmmn";
+import { apiClient } from "@/core/api/client";
+import { getUserAuthType } from "@/utils/cmmn";
+import { useSearchParams } from "@/hooks/customHook";
 
-import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
-import TempHeader from "@/pages/layout/StatusArea/Status.tsx";
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import PaginationComponent from "@/components/TableModule/PaginationComponent";
+import TempHeader from "@/pages/layout/StatusArea/Status";
+import Empty from "@/pages/layout/StatusArea/Empty";
+import SupportSearchBar from "./components/SupportSearchBar";
+import SupportTable from "./components/SupportTable";
 
-import SupportSearchBar from "./components/SupportSearchBar.tsx";
-import SupportTable from "./components/SupportTable.tsx";
-
-import { ResSupportListDTO, SupportList } from "../types.ts";
-
-interface SupportSearchParams {
-    searchCompanyId: number;
-    searchRequestCd: number;
-    searchStatusCd: number;
-    searchStartDt: string;
-    searchEndDt: string;
-    searchTitle: string;
-}
+import type { ResSupportListDTO, SupportList, ReqSupportListDTO } from "../types";
 
 const RequestList: React.FC = () => {
     const navigate = useNavigate();
@@ -33,54 +22,24 @@ const RequestList: React.FC = () => {
     const [ currentPage, setCurrentPage ] = useState<number>(1);
     const [ data, setData ] = useState<SupportList[]>([]);
     const [ totalCnt, setTotalCnt ] = useState<number>(0);
+    const [ searchParams, setSearchParams ] = useState<ReqSupportListDTO>(defaultSearchParams());
+    const { updateSearchParams, resetSearchParams } = useSearchParams(setSearchParams, defaultSearchParams());
 
-    // 검색 값
-    const [ searchParams, setSearchParams ] = useState<SupportSearchParams>({
-        searchCompanyId: 0,
-        searchRequestCd: 0,
-        searchStatusCd: 0,
-        searchStartDt: "",
-        searchEndDt: "",
-        searchTitle: "",
-    });
-
-    // 검색 값 매핑
-    const updateSearchParams = (key: keyof typeof searchParams, value: string) => {
-        setSearchParams((prev) => ({ ...prev, [key]: value }));
-    };
-
-    // 검색 초기화
-    const handleClearSearch = () => {
-        setSearchParams({
-            searchCompanyId: 0,
-            searchRequestCd: 0,
-            searchStatusCd: 0,
-            searchStartDt: "",
-            searchEndDt: "",
-            searchTitle: "",
-        });
-
-        const pickerInput = document.getElementById("searchDate") as HTMLInputElement;
-
-        if (pickerInput) pickerInput.value = "";
-    };
-
-    // 유지보수 목록 데이터를 가져온다.
-    const fetchSupportList = useCallback(async () => {
-        const endPoint = `/api/support/list`;
-
-        const result = await apiClient.post<ResSupportListDTO>(endPoint, {
+    const fetchSupportList = useCallback(async (): Promise<void> => {
+        const request = {
             ...searchParams,
             pageNo: currentPage,
-            pageSize: 10,
-        });
+        };
+
+        const result
+            = await apiClient.post<ResSupportListDTO>('/api/support/list', request);
 
         setTotalCnt(result.totalCnt);
         setData(result.supportList);
-    }, [searchParams, currentPage]);
+    }, [ searchParams, currentPage ]);
 
-    useEffect(() => {
-        const init = async () => {
+    useEffect((): void => {
+        const init = async (): Promise<void> => {
             const type = await getUserAuthType();
 
             if (!type) {
@@ -93,31 +52,28 @@ const RequestList: React.FC = () => {
         };
 
         init();
-    }, [fetchSupportList]);
+    }, [ fetchSupportList ]);
 
-    // 접수대기인 게시글을 클릭하여 상세 페이지로 이동 전, 접수완료로 자동 업데이트 처리한다.
-    const handleRowClick = useCallback(async (supportRequestId: number, statusCd: number) => {
-        try {
+    const handleRowClick
+        = useCallback(async (supportRequestId: number, statusCd: number): Promise<void> => {
+            // 접수대기인 게시물을 최초 클릭시, 접수완료 상태로 바뀐다.
             if (statusCd === 3) {
-                const endPoint = `/api/support/update-status`;
-
-                const jsonData = {
-                    supportRequestId,
-                    statusCd: 4,
+                const request = {
+                    supportRequestId: supportRequestId,
+                    statusCd: 4
                 };
 
-                await apiClient.post(endPoint, jsonData);
+                await apiClient.post('/api/support/update-status', request);
             }
 
             const encodeId = utf8ToBase64(supportRequestId.toString());
             navigate(`/admin/support/view?support_page=${encodeId}`);
+        }, [navigate]
+    );
 
-        } catch (error) {
-            console.error("상태 업데이트 실패", error);
-        }
-    }, [navigate]);
+    if (authType === null) return null;
 
-    return authType === null ? null : (
+    return (
         <>
             {authType === "TEMP" ? <Empty /> : <TempHeader />}
 
@@ -132,15 +88,16 @@ const RequestList: React.FC = () => {
                                             authType={authType}
                                             searchParams={searchParams}
                                             updateSearchParams={updateSearchParams}
+                                            resetSearchParams={resetSearchParams}
                                             onSearch={fetchSupportList}
-                                            onReset={handleClearSearch}
                                         />
                                     </Col>
                                     <Col md="2">
                                         <div className="d-flex justify-content-end align-items-center gap-2">
-                                            <Button type="button"
+                                            <Button
+                                                type="button"
                                                 color="default"
-                                                onClick={() => navigate("/admin/support/form", { state: { formType: "insert" } })}
+                                                onClick={() => navigate("/admin/support/form?formType=insert")}
                                             >
                                                 문의등록
                                             </Button>
@@ -152,13 +109,11 @@ const RequestList: React.FC = () => {
                             <SupportTable
                                 data={data}
                                 onRowClick={(supportRequestId: number) => {
-                                    const row
-                                        = data.find((item) => item.supportRequestId === supportRequestId);
+                                    const row = data.find((item) => item.supportRequestId === supportRequestId);
                                     if (row) handleRowClick(row.supportRequestId, row.statusCd);
                                 }}
                             />
 
-                            {/* 페이징 */}
                             <PaginationComponent
                                 totalCnt={totalCnt}
                                 currentPage={currentPage}
@@ -172,5 +127,16 @@ const RequestList: React.FC = () => {
         </>
     );
 };
+
+const defaultSearchParams = (): ReqSupportListDTO => ({
+    pageNo: 1,
+    pageSize: 10,
+    searchCompanyId: 0,
+    searchRequestCd: 0,
+    searchStatusCd: 0,
+    searchStartDt: "",
+    searchEndDt: "",
+    searchTitle: "",
+});
 
 export default RequestList;

@@ -8,7 +8,7 @@ interface JwtPayload {
 }
 
 // 로그아웃
-export const logOut = () => {
+export const logOut = (): void => {
     clearCookie();
 };
 

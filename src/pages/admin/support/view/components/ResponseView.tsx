@@ -11,19 +11,23 @@ import React from "react";
 
 import { isValidHtmlContent } from "@/utils/cmmn.ts";
 import FileDown from "@/components/CmmnModule/FileDownload.tsx";
-import { supportFileList, supportResponse } from "../../types";
+import type { supportFileList, supportResponse } from "../../types";
 
 interface ResponseViewProps {
-    supportResponse: supportResponse;
     authType: string;
+    supportResponse: supportResponse;
     responseFileList: supportFileList[];
     onResponseDelete: () => void;
     onResponseUpdate: () => void;
 }
 
-const ResponseView: React.FC<ResponseViewProps> = (
-    { supportResponse, authType, responseFileList, onResponseDelete, onResponseUpdate }
-) => {
+const ResponseView: React.FC<ResponseViewProps> = ({
+    supportResponse,
+    authType,
+    responseFileList,
+    onResponseDelete,
+    onResponseUpdate
+}) => {
     const hasValidTitle = supportResponse.responseTitle && supportResponse.responseTitle.trim() !== "";
     const hasValidEditor = isValidHtmlContent(supportResponse.responseEditor);
     const hasFiles = responseFileList && responseFileList.length > 0;
@@ -73,7 +77,7 @@ const ResponseView: React.FC<ResponseViewProps> = (
                                                 <label className="form-control-label-custom">처리 상세 내역</label>
                                                 <div className="text-editor__wrapper_res">
                                                     <div className="my-detail-text-editor"
-                                                         dangerouslySetInnerHTML={{__html: supportResponse.responseEditor || "",}}
+                                                         dangerouslySetInnerHTML={{__html: supportResponse.responseEditor || ""}}
                                                     >
                                                     </div>
                                                 </div>
@@ -83,8 +87,12 @@ const ResponseView: React.FC<ResponseViewProps> = (
 
                                     {authType == "ADMIN" && (
                                         <Col className="text-right" xs="12">
-                                            <Button onClick={onResponseDelete} color="danger" outline>답변삭제</Button>
-                                            <Button onClick={onResponseUpdate} color="info" outline>답변수정</Button>
+                                            <Button onClick={onResponseDelete} color="danger" outline>
+                                                답변삭제
+                                            </Button>
+                                            <Button onClick={onResponseUpdate} color="info" outline>
+                                                답변수정
+                                            </Button>
                                         </Col>
                                     )}
                                 </Row>

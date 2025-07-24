@@ -3,7 +3,7 @@ import React from "react";
 interface TableEmptyProps {
     colSpan: number;
     message?: string;
-}
+};
 
 const TableEmpty: React.FC<TableEmptyProps> = ({ colSpan, message = "표시할 항목이 없습니다." }) => {
     return (

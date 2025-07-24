@@ -16,22 +16,20 @@ const tabRoutes = [
 
 /* 📁 Admin Setting 공통 레이아웃  */
 const SettingPage: React.FC = () => {
-
     const location = useLocation();
     const navigate = useNavigate();
 
     // URL에 따라 탭 결정
-    const activeTab = useMemo(() => {
+    const activeTab = useMemo((): number => {
         const index = tabRoutes.findIndex(path => location.pathname.startsWith(path));
         return index !== -1 ? index + 1 : 1; // default: 1
     }, [location.pathname]);
 
-    const handleTabChange = (index: number) => {
+    const handleTabChange = (index: number): void => {
         navigate(tabRoutes[index - 1]);
     };
 
     const renderContent = () => {
-
         switch (activeTab) {
             case 1:
                 return <UserList />;

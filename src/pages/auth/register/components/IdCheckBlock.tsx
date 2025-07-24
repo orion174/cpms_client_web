@@ -2,22 +2,22 @@ import { Input, InputGroup, InputGroupAddon, InputGroupText, Button, Col, Row, F
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import useModalHook from '@/hook/useModal.ts';
-
-import { ApiResponse } from '@/types/cmmn.ts';
-import { ResCheckIdDTO } from "../../types.ts";
+import useModalHook from '@/hooks/useModal.ts';
+import type { ApiResponse } from '@/types/cmmn.ts';
+import type { ResCheckIdDTO } from "../../types.ts";
 
 interface Props {
     loginId: string;
     setLoginId: (value: string) => void;
     onValid: () => void; // 중복검사 통과 시 호출
-}
+};
 
 const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
-    const { openCustomModal } = useModalHook();
+
+    const { openCustomModal, openErrorModal } = useModalHook();
     const [ isValid, setIsValid ] = useState(false);
 
-    const handleChange = (value: string) => {
+    const handleChange = (value: string): void => {
         // 변경되면 상태 초기화
         if (/^[a-zA-Z0-9]*$/.test(value)) {
             setLoginId(value);
@@ -26,23 +26,34 @@ const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
     };
 
     // 아아디 중복 검사 API
-    const handleCheckDuplicate = async () => {
+    const handleCheckDuplicate = async (): Promise<void> => {
         if (!loginId || loginId.trim().length < 6) {
-            openCustomModal({ title: '알림', message: '아이디는 최소 6자리 이상 입력해주세요.', isConfirm: false });
+            openCustomModal({
+                title: '알림',
+                message: '아이디는 최소 6자리 이상 입력해주세요.',
+                isConfirm: false
+            });
+
             return;
         }
 
         try {
-            const endPoint = `${import.meta.env.VITE_API_URL}/api/user/verify/id-check`;
+            const endPoint = `
+                ${import.meta.env.VITE_API_URL}/api/user/verify/id-check
+            `;
 
             const jsonData = {
                 loginId: loginId.trim()
             };
 
             const response
-                = await axios.post<ApiResponse<ResCheckIdDTO>>(endPoint, jsonData, {
-                    headers: { 'Content-Type': 'application/json' },
-                });
+                = await axios.post<ApiResponse<ResCheckIdDTO>>(
+                    endPoint,
+                    jsonData
+                    , {
+                        headers: { 'Content-Type': 'application/json' }
+                    }
+                );
 
             const { success, data, message } = response.data;
 
@@ -58,8 +69,10 @@ const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
                 });
             }
         } catch (error: any) {
-            const message = error?.response?.data?.message ?? '중복검사 중 오류가 발생했습니다.';
-            openCustomModal({ title: '오류', message, isConfirm: false });
+            openErrorModal({
+                errorCode: error?.response?.data?.errorCode ?? '0000',
+                message: error?.response?.data?.message ?? '중복검사 중 오류가 발생했습니다.'
+            });
         }
     };
 

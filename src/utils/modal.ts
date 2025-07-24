@@ -29,7 +29,7 @@ export const openCustomModal = ({
     onConfirm,
     redirectUrl,
     navigate
-}: CustomModalOptions) => {
+}: CustomModalOptions): void => {
 
     const modalId = uuidv4();
 
@@ -58,7 +58,7 @@ export const openErrorModal = ({
     message,
     redirectUrl,
     navigate,
-}: ErrorModalOptions) => {
+}: ErrorModalOptions): void => {
 
     const modalId = uuidv4();
     const title = `오류 [에러코드 ${errorCode}]`;

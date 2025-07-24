@@ -1,10 +1,10 @@
 import React from 'react';
 
 import FileUpload from "@/components/CmmnModule/FileUpload.tsx";
-import { FileItem } from "@/types/cmmn.ts";
+import type { FileItem } from "@/types/cmmn.ts";
 
 interface RequestFileProps {
-    formType: "insert" | "update";
+    formType: string;
     fileList: FileItem[];
     setFileList: React.Dispatch<React.SetStateAction<FileItem[]>>;
 }

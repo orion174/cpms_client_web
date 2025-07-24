@@ -1,7 +1,7 @@
 import { Button, Form, Input, InputGroup } from "reactstrap";
 
-import { ReqCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
+import type { ReqCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
 
 interface CompanySearchProps {
     searchParams: ReqCompanyListDTO;
@@ -11,14 +11,16 @@ interface CompanySearchProps {
 };
 
 const CompanySearchBar: React.FC<CompanySearchProps> = ({
-    searchParams, updateSearchParams, resetSearchParams, onSearch
+    searchParams,
+    updateSearchParams,
+    resetSearchParams,
+    onSearch
 }) => {
     return (
         <>
             <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()} >
                 <InputGroup>
                     <CmmnUseYnSelect
-                        selectId="useYn"
                         value={searchParams.useYn}
                         onChange={(e) => updateSearchParams("useYn", e.target.value)}
                         classNm="my-custom-select"
@@ -37,8 +39,12 @@ const CompanySearchBar: React.FC<CompanySearchProps> = ({
                 </InputGroup>
 
                 <div className="d-flex gap-2">
-                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">검색</Button>
-                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">초기화</Button>
+                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">
+                        검색
+                    </Button>
+                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">
+                        초기화
+                    </Button>
                 </div>
             </Form>
         </>

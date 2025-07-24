@@ -17,9 +17,9 @@ export const refreshAccessToken = async (): Promise<string | null> => {
     try {
         const response
             = await axios.post<ApiResponse<ResRefreshTokenDTO>>(
-            `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`
-                , { loginHistoryId: Number(loginHistoryId) }
-                , { withCredentials: true }
+            `${import.meta.env.VITE_API_URL}/api/auth/refresh-token`,
+                { loginHistoryId: Number(loginHistoryId) },
+                { withCredentials: true }
             );
 
         const { success, data } = response.data;
