@@ -1,7 +1,7 @@
 /* 📁 client.ts */
 import axios, { AxiosRequestConfig } from 'axios';
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptor.ts';
-import { ApiResponse } from '@/definition/common.types.ts';
+import type { ApiResponse } from '@/types/cmmn.ts';
 
 // 📌 일반 JSON 요청용 인스턴스
 const callAPI = axios.create({
@@ -25,6 +25,7 @@ callAPI.interceptors.response.use(responseInterceptor, errorInterceptor);
 rawAPI.interceptors.response.use(responseInterceptor, errorInterceptor);
 
 /* 📌 API 호출 헬퍼 */
+
 const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     const response = await callAPI.get<ApiResponse<T>>(url, config);
     return response.data.data;
@@ -41,16 +42,17 @@ const put = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Pro
 };
 
 const postForm = async <T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> => {
-    const response = await rawAPI.post<ApiResponse<T>>(url, formData, {
-        ...config,
-        headers: {
-            ...(config?.headers ?? {}),
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    const response
+        = await rawAPI.post<ApiResponse<T>>(url, formData, {
+            ...config,
+            headers: {
+                ...(config?.headers ?? {}),
+                'Content-Type': 'multipart/form-data',
+            },
+        });
 
     return response.data.data;
 };
 
-export const apiClient = { get, post, put, postForm };
 export { callAPI, rawAPI };
+export const apiClient = { get, post, put, postForm };

@@ -6193,7 +6193,7 @@ nhn.husky.SE_EditingAreaVerticalResizer = jindo.$Class({
 		this.oApp.exec("ADD_APP_PROPERTY", ["checkResizeGripPosition", jindo.$Fn(this.checkResizeGripPosition, this).bind()]);	// [SMARTEDITORSUS-677]
 		
 		if(!!this.oApp.getEditingAreaHeight){
-			this.nEditingAreaMinHeight = this.oApp.getEditingAreaHeight();	// [SMARTEDITORSUS-677] 편집 영역의 최소 높이를 가져와 Gap 처리 시 사용
+			this.nEditingAreaMinHeight = this.oApp.getEditingAreaHeight();	// [SMARTEDITORSUS-677] 편집 영역의 최소 높이를 가져와 Empty 처리 시 사용
 		}
 	},
 	
@@ -6218,7 +6218,7 @@ nhn.husky.SE_EditingAreaVerticalResizer = jindo.$Class({
 				nGap = (-1) * (this.nEditingAreaMinHeight - this.oApp.getEditingAreaHeight());
 			}
 	
-			// Gap 만큼 편집영역 사이즈를 조절하여
+			// Empty 만큼 편집영역 사이즈를 조절하여
 			// 사진 첨부나 붙여넣기 등의 사이즈가 큰 내용 추가가 있었을 때 입력창 크기 조절 바가 숨겨지지 않도록 함
 			this.oApp.exec("MSG_EDITING_AREA_RESIZE_STARTED");
 			this.oApp.exec("RESIZE_EDITING_AREA_BY", [0, (-1) * nGap]);

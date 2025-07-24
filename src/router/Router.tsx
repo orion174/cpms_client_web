@@ -1,28 +1,28 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AuthGuard from "@/core/auth/AuthGuard.tsx";
+import AuthGuard from "@/pages/layout/AuthGuard.tsx";
 
 /* 로그인 및 회원가입 */
-import Auth from "@/view/layout/Auth.tsx";
-import Login from "@/view/page/main/Login.tsx";
-import CpmsRegister from "@/view/page/main/register/CpmsRegister.tsx";
+import Auth from "@/pages/layout/Auth.tsx";
+import Login from "@/pages/auth/Login.tsx";
+import CpmsRegister from "@/pages/auth/register/CpmsRegister.tsx";
 /* CPMS 주요 기능 */
-import Admin from "@/view/layout/Admin.tsx";
-import SupportList from "@/view/page/support/list/RequestList.tsx";
-import SupportForm from '@/view/page/support/form/RequestForm.tsx';
-import SupportView from '@/view/page/support/view/RequestView.tsx';
-import SettingPage from '@/view/page/setting/SettingPage.tsx';
-import UserForm from '@/view/page/setting/user/form/UserForm';
-import CompanyForm from '@/view/page/setting/company/form/CompanyForm';
+import Admin from "@/pages/layout/Admin.tsx";
+import SupportList from "@/pages/admin/support/list/RequestList.tsx";
+import SupportForm from '@/pages/admin/support/form/RequestForm.tsx';
+import SupportView from '@/pages/admin/support/view/RequestView.tsx';
+import SettingPage from '@/pages/admin/setting/SettingPage.tsx';
+import UserForm from '@/pages/admin/setting/user/form/UserForm';
+import CompanyForm from '@/pages/admin/setting/company/form/CompanyForm';
 /* 템플릿 임시 페이지 */
-import Index from "@/view/examples/Index.jsx";
-import Profile from "@/view/examples/Profile.jsx";
-import Maps from "@/view/examples/Maps.jsx";
-import Icons from "@/view/examples/Icons.jsx";
+import Index from "@/pages/examples/Index.jsx";
+import Profile from "@/pages/examples/Profile.jsx";
+import Maps from "@/pages/examples/Maps.jsx";
+import Icons from "@/pages/examples/Icons.jsx";
 
 const adminRoutes = [
     { path: "/support/list", layout: "/admin", name: "Support", icon: "ni ni-bullet-list-67 text-red" },
     { path: "/setting/user/list", layout: "/admin", name: "Admin Setting", icon: "ni ni-settings-gear-65 text-yellow" },
-    { path: "/my/home", layout: "/admin", name: "My Page", icon: "ni ni-circle-08 text-primary" },
+    // { path: "/my/home", layout: "/admin", name: "My Page", icon: "ni ni-circle-08 text-primary" },
     // { path: "/dashboard", layout: "/admin", name: "Dashboard", icon: "ni ni-tv-2 text-primary" },
     // { path: "/company", layout: "/admin", name: "Company", icon: "ni ni-building text-yellow" },
     // { path: "/user-profile", layout: "/admin", name: "Admin Setting", icon: "ni ni-settings-gear-65 text-yellow" },
@@ -34,7 +34,7 @@ const Router = () => {
         <BrowserRouter>
             <Routes>
 
-                <Route path="/" element={<Navigate to="/auth/login" />} />
+                <Route path="/" element={<Navigate to="/login" />} />
 
                 <Route path="/auth/*" element={<Auth/>}>
                     <Route path="login" element={<Login/>} />

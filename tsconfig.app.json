@@ -27,7 +27,7 @@
   },
   "include": [
     "src",
-    "src/definition/*",
+    "src/types/*",
     "vite-env.d.ts"
   ]
 }

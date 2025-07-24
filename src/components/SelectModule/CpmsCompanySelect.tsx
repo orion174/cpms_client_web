@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { ResCompanyDTO } from "@/definition/common.types.ts";
+import { ResCompanyDTO } from "@/types/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";
 
 interface CpmsCompanyProps {

@@ -23,6 +23,7 @@ export const useSearchParams = <T extends object>(
     setSearchParams: React.Dispatch<React.SetStateAction<T>>
     , defaultParams: T
 ) => {
+
     const updateSearchParams = useCallback(
         (key: keyof T, value: string) => {
             setSearchParams((prev) => ({
@@ -41,6 +42,7 @@ export const useSearchParams = <T extends object>(
 };
 
 export function useFormState<T extends object>(initialState: T) {
+
     const [formState, setFormState] = useState<T>(initialState);
 
     const handleChange = (field: keyof T, value: any) => {

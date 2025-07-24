@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { ResProjectDTO } from "@/definition/common.types.ts";
+import { ResProjectDTO } from "@/types/cmmn.ts";
 import { apiClient } from "@/core/api/client.ts";
 
 interface CpmsProjectProps  {

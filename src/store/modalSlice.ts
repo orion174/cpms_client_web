@@ -25,10 +25,12 @@ const modalSlice = createSlice({
     initialState,
     reducers: {
         openModal: (state, action: PayloadAction<Omit<ModalState, 'isOpen'>>) => {
+
             const modal = { ...action.payload, isOpen: true };
 
             if (!state.currentModal) {
                 state.currentModal = modal;
+
             } else {
                 state.pendingModal = modal; // 현재 모달이 열려있으면 다음 모달로 대기
             }
