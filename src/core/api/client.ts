@@ -1,6 +1,7 @@
 /* 📁 client.ts */
 import axios, { AxiosRequestConfig } from 'axios';
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptor.ts';
+
 import type { ApiResponse } from '@/types/cmmn.ts';
 
 // 일반 JSON 요청용 인스턴스
@@ -31,12 +32,12 @@ const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
     return response.data.data;
 };
 
-const post = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+const post = async <T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
     const response = await callAPI.post<ApiResponse<T>>(url, data, config);
     return response.data.data;
 };
 
-const put = async <T>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> => {
+const put = async <T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
     const response = await callAPI.put<ApiResponse<T>>(url, data, config);
     return response.data.data;
 };
