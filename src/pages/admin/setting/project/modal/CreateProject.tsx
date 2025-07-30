@@ -2,14 +2,14 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import React from "react";
 
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import type { ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
+import type { ReqProjectDTO } from "@/types/admin/projectTypes.ts";
 
 interface ProjectModalFormProps {
     formState: ReqProjectDTO;
     handleChange: (field: keyof ReqProjectDTO, value: string | number) => void;
 };
 
-const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleChange }) => {
+const CreateProject: React.FC<ProjectModalFormProps> = ({ formState, handleChange }) => {
 
     return (
         <div className="modal-body p-0">
@@ -17,6 +17,7 @@ const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleCh
                 <Col lg="12">
                     <FormGroup>
                         <label className="form-control-label">업체 선택</label>
+
                         <CpmsCompanySelect
                             value={formState.companyId}
                             onChange={(e) => handleChange("companyId", e.target.value)}
@@ -30,6 +31,7 @@ const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleCh
                 <Col lg="12">
                     <FormGroup>
                         <label className="form-control-label">프로젝트 명</label>
+
                         <Input
                             type="text"
                             className="my-input-text"
@@ -45,6 +47,7 @@ const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleCh
                 <Col lg="12">
                     <FormGroup>
                         <label className="form-control-label">프로젝트 정보</label>
+
                         <Input
                             type="textarea"
                             className="my-input-text"
@@ -62,4 +65,4 @@ const ProjectModalForm: React.FC<ProjectModalFormProps> = ({ formState, handleCh
     );
 };
 
-export default ProjectModalForm;
+export default CreateProject;

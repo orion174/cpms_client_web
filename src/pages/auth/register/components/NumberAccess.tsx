@@ -3,19 +3,21 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import useModalHook from '@/hooks/useModal.ts';
+import { identityCode } from '@/core/api/user/verifyService';
 
-interface Props {
+interface NumberAccessProps {
     originPhone: string;
     onSuccess: () => void;
 };
 
-const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
+const TIME_LIMIT = 500; // 인증 유효기간 5분
 
+const NumberAccess: React.FC<NumberAccessProps> = ({ originPhone, onSuccess }) => {
     const { openCustomModal, openErrorModal } = useModalHook();
 
     const [ code, setCode ] = useState('');
-    const [ timeLeft, setTimeLeft ] = useState(300); // 인증 유효기간 5분
-    const [ isVerified, setIsVerified ] = useState(false); // ✅ 인증 성공 여부 상태
+    const [ timeLeft, setTimeLeft ] = useState(TIME_LIMIT);
+    const [ isVerified, setIsVerified ] = useState(false);
 
     useEffect(() => {
         if (timeLeft <= 0) return;
@@ -26,7 +28,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
         return () => clearInterval(timer);
     }, [timeLeft]);
 
-    // 인증번호 만료기간 UI
+    // 인증번호 만료시간 UI
     const formatTime = (seconds: number): string => {
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
@@ -52,6 +54,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
 
     // 인증번호 검사
     const handleVerify = async (): Promise<void> => {
+
         if (code.length !== 6) {
             openCustomModal({
                 title: '인증 오류',
@@ -62,43 +65,39 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
             return;
         }
 
+        const data = {
+            originPhone: originPhone.replace(/-/g, ''),
+            checkCode: code
+        };
+
         try {
-            const endPoint = `
-                ${import.meta.env.VITE_API_URL}/api/user/verify/identity-code
-            `;
-
-            const jsonData = {
-                originPhone: originPhone.replace(/-/g, ''),
-                checkCode: code
-            };
-
-
-            const response = await axios.post(endPoint, jsonData);
-
+            const response = await identityCode(data);
             const { success, message } = response.data;
 
             if (success) {
                 openCustomModal({
                     title: '알림',
-                    message,
+                    message: message,
                     isConfirm: false
                 });
+
                 setIsVerified(true);
                 onSuccess(); // 외부 상태 변경
             }
-        } catch (error: any) {
+
+        } catch (error: unknown) {
+
             if (axios.isAxiosError(error)) {
                 const { message, errorCode } = error.response?.data || {};
 
                 // 인증 실패 코드 처리
-                if (errorCode === '1006' || errorCode === '1007' || errorCode === '1009') {
-                    openCustomModal({
-                        title: `오류 (${errorCode})`,
-                        message: message,
-                        isConfirm: false
+                if (['1006', '1007', '1009'].includes(errorCode)) {
+                    openErrorModal({
+                        errorCode: errorCode,
+                        message: message
                     });
 
-                    setTimeout(() => {
+                    setTimeout((): void => {
                         window.location.reload();
                     }, 1500);
                 } else {
@@ -120,7 +119,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
                     <InputGroup className="input-group-alternative">
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>
-                                <i className="ni ni-key-25" />
+                                <i className="ni ni-key-25"/>
                             </InputGroupText>
                         </InputGroupAddon>
                         <Input
@@ -143,8 +142,7 @@ const NumberAccess: React.FC<Props> = ({ originPhone, onSuccess }) => {
                         className="w-100"
                         onClick={handleVerify}
                         disabled={timeLeft === 0}
-                    >
-                        인증하기
+                    >인증하기
                     </Button>
                 </Col>
             </Row>

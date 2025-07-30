@@ -6,7 +6,7 @@ import CompanyFormButton from "@/pages/admin/setting/company/form/components/Com
 import BasicInfoSection from "./components/BasicInfoSection.tsx";
 import EtcInfoSection from "@/pages/admin/setting/company/form/components/EtcInfoSection.tsx";
 
-import type { ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
 
 const CompanyForm: React.FC = () => {
     const isEditMode = new URLSearchParams(location.search).has("companyId");
@@ -23,7 +23,9 @@ const CompanyForm: React.FC = () => {
                             <CardHeader className="bg-white border-0">
                                 <Row className="align-items-center">
                                     <Col xs="8">
-                                        <h3 className="mb-0">{isEditMode ? '업체 정보 수정' : '신규 관리 업체 생성'}</h3>
+                                        <h3 className="mb-0">
+                                            {isEditMode ? '업체 정보 수정' : '신규 관리 업체 생성'}
+                                        </h3>
                                     </Col>
                                     <Col className="text-right" xs="4">
                                         <CompanyFormButton

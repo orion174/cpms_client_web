@@ -12,15 +12,14 @@ import {
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import { useState, useRef } from 'react';
-import axios from 'axios';
 
 import useModalHook from '@/hooks/useModal.ts';
 import { handleInputKeyDown } from '@/utils/cmmn.ts'
-import { userLogin } from "@/core/api/auth/loginService";
+import { userLogin } from "@/core/api/auth/loginService.ts";
 
 const Login: React.FC = () => {
     const navigate = useNavigate();
-    const { openCustomModal, openErrorModal } = useModalHook();
+    const { openCustomModal } = useModalHook();
 
     const [ loginId, setLoginId ] = useState('');
     const [ loginPw, setLoginPw ] = useState('');
@@ -52,34 +51,28 @@ const Login: React.FC = () => {
             return;
         }
 
-        const jsonData = {
-            loginId: loginId
-            , loginPw: loginPw
+        const data = {
+            loginId: loginId.trim()
+            , loginPw: loginPw.trim()
         };
 
         try {
-            const response = await userLogin(jsonData);
-            const { success, message, data } = response.data;
+            const result = await userLogin(data);
 
-            if (success && data?.accessToken) {
-                sessionStorage.setItem('accessToken', data.accessToken);
-                sessionStorage.setItem('accessExp', String(data.accessTokenExpiration));
-                sessionStorage.setItem('loginHistoryId', String(data.loginHistoryId));
+            if (result.success && result.data?.accessToken) {
+                sessionStorage.setItem('accessToken', result.data.accessToken);
+                sessionStorage.setItem('accessExp', String(result.data.accessTokenExpiration));
+                sessionStorage.setItem('loginHistoryId', String(result.data.loginHistoryId));
 
                 navigate('/admin/support/list');
             } else {
                 openCustomModal({
                     title: '알림',
-                    message: message ?? '로그인 실패'
+                    message: result.message ?? '로그인 중 오류가 발생했습니다.'
                 });
             }
-        } catch (error: any) {
-            if (axios.isAxiosError(error)) {
-                openErrorModal({
-                    errorCode: error.response?.data?.errorCode ?? '',
-                    message: error.response?.data?.message ?? '로그인 중 오류가 발생했습니다.'
-                });
-            }
+        } catch {
+            console.warn('handleLogin error!');
         }
     };
 

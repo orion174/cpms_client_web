@@ -3,7 +3,7 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import SectionBorder from "@/components/FormModule/SectionBorder.tsx";
 
-import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/types/user/userTypes.ts";
 
 interface CompanyInfoSectionProps {
     reqUserDTO: ReqUserDTO;
@@ -25,7 +25,6 @@ const CompanyInfoSection: React.FC<CompanyInfoSectionProps> = ({ reqUserDTO, han
                             </label>
 
                             <CpmsCompanySelect
-                                selectId="companyId"
                                 classNm="my-custom-select form-control"
                                 initText="회사 선택"
                                 value={reqUserDTO.companyId}

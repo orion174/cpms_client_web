@@ -1,36 +1,29 @@
 import React, { useEffect, useState } from "react";
 
-import { apiClient  } from "@/core/api/client.ts";
-import type { ResCommonCodeDTO } from "@/types/cmmn.ts";
+import { codeList } from "@/core/api/cmmn/codeService.ts";
+import type { ResCmmnCodeDTO } from "@/types/cmmn.ts";
 
-interface CommonCodeProps  {
+interface CmmnCodeProps  {
     groupCode: string;
-    selectId?: string;
     value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
     classNm: string;
 }
 
-const CmmnCodeSelect: React.FC<CommonCodeProps> = ({
-    groupCode,
-    selectId,
+const CmmnCodeSelect: React.FC<CmmnCodeProps> = ({
+    groupCode = '',
     value,
     onChange,
     initText,
     classNm
 }) => {
-    const [ options, setOptions ] = useState<ResCommonCodeDTO[]>([]);
+    const [ options, setOptions ] = useState<ResCmmnCodeDTO[]>([]);
 
     useEffect(() => {
         const fetchOptions = async (): Promise<void> => {
-            const jsonData = {
-                groupCode: groupCode ?? '',
-            };
 
-            const response
-                = await apiClient.post<ResCommonCodeDTO[]>('/api/code/list', jsonData);
-
+            const response = await codeList(groupCode);
             setOptions(response);
         };
 
@@ -39,7 +32,6 @@ const CmmnCodeSelect: React.FC<CommonCodeProps> = ({
 
     return (
         <select
-            id={selectId}
             value={value}
             onChange={onChange}
             className={classNm}

@@ -31,6 +31,7 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({
 
     // 입력된 휴대폰 번호로 인증 문자를 전송한다.
     const handlePhoneVerify = async (): Promise<void> => {
+
         if (!/^\d{11}$/.test(phone)) {
             openCustomModal({
                 title: '알림',
@@ -75,10 +76,12 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({
     return (
         <Row>
             <Col xs="8">
-                <InputGroup className={`input-group-alternative mb-3 ${phoneLocked ? 'custom-disabled-group' : ''}`}>
+                <InputGroup
+                    className={`input-group-alternative mb-3 ${phoneLocked ? 'custom-disabled-group' : ''}`}
+                >
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                            <i className="ni ni-chat-round" />
+                            <i className="ni ni-chat-round"/>
                         </InputGroupText>
                     </InputGroupAddon>
                     <Input

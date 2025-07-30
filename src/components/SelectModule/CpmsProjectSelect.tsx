@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { apiClient } from "@/core/api/client.ts";
-import type { ResProjectDTO } from "@/types/cmmn.ts";
+
+import { projectList } from "@/core/api/setting/projectService.ts";
+import type { ResProjectListDTO } from "@/types/admin/projectTypes.ts";
 
 interface CpmsProjectProps  {
     companyId?: number;
-    selectId?: string;
     value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -13,24 +13,18 @@ interface CpmsProjectProps  {
 
 const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     companyId = 0,
-    selectId,
     value,
     onChange,
     initText,
     classNm
 }) => {
-    const [ options, setOptions ] = useState<ResProjectDTO[]>([]);
+    const [ options, setOptions ] = useState<ResProjectListDTO[]>([]);
     const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
-    useEffect(() => {
+    useEffect(():void => {
         const fetchProjects = async (): Promise<void> => {
-            const jsonData = {
-                companyId: companyId ?? 0
-            };
 
-            const response
-                = await apiClient.post<ResProjectDTO[]>('/api/setting/project/list', jsonData);
-
+            const response = await projectList(companyId);
             setOptions(response);
         };
 
@@ -38,7 +32,7 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
     }, [companyId]);
 
     // 옵션이 하나만 있을 경우 자동 선택
-    useEffect(() => {
+    useEffect((): void => {
         if (options.length === 1 && !hasAutoSelected) {
             const fakeEvent = {
                 target: { value: options[0].projectId.toString() }
@@ -51,7 +45,6 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
 
     return (
         <select
-            id={selectId}
             value={value}
             className={classNm}
             onChange={onChange}

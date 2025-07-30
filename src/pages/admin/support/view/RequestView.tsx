@@ -226,7 +226,12 @@ const SupportView: React.FC = () => {
                                                 <Col lg="12">
                                                     <FormGroup>
                                                         <label className="form-control-label-custom">첨부 파일</label>
-                                                        <FileDown fileList={requestFileList} idKey="supportFileId" />
+
+                                                        <FileDown
+                                                            content="support"
+                                                            fileList={requestFileList}
+                                                            idKey="supportFileId"
+                                                        />
                                                     </FormGroup>
                                                 </Col>
                                             </Row>

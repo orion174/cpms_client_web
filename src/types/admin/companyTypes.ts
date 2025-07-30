@@ -1,3 +1,4 @@
+
 // CPMS 회사 리스트 응답 인터페이스
 export interface ResCompanyListDTO {
     companyId: number;
@@ -12,6 +13,7 @@ export interface ResCompanyListDTO {
 export interface ReqCompanyListDTO {
     pageNo: number;
     pageSize: number;
+    companyId: number;
     companyNm: string;
     useYn: string;
 };

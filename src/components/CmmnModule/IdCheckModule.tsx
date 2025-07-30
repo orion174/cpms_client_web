@@ -1,57 +1,61 @@
 import { Button } from 'reactstrap';
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import useModalHook from '@/hooks/useModal';
+import { idCheck } from '@/core/api/user/verifyService';
 
-import { ApiResponse } from '@/types/cmmn.ts';
-import { ResCheckIdDTO } from '@/pages/auth/types';
-
-interface Props {
+interface idCheckProps {
     loginId: string;
     classNm: string;
     onValid: () => void; // 중복검사 통과 시 호출
 };
 
-const IdCheckModule: React.FC<Props> = ({ loginId, classNm, onValid }) => {
+const IdCheckModule: React.FC<idCheckProps> = ({
+                                                   loginId,
+                                                   classNm,
+                                                   onValid
+                                               }: idCheckProps) => {
     const { openCustomModal } = useModalHook();
     const [ isValid, setIsValid ] = useState(false);
 
-    // 아아디 중복 검사 API
-    const handleCheckDuplicate = async () => {
+    // 아아디 중복 검사
+    const handleCheckDuplicate = async (): Promise<void> => {
+
         if (!loginId || loginId.trim().length < 4) {
-            openCustomModal({ title: '알림', message: '아이디는 최소 4자리 이상 입력해주세요.', isConfirm: false });
+            openCustomModal({
+                title: '알림',
+                message: '아이디는 최소 4자리 이상 입력해주세요.',
+                isConfirm: false
+            });
+
             return;
         }
 
+        const jsonData = {
+            loginId: loginId.trim()
+        };
+
         try {
-            const endPoint = `${import.meta.env.VITE_API_URL}/api/user/verify/id-check`;
+            const result = await idCheck(jsonData);
 
-            const jsonData = {
-                loginId: loginId.trim()
-            };
-
-            const response
-                = await axios.post<ApiResponse<ResCheckIdDTO>>(endPoint, jsonData, {
-                headers: { 'Content-Type': 'application/json' },
-            });
-
-            const { success, data, message } = response.data;
-
-            if (success && data?.loginId === loginId.trim()) {
+            if (result.success && result.data?.loginId === loginId.trim()) {
                 openCustomModal({
                     title: '알림',
-                    message: message,
+                    message: result.message,
                     isConfirm: true,
-                    onConfirm: () => {
+                    onConfirm: (): void => {
                         setIsValid(true);
                         onValid();
                     }
                 });
+            } else {
+                openCustomModal({
+                    title: '알림',
+                    message: result.message ?? '아이디 중복검사 중 오류가 발생했습니다.'
+                });
             }
-        } catch (error: any) {
-            const message = error?.response?.data?.message ?? '중복검사 중 오류가 발생했습니다.';
-            openCustomModal({ title: '오류', message, isConfirm: false });
+        } catch {
+            console.warn('handleCheckDuplicate error!');
         }
     };
 

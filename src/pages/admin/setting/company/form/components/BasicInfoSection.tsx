@@ -5,7 +5,7 @@ import SectionBorder from "@/components/FormModule/SectionBorder.tsx"
 import DaumAddressInput from "@/components/FormModule/DaumAddressInput.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 
-import { ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
 
 interface BasicInfoSectionProps {
     reqCompanyDTO: ReqCompanyDTO;
@@ -26,7 +26,11 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                                 업체 명 <span style={{ color: "red" }}>*</span>
                             </label>
 
-                            <Input className="form-control-alternative" type="text" placeholder="이름을 입력하세요." maxLength={30}
+                            <Input
+                                className="form-control-alternative"
+                                type="text"
+                                placeholder="이름을 입력하세요."
+                                maxLength={30}
                                 value={reqCompanyDTO.companyNm}
                                 onChange={(e) => handleChange('companyNm', e.target.value)}
                             />
@@ -39,7 +43,9 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                                 업체 등급 설정<span style={{ color: "red" }}>*</span>
                             </label>
 
-                            <CpmsAuthSelect selectId="authType" classNm="my-custom-select form-control" initText="등급 선택"
+                            <CpmsAuthSelect
+                                classNm="my-custom-select form-control"
+                                initText="등급 선택"
                                 value={reqCompanyDTO.authType}
                                 onChange={(e) => handleChange('authType', e.target.value)}
                             />
@@ -51,6 +57,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                     <Col lg="4">
                         <FormGroup>
                             <label className="form-control-label">주소</label>
+
                             {/* 다음 주소 검색 API */}
                             <DaumAddressInput
                                 zipCode={reqCompanyDTO.zipCode}
@@ -65,7 +72,11 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                         <FormGroup>
                             <label className="form-control-label">추가 주소</label>
 
-                            <Input type="text" className="form-control-alternative" placeholder="추가 주소를 입력하세요." maxLength={255}
+                            <Input
+                                type="text"
+                                className="form-control-alternative"
+                                placeholder="추가 주소를 입력하세요."
+                                maxLength={255}
                                 value={reqCompanyDTO.extraAddress}
                                 onChange={(e) => handleChange('extraAddress', e.target.value)}
                             />
@@ -78,7 +89,11 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                         <FormGroup>
                             <label className="form-control-label">홈페이지</label>
 
-                            <Input type="text" className="form-control-alternative" placeholder="www.example.com" maxLength={255}
+                            <Input
+                                type="text"
+                                className="form-control-alternative"
+                                placeholder="www.example.com"
+                                maxLength={255}
                                 value={reqCompanyDTO.homepage}
                                 onChange={(e) => handleChange('homepage', e.target.value)}
                             />

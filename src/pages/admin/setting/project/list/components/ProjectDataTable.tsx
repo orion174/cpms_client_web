@@ -3,7 +3,8 @@ import { Table } from 'reactstrap';
 
 import TableEmpty from "@/components/TableModule/TableEmpty.tsx";
 import ProjectDataRow from './ProjectDataRow.tsx';
-import type { ResProjectListDTO } from '@/pages/admin/setting/project/types.ts';
+
+import type { ResProjectListDTO } from "@/types/admin/projectTypes.ts";
 
 interface ProjectListProps {
     projectList: ResProjectListDTO[];

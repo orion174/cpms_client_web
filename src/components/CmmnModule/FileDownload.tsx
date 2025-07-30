@@ -8,70 +8,41 @@ import pngIcon from "@/assets/img/icons/png_icon.png";
 import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
 
-interface FileList {
-    [key: string]: any;
-    fileType: string;
-    filePath: string;
-    fileNm: string;
-    fileOgNm: string;
-}
+import type { FileList } from "@/types/cmmn.ts";
 
 interface FileDownProps<T extends keyof FileList> {
+    content: string
     fileList: FileList[];
     idKey: T;
 }
 
-const getIconByExtension = (extension: string): string => {
-    switch (extension.toLowerCase()) {
-        case "xlsx":
-        case "xls":
-            return excelIcon;
-        case "hwp":
-            return hwpIcon;
-        case "jpg":
-        case "jpeg":
-            return jpgIcon;
-        case "pdf":
-            return pdfIcon;
-        case "png":
-            return pngIcon;
-        case "ppt":
-        case "pptx":
-            return pptIcon;
-        case "doc":
-        case "docx":
-            return wordIcon;
-        default:
-            return "";
-    }
-};
+const FileDown = <T extends keyof FileList>({
+    content,
+    fileList,
+    idKey
+}: FileDownProps<T>) => {
 
-const FileDown = <T extends keyof FileList>({ fileList, idKey }: FileDownProps<T>) => {
-    // 버튼 클릭시, 파일 다운로드 이벤트
-    const handleFileDownload = async (fileId: any, fileOgNm: string) => {
+    // 버튼 클릭 시, 파일 다운로드 이벤트
+    const handleFileDownload
+        = async (fileId: any, fileOgNm: string): Promise<void> => {
+
         if (!fileId) return;
 
-        try {
-            const endPoint = `/api/support/file/${fileId}/download`;
-            const response = await rawAPI.get(endPoint, {
-                responseType: 'blob',
-            });
+        const endPoint = `/api/${content}/file/${fileId}/download`;
+        const response
+            = await rawAPI.get(endPoint, { responseType: 'blob' });
 
-            const blob = response.data;
-            const url = window.URL.createObjectURL(blob);
+        const blob = response.data;
+        const url = window.URL.createObjectURL(blob);
 
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = fileOgNm;
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileOgNm;
 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-
-        } catch (err) {
-            console.error("첨부파일 다운로드 에러", err);
-        }
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     };
 
     if (!fileList || fileList.length === 0) {
@@ -119,6 +90,31 @@ const FileDown = <T extends keyof FileList>({ fileList, idKey }: FileDownProps<T
             })}
         </div>
     );
+};
+
+const getIconByExtension = (extension: string): string => {
+    switch (extension.toLowerCase()) {
+        case "xlsx":
+        case "xls":
+            return excelIcon;
+        case "hwp":
+            return hwpIcon;
+        case "jpg":
+        case "jpeg":
+            return jpgIcon;
+        case "pdf":
+            return pdfIcon;
+        case "png":
+            return pngIcon;
+        case "ppt":
+        case "pptx":
+            return pptIcon;
+        case "doc":
+        case "docx":
+            return wordIcon;
+        default:
+            return "";
+    }
 };
 
 export default FileDown;

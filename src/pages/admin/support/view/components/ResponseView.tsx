@@ -11,6 +11,7 @@ import React from "react";
 
 import { isValidHtmlContent } from "@/utils/cmmn.ts";
 import FileDown from "@/components/CmmnModule/FileDownload.tsx";
+
 import type { supportFileList, supportResponse } from "../../types";
 
 interface ResponseViewProps {
@@ -62,7 +63,11 @@ const ResponseView: React.FC<ResponseViewProps> = ({
                                         <Row>
                                             <Col xl="12">
                                                 <label className="form-control-label-custom">관련 첨부파일</label>
-                                                <FileDown fileList={responseFileList} idKey="supportFileId"/>
+                                                <FileDown
+                                                    content="support"
+                                                    fileList={responseFileList}
+                                                    idKey="supportFileId"
+                                                />
                                             </Col>
                                         </Row>
                                     )}

@@ -1,20 +1,22 @@
 import { Input, InputGroup, InputGroupAddon, InputGroupText, Button, Col, Row, FormGroup } from 'reactstrap';
 import React, { useState } from 'react';
-import axios from 'axios';
 
 import useModalHook from '@/hooks/useModal.ts';
-import type { ApiResponse } from '@/types/cmmn.ts';
-import type { ResCheckIdDTO } from "../../types.ts";
+import { idCheck } from "@/core/api/user/verifyService.ts";
 
-interface Props {
+interface IdCheckProps {
     loginId: string;
     setLoginId: (value: string) => void;
     onValid: () => void; // 중복검사 통과 시 호출
 };
 
-const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
+const IdCheckBlock: React.FC<IdCheckProps> = ({
+    loginId,
+    setLoginId,
+    onValid
+}: IdCheckProps) => {
 
-    const { openCustomModal, openErrorModal } = useModalHook();
+    const { openCustomModal } = useModalHook();
     const [ isValid, setIsValid ] = useState(false);
 
     const handleChange = (value: string): void => {
@@ -27,6 +29,7 @@ const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
 
     // 아아디 중복 검사 API
     const handleCheckDuplicate = async (): Promise<void> => {
+
         if (!loginId || loginId.trim().length < 6) {
             openCustomModal({
                 title: '알림',
@@ -37,42 +40,29 @@ const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
             return;
         }
 
+        const data = { loginId: loginId.trim() };
+
         try {
-            const endPoint = `
-                ${import.meta.env.VITE_API_URL}/api/user/verify/id-check
-            `;
+            const result = await idCheck(data);
 
-            const jsonData = {
-                loginId: loginId.trim()
-            };
-
-            const response
-                = await axios.post<ApiResponse<ResCheckIdDTO>>(
-                    endPoint,
-                    jsonData
-                    , {
-                        headers: { 'Content-Type': 'application/json' }
-                    }
-                );
-
-            const { success, data, message } = response.data;
-
-            if (success && data?.loginId === loginId.trim()) {
+            if (result.success && result.data?.loginId === loginId.trim()) {
                 openCustomModal({
                     title: '알림',
-                    message: message,
+                    message: result.message,
                     isConfirm: true,
-                    onConfirm: () => {
+                    onConfirm: (): void => {
                         setIsValid(true);
                         onValid();
                     }
                 });
+            } else {
+                openCustomModal({
+                    title: '알림',
+                    message: result.message ?? '오류가 발생했습니다.'
+                });
             }
-        } catch (error: any) {
-            openErrorModal({
-                errorCode: error?.response?.data?.errorCode ?? '0000',
-                message: error?.response?.data?.message ?? '중복검사 중 오류가 발생했습니다.'
-            });
+        } catch {
+            console.warn('handleCheckDuplicate error!');
         }
     };
 
@@ -80,7 +70,9 @@ const IdCheckBlock: React.FC<Props> = ({ loginId, setLoginId, onValid }) => {
         <FormGroup className="mb-3">
             <Row>
                 <Col xs="8">
-                    <InputGroup className={`input-group-alternative ${isValid ? 'custom-disabled-group' : ''}`}>
+                    <InputGroup
+                        className={`input-group-alternative ${isValid ? 'custom-disabled-group' : ''}`}
+                    >
                         <InputGroupAddon addonType="prepend">
                             <InputGroupText>
                                 <i className="ni ni-circle-08" />

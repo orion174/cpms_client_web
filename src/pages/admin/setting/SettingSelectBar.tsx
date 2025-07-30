@@ -13,6 +13,7 @@ const tabLabels = [
 ];
 
 const SettingSelectBar: React.FC<SettingSelectBarProps> = ({ activeTab, onChangeTab }) => {
+
     return (
         <>
             <CardHeader className="border-0">

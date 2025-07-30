@@ -5,10 +5,10 @@ import { useNavigate } from "react-router-dom";
 import useModalHook from "@/hooks/useModal.ts";
 import { useFormState } from "@/hooks/customHook.ts";
 import { saveProject } from "@/core/api/setting/projectService.ts";
-import ProjectModalForm from "../../modal/ProjectModalForm.tsx";
+import CreateProject from "../../modal/CreateProject.tsx";
 import FormModal from "@/components/ModalModule/FormModal.tsx";
 
-import type { ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
+import type { ReqProjectDTO } from "@/types/admin/projectTypes.ts";
 
 const ManagementButton: React.FC = () => {
     const { openCustomModal } = useModalHook();
@@ -51,9 +51,7 @@ const ManagementButton: React.FC = () => {
             message: "저장하시겠습니까?",
             isConfirm: true,
             onConfirm: async (): Promise<void> => {
-
                 await saveProject(formState);
-
                 handleClose();
 
                 openCustomModal({
@@ -86,7 +84,7 @@ const ManagementButton: React.FC = () => {
                 onConfirm={handleSubmit}
                 onClose={handleClose}
             >
-                <ProjectModalForm
+                <CreateProject
                     formState={formState}
                     handleChange={handleChange}
                 />

@@ -1,6 +1,8 @@
 /* 📁 jwt.ts */
 import axios from "axios";
-import type { ApiResponse, ResRefreshTokenDTO } from '@/types/cmmn.ts';
+
+import type { ResRefreshTokenDTO } from '@/types/auth/types';
+import type { ApiResponse } from '@/types/cmmn';
 
 const ACCESS_KEY = 'accessToken';
 const LOGIN_HISTORY_KEY = 'loginHistoryId';
@@ -12,6 +14,7 @@ export const getAccessToken = (): string | null => sessionStorage.getItem(ACCESS
 export const refreshAccessToken = async (): Promise<string | null> => {
 
     const loginHistoryId = sessionStorage.getItem(LOGIN_HISTORY_KEY);
+
     if (!loginHistoryId) return null;
 
     try {

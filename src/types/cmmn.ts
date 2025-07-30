@@ -19,35 +19,21 @@ export interface PageResponse<T = any> {
     empty?: boolean;
 }
 
-// 리프레쉬 토큰 응답 인터페이스
-export interface ResRefreshTokenDTO {
-    accessToken: string;
-    accessTokenExpiration: number;
+// 공통 코드 인터페이스
+export interface ResCmmnCodeDTO {
+    codeId: number;
+    codeNm: string;
 }
 
-// 로그인 요청 인터페이스
-export interface ReqLoginDTO {
-    loginId: string;
-    loginPw: string;
+// 파일 공통 인터페이스
+export interface FileList {
+    [key: string]: any;
+    fileType: string;
+    filePath: string;
+    fileNm: string;
+    fileOgNm: string;
 }
 
-// 로그인 응답 인터페이스
-export interface ResLoginDTO {
-    authType: string;
-    loginHistoryId: number;
-    userId: number;
-    userNm: string;
-    companyId: number;
-    loginId: string;
-    loginPw: string;
-    useYn: string;
-    accessToken: string;
-    refreshToken: string;
-    accessTokenExpiration: number;
-    refreshTokenExpiration: number;
-}
-
-// 파일 인터페이스
 export interface ExistingFileItem {
     id: number,
     name: string,
@@ -63,21 +49,3 @@ export interface NewFileItem  {
 }
 
 export type FileItem = ExistingFileItem | NewFileItem;
-
-// 공통 코드 목록 인터페이스
-export interface ResCommonCodeDTO {
-    codeId: number;
-    codeNm: string;
-}
-
-// CPMS 회사 SELECT OPTION 인터페이스
-export interface ResCompanyDTO {
-    companyId: number;
-    companyNm: string;
-}
-
-// CPMS 프로젝트 SELECT OPTION 목록 인터페이스
-export interface ResProjectDTO {
-    projectId: number;
-    projectNm: string;
-}

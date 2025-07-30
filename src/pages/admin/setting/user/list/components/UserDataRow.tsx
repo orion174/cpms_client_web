@@ -1,7 +1,7 @@
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 import React from "react";
 
-import type { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ResUserListDTO } from "@/types/user/userTypes.ts";
 
 interface UserRowProps {
     index: number;
@@ -9,6 +9,7 @@ interface UserRowProps {
 };
 
 const UserDataRow: React.FC<UserRowProps> = ({ rowData, index }) => {
+
     return (
         <tr>
             <td>{index + 1}</td>

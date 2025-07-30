@@ -10,15 +10,19 @@ interface FormModalProps {
 };
 
 const FormModal: React.FC<FormModalProps> = ({
-    isOpen, title, children, onConfirm, onClose
+    isOpen,
+    title,
+    children,
+    onConfirm,
+    onClose
 }) => {
-
     useEffect(() => {
         if (isOpen) {
             document.body.style.removeProperty('padding-right');
         } else {
             document.body.style.overflow = "auto";
         }
+
         return () => {
             document.body.style.overflow = "auto";
         };
@@ -33,8 +37,12 @@ const FormModal: React.FC<FormModalProps> = ({
                 {children}
             </ModalBody>
             <ModalFooter>
-                <Button color="secondary" onClick={onClose}>취소</Button>
-                <Button color="primary" onClick={onConfirm}>저장</Button>
+                <Button color="secondary" onClick={onClose}>
+                    취소
+                </Button>
+                <Button color="primary" onClick={onConfirm}>
+                    저장
+                </Button>
             </ModalFooter>
         </Modal>
     );

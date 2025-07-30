@@ -1,7 +1,7 @@
 import { Button, Form, Input, InputGroup } from "reactstrap";
 
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
-import type { ReqCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ReqCompanyListDTO } from "@/types/admin/companyTypes.ts";
 
 interface CompanySearchProps {
     searchParams: ReqCompanyListDTO;
@@ -29,7 +29,6 @@ const CompanySearchBar: React.FC<CompanySearchProps> = ({
                 </InputGroup>
                 <InputGroup className="input-title">
                     <Input
-                        id="companyNm"
                         type="text"
                         className="my-input-text"
                         placeholder="회사명 입력"

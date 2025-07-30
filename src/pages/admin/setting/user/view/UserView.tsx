@@ -1,8 +1,7 @@
-const UserView:React.FC<{}> = () => {
-    return (
-       <>
 
-       </>
+const UserView:React.FC = () => {
+    return (
+       <></>
     );
 };
 

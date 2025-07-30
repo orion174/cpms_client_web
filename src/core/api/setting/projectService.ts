@@ -1,6 +1,18 @@
 import { apiClient } from "@/core/api/client.ts";
 import type { PageResponse } from "@/types/cmmn.ts";
-import type { ResProjectListDTO, ReqProjectListDTO, ReqProjectDTO } from "@/pages/admin/setting/project/types.ts";
+import type { ResProjectListDTO, ReqProjectListDTO, ReqProjectDTO }  from "@/types/admin/projectTypes.ts";
+
+export const projectList
+    = async (data: number): Promise<ResProjectListDTO[]> => {
+
+    const response
+     = await apiClient.get<ResProjectListDTO[]>(
+        '/api/setting/project/list'
+        , { params: data}
+    );
+
+    return response;
+};
 
 export const fetchAdminProjectList = async (
     request: ReqProjectListDTO

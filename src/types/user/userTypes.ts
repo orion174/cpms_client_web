@@ -1,3 +1,4 @@
+
 // 사용자 목록 데이터 응답 인터페이스
 export interface ResUserListDTO {
     userId: number;

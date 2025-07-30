@@ -9,7 +9,8 @@ import PaginationComponent from "@/components/TableModule/PaginationComponent.ts
 
 import { useSearchParams } from "@/hooks/customHook.ts";
 import { fetchAdminProjectList } from "@/core/api/setting/projectService.ts";
-import type { ReqProjectListDTO, ResProjectListDTO } from "@/pages/admin/setting/project/types.ts";
+
+import type { ReqProjectListDTO, ResProjectListDTO } from "@/types/admin/projectTypes.ts";
 
 /* 📁 관리 프로젝트 데이터 목록 */
 const ProjectList: React.FC = () => {
@@ -37,7 +38,7 @@ const ProjectList: React.FC = () => {
         if (!location.state || location.state.reload) {
             fetchProjectList();
         }
-    }, [ location.state, fetchProjectList ]);
+    }, [location.state, fetchProjectList]);
 
     return (
         <>

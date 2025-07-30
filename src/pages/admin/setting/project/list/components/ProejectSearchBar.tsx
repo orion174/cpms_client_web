@@ -2,7 +2,7 @@ import { Button, Form, Input, InputGroup } from "reactstrap";
 
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import type { ReqProjectListDTO } from "@/pages/admin/setting/project/types.ts";
+import type { ReqProjectListDTO } from "@/types/admin/projectTypes.ts";
 
 interface ProjectSearchProps {
     searchParams: ReqProjectListDTO;
@@ -38,7 +38,6 @@ const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
                 </InputGroup>
                 <InputGroup className="input-title">
                     <Input
-                        id="projectNm"
                         type="text"
                         className="my-input-text"
                         placeholder="프로젝트명 입력"

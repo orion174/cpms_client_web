@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { apiClient } from "@/core/api/client.ts";
-import type { ResCompanyDTO } from "@/types/cmmn.ts";
+
+import { companyList } from "@/core/api/setting/companyService.ts";
+import type { ResCompanyListDTO } from "@/types/admin/companyTypes.ts";
 
 interface CpmsCompanyProps {
     companyId?: number;
-    selectId?: string;
     value: number;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -13,24 +13,18 @@ interface CpmsCompanyProps {
 
 const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
     companyId = 0,
-    selectId,
     value,
     onChange,
     initText,
     classNm
 }) => {
-    const [ options, setOptions ] = useState<ResCompanyDTO[]>([]);
+    const [ options, setOptions ] = useState<ResCompanyListDTO[]>([]);
     const [ hasAutoSelected, setHasAutoSelected ] = useState(false);
 
-    useEffect(() => {
+    useEffect((): void => {
         const fetchCompanys = async (): Promise<void> => {
-            const jsonData = {
-                companyId: companyId ?? 0
-            };
 
-            const response
-                = await apiClient.post<ResCompanyDTO[]>('/api/setting/company/list', jsonData);
-
+            const response = await companyList(companyId);
             setOptions(response);
         };
 
@@ -38,7 +32,7 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
     }, [companyId]);
 
     // 옵션이 하나뿐이면 자동 선택 (단 한 번만 실행)
-    useEffect(() => {
+    useEffect((): void => {
         if (options.length === 1 && !hasAutoSelected) {
 
             const fakeEvent = {
@@ -52,7 +46,6 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
 
     return (
         <select
-            id={selectId}
             value={value}
             className={classNm}
             onChange={onChange}

@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "reactstrap";
 
-import type { ResCompanyListDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ResCompanyListDTO } from "@/pages/admin/setting/company/companyTypes.ts";
 
 interface CompanyDataProps {
     index: number;

@@ -4,13 +4,14 @@ import React from 'react';
 import TableEmpty from "@/components/TableModule/TableEmpty.tsx";
 import UserDataRow from "@/pages/admin/setting/user/list/components/UserDataRow.tsx";
 
-import type { ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ResUserListDTO } from "@/types/user/userTypes.ts";
 
 interface UserListProps {
     userList: ResUserListDTO[];
 };
 
 const UserDataTable: React.FC<UserListProps> = ({ userList }) => {
+
     return (
         <>
             <Table className="align-items-center table-flush" responsive>

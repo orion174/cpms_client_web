@@ -4,7 +4,7 @@ import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
 
-import type { ReqUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserListDTO } from "@/types/user/userTypes.ts";
 
 interface UserSearchProps {
     searchParams: ReqUserListDTO;
@@ -24,7 +24,6 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
             <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()}>
                 <InputGroup>
                     <CpmsCompanySelect
-                        selectId="searchCompanyId"
                         value={searchParams.searchCompanyId}
                         onChange={(e) => updateSearchParams("searchCompanyId", e.target.value)}
                         classNm="my-custom-select"
@@ -33,7 +32,6 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
                 </InputGroup>
                 <InputGroup>
                     <CpmsAuthSelect
-                        selectId="searchAuthType"
                         value={searchParams.searchAuthType}
                         onChange={(e) => updateSearchParams("searchAuthType", e.target.value)}
                         classNm="my-custom-select"
@@ -42,7 +40,6 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
                 </InputGroup>
                 <InputGroup>
                     <CmmnUseYnSelect
-                        selectId="searchUseYn"
                         value={searchParams.searchUseYn}
                         onChange={(e) => updateSearchParams("searchUseYn", e.target.value)}
                         classNm="my-custom-select"
@@ -51,7 +48,6 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
                 </InputGroup>
                 <InputGroup className="input-title">
                     <Input
-                        id="searchUserNm"
                         type="text"
                         className="my-input-text"
                         placeholder="이름(닉네임) 입력"

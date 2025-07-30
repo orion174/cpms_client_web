@@ -1,7 +1,6 @@
 import { CardHeader, Col, Row } from "reactstrap";
 import { useCallback, useState, useEffect } from "react";
 
-import { apiClient } from "@/core/api/client.ts";
 import { useSearchParams } from "@/hooks/customHook.ts";
 
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
@@ -9,8 +8,8 @@ import UserSearchBar from "@/pages/admin/setting/user/list/components/UserSearch
 import UserDataTable from "@/pages/admin/setting/user/list/components/UserDataTable.tsx";
 import CreateUserButton from "@/pages/admin/setting/user/list/components/CreateUserButton.tsx";
 
-import type { PageResponse } from "@/types/cmmn.ts";
-import type { ReqUserListDTO, ResUserListDTO } from "@/pages/admin/setting/user/types.ts";
+import { adminUserList } from "@/core/api/user/userService.ts";
+import type { ReqUserListDTO, ResUserListDTO } from "@/types/user/userTypes.ts";
 
 /* 📁 사용자 데이터 목록 */
 const UserList: React.FC = () => {
@@ -20,18 +19,17 @@ const UserList: React.FC = () => {
     const [ searchParams, setSearchParams ] = useState<ReqUserListDTO>(defaultUserListParams());
     const { updateSearchParams, resetSearchParams } = useSearchParams(setSearchParams, defaultUserListParams());
 
-    // API 호출 데이터
     const fetchUserList = useCallback(async (): Promise<void> => {
         const request = {
             ...searchParams,
             pageNo: currentPage
         };
 
-        const response
-            = await apiClient.post<PageResponse<ResUserListDTO>>('/api/user/list', request);
+        const response = await adminUserList(request);
 
         setUserList(response.content);
         setTotalCnt(response.totalElements);
+
     }, [searchParams, currentPage]);
 
     useEffect((): void => {

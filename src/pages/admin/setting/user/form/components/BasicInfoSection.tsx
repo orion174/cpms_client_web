@@ -5,7 +5,7 @@ import SectionBorder from "@/components/FormModule/SectionBorder.tsx"
 import IdCheckModule from "@/components/CmmnModule/IdCheckModule.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 
-import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/types/user/userTypes.ts";
 
 interface BasicInfoSectionProps {
     reqUserDTO: ReqUserDTO;
@@ -76,7 +76,6 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                             </label>
 
                             <CpmsAuthSelect
-                                selectId="authType"
                                 classNm="my-custom-select form-control"
                                 initText="권한 선택"
                                 value={reqUserDTO.authType}
@@ -91,9 +90,17 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                         <FormGroup>
                             <label className="form-control-label">휴대폰</label>
 
-                            <Input type="text" className="form-control-alternative" placeholder="010-1234-5678"
-                                   value={formatPhoneNumber(reqUserDTO.userPhone)}
-                               onChange={(e) => handleChange('userPhone', e.target.value.replace(/[^\d]/g, '').slice(0, 11))}
+                            <Input
+                                type="text"
+                                className="form-control-alternative"
+                                placeholder="010-1234-5678"
+                                value={formatPhoneNumber(reqUserDTO.userPhone)}
+                                onChange={
+                                    (e) => handleChange(
+                                        'userPhone',
+                                        e.target.value.replace(/[^\d]/g, '').slice(0, 11)
+                                    )
+                                }
                             />
                         </FormGroup>
                     </Col>
@@ -102,7 +109,11 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({
                         <FormGroup>
                             <label className="form-control-label">이메일</label>
 
-                            <Input type="email" className="form-control-alternative" placeholder="jesse@example.com" maxLength={255}
+                            <Input
+                                type="email"
+                                className="form-control-alternative"
+                                placeholder="jesse@example.com"
+                                maxLength={255}
                                 value={reqUserDTO.userEmail}
                                 onChange={(e) => handleChange('userEmail', e.target.value)}
                             />

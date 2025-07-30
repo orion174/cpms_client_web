@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useModalHook from "@/hooks/useModal.ts";
 import { useCancelNavigation } from "@/hooks/customHook.ts";
 
-import { saveUser } from "@/core/api/setting/userService.ts";
-import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import { saveUser } from "@/core/api/user/userService.ts";
+import type { ReqUserDTO } from "@/types/user/userTypes.ts";
 
 interface UserFormButtonPrps {
     reqUserDTO: ReqUserDTO;
@@ -22,6 +22,7 @@ const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO })
         if (!reqUserDTO.userNm) return "이름을 입력하세요.";
         if (!reqUserDTO.authType) return "시스템 권한을 선택하세요.";
         if (!reqUserDTO.companyId) return "소속업체를 선택하세요.";
+
         return "";
     };
 
@@ -43,7 +44,7 @@ const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO })
             title: "확인",
             message: "저장하시겠습니까?",
             isConfirm: true,
-            onConfirm: async () => {
+            onConfirm: async (): Promise<void> => {
                 if (!isEditMode) await saveUser(reqUserDTO);
 
                 openCustomModal({

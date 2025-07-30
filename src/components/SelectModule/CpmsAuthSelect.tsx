@@ -1,7 +1,6 @@
 import React from "react";
 
 interface AuthSelectProps {
-    selectId?: string;
     value: string;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -16,7 +15,6 @@ const authCode = [
 ];
 
 const CpmsAuthSelect: React.FC<AuthSelectProps> = ({
-    selectId,
     value,
     onChange,
     initText,
@@ -25,7 +23,6 @@ const CpmsAuthSelect: React.FC<AuthSelectProps> = ({
     return (
         <>
             <select
-                id={selectId}
                 value={value}
                 className={classNm}
                 onChange={onChange}

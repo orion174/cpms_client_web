@@ -39,6 +39,7 @@ export const responseInterceptor = async (response: AxiosResponse) => {
         || contentType.includes('application/pdf')
         || contentType.includes('image/')
         || response.request?.responseType === 'blob') {
+
         return response;
     }
 

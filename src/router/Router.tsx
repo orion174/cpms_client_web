@@ -3,7 +3,7 @@ import AuthGuard from "@/pages/layout/AuthGuard.tsx";
 
 /* 로그인 및 회원가입 */
 import Auth from "@/pages/layout/Auth.tsx";
-import Login from "@/pages/auth/Login.tsx";
+import Login from "@/pages/auth/login/Index.tsx";
 import CpmsRegister from "@/pages/auth/register/CpmsRegister.tsx";
 /* CPMS 주요 기능 */
 import Admin from "@/pages/layout/Admin.tsx";

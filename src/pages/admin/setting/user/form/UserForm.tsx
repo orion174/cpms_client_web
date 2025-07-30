@@ -10,6 +10,7 @@ import {
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
+import { useFormState } from "@/hooks/customHook.ts";
 import Empty from "@/pages/layout/StatusArea/Empty.tsx";
 import SideInfoForm from "@/pages/admin/setting/user/view/components/SideInfoForm.tsx";
 import UserFormButton from "@/pages/admin/setting/user/form/components/UserFormButton.tsx";
@@ -17,21 +18,15 @@ import BasicInfoSection from "@/pages/admin/setting/user/form/components/BasicIn
 import CompanyInfoSection from "@/pages/admin/setting/user/form/components/CompanyInfoSection.tsx";
 import EtcInfoSection from "@/pages/admin/setting/user/form/components/EtcInfoSection.tsx";
 
-import type { ReqUserDTO } from "@/pages/admin/setting/user/types.ts";
+import type { ReqUserDTO } from "@/types/user/userTypes.ts";
 
 const UserForm:React.FC = () => {
     const location = useLocation();
     const isEditMode = new URLSearchParams(location.search).has("userId");
 
-    const [ isIdVerified, setIsIdVerified ] = useState<boolean>(false); // 아아디 중복검사 통과여부
-    const [ reqUserDTO, setReqUserDTO ] = useState<ReqUserDTO>(getInitUser());
-
-    const handleChange = (field: keyof ReqUserDTO, value: string | number): void => {
-        setReqUserDTO((prev) => ({
-            ...prev,
-            [field]: value,
-        }));
-    };
+    // 아아디 중복검사 통과여부
+    const [ isIdVerified, setIsIdVerified ] = useState<boolean>(false);
+    const { formState, handleChange } = useFormState<ReqUserDTO>(getInitUser());
 
     return (
         <>
@@ -58,7 +53,7 @@ const UserForm:React.FC = () => {
                                     <Col className="text-right" xs="4">
                                         {/* 폼 버튼 */}
                                         <UserFormButton
-                                            reqUserDTO={reqUserDTO}
+                                            reqUserDTO={formState}
                                             isEditMode={isEditMode}
                                         />
                                     </Col>
@@ -69,7 +64,7 @@ const UserForm:React.FC = () => {
                                 <Form>
                                     {/* 기본 정보 입력 폼 */}
                                     <BasicInfoSection
-                                        reqUserDTO={reqUserDTO}
+                                        reqUserDTO={formState}
                                         handleChange={handleChange}
                                         isIdVerified={isIdVerified}
                                         setIsIdVerified={setIsIdVerified}
@@ -77,13 +72,13 @@ const UserForm:React.FC = () => {
 
                                     {/* 회사 정보 입력 폼 */}
                                     <CompanyInfoSection
-                                        reqUserDTO={reqUserDTO}
+                                        reqUserDTO={formState}
                                         handleChange={handleChange}
                                     />
 
                                     {/* 기타 정보 입력 폼 */}
                                     <EtcInfoSection
-                                        reqUserDTO={reqUserDTO}
+                                        reqUserDTO={formState}
                                         handleChange={handleChange}
                                     />
                                 </Form>

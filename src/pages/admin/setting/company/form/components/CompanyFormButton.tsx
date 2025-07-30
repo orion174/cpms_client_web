@@ -4,7 +4,7 @@ import useModalHook from "@/hooks/useModal.ts";
 import { useCancelNavigation } from "@/hooks/customHook.ts";
 
 import { saveCompany } from "@/core/api/setting/companyService.ts";
-import { ReqCompanyDTO } from "@/pages/admin/setting/company/types.ts";
+import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
 
 interface CompanyFormButtonPrps {
     reqCompanyDTO: ReqCompanyDTO
@@ -12,6 +12,7 @@ interface CompanyFormButtonPrps {
 };
 
 const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCompanyDTO }) => {
+
     const { openCustomModal } = useModalHook();
     const confirmCancel = useCancelNavigation();
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCom
     const validate = (): string => {
         if (!reqCompanyDTO.authType) return "업체의 등급을 선택하세요.";
         if (!reqCompanyDTO.companyNm) return "업체 이름을 입력하세요.";
+
         return "";
     };
 
