@@ -11,26 +11,25 @@ import {
     Col,
 } from 'reactstrap';
 import { useState } from 'react';
-import axios from 'axios';
 
-import useModalHook from '@/hooks/useModal.ts';
-
+import useModalHook from '@/hooks/useModal';
 import PhoneVerifyBlock from './components/PhoneVerifyBlock.tsx';
 import NumberAccess from './components/NumberAccess.tsx';
 import IdCheckBlock from './components/IdCheckBlock.tsx';
 
-import type { ApiResponse } from '@/types/cmmn.ts';
+import { registerUser } from '@/server/api/user/verifyService';
+import { HttpError } from '@/types/cmmn';
 
 const CpmsRegister: React.FC = () => {
     const { openCustomModal, openErrorModal } = useModalHook();
 
-    const [ showAccess, setShowAccess ] = useState(false);
-    const [ isPhoneVerified, setIsPhoneVerified ] = useState(false);
-    const [ isIdVerified, setIsIdVerified ] = useState(false);
-    const [ phone, setPhone ] = useState('');
-    const [ loginId, setLoginId ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ confirmPassword, setConfirmPassword ] = useState('');
+    const [ showAccess, setShowAccess ] = useState<boolean>(false);
+    const [ isPhoneVerified, setIsPhoneVerified ] = useState<boolean>(false);
+    const [ isIdVerified, setIsIdVerified ] = useState<boolean>(false);
+    const [ phone, setPhone ] = useState<string>('');
+    const [ loginId, setLoginId ] = useState<string>('');
+    const [ password, setPassword ] = useState<string>('');
+    const [ confirmPassword, setConfirmPassword ] = useState<string>('');
 
     const validate = (): string => {
         if (!isPhoneVerified) return '휴대폰 인증을 완료해 주세요.';
@@ -60,42 +59,43 @@ const CpmsRegister: React.FC = () => {
             isConfirm: true,
             onConfirm: async () => {
                 try {
-                    const endPoint = `
-                        ${import.meta.env.VITE_API_URL}/api/user/verify/register
-                    `;
+                    const result
+                        = await registerUser({
+                            phone: phone.replace(/-/g, ''),
+                            loginId,
+                            password,
+                            confirmPassword,
+                        });
 
-                    const jsonData = {
-                        phone: phone.replace(/-/g, ''),
-                        loginId,
-                        password,
-                        confirmPassword
-                    };
-
-                    const response
-                        = await axios.post<ApiResponse<null>>(endPoint, jsonData);
-
-                    const { success, message } = response.data;
-
-                    if (success) {
+                    if (result.success) {
                         openCustomModal({
                             title: '완료',
-                            message: message,
+                            message: result.message ?? '회원가입이 완료되었습니다.',
                             isConfirm: true,
                             onConfirm: () => {
                                 window.location.href = '/auth/login';
-                            }
+                            },
+                        });
+                    } else {
+                        openErrorModal({
+                            errorCode: result.errorCode ?? '0000',
+                            message: result.message ?? '회원가입 중 오류가 발생했습니다.',
                         });
                     }
-                } catch (error: any) {
-                    if (axios.isAxiosError(error)) {
-                        const errorRes = error.response?.data as ApiResponse;
+                } catch (e: unknown) {
+                    if (e instanceof HttpError) {
                         openErrorModal({
-                            errorCode: errorRes.errorCode ?? '0000',
-                            message: errorRes?.message ?? '회원가입 중 오류가 발생했습니다.',
+                            errorCode: e.code,
+                            message: e.message
+                        });
+                    } else {
+                        openErrorModal({
+                            errorCode: '0000',
+                            message: '예상치 못한 오류가 발생했습니다.',
                         });
                     }
                 }
-            }
+            },
         });
     };
 

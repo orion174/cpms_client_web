@@ -1,5 +1,5 @@
 import { Navigate } from "react-router-dom";
-import { getAccessToken } from "@/core/certification/jwt.ts";
+import { getAccessToken } from "@/server/utils/jwt.ts";
 
 const AuthGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const token = getAccessToken();

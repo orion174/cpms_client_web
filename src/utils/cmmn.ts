@@ -1,10 +1,10 @@
 import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { jwtDecode } from 'jwt-decode';
-import { clearCookie } from "@/core/certification/cookie.ts";
+import { clearCookie } from "@/server/utils/cookie.ts";
 
 interface JwtPayload {
     authType: string;
-    [key: string]: any;
+    [ key: string ]: any;
 }
 
 // 로그아웃

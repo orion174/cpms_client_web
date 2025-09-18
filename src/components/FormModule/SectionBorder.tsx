@@ -1,4 +1,5 @@
-const SectionBorder: React.FC<{}> = () => {
+
+const SectionBorder: React.FC = () => {
     return (
         <>
             <hr className="my-4" />

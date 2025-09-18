@@ -1,14 +1,15 @@
 /* 📁 공통 인터페이스 */
 
 // API 응답 인터페이스
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = void> {
     success: boolean;
-    data: T;
+    data: T | null;
     message: string;
     errorCode?: string;
 }
 
-export interface PageResponse<T = any> {
+// 페이징 인터페이스
+export interface PageResponse<T> {
     content: T[];
     totalElements: number;
     totalPages: number;
@@ -49,3 +50,15 @@ export interface NewFileItem  {
 }
 
 export type FileItem = ExistingFileItem | NewFileItem;
+
+export class HttpError extends Error {
+    code: string;
+    status?: number;
+
+    constructor(message: string, code = '0000', status?: number) {
+        super(message);
+        this.name = 'HttpError';
+        this.code = code;
+        this.status = status;
+    }
+}

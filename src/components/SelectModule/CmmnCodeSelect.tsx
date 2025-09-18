@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { codeList } from "@/core/api/cmmn/codeService.ts";
+import { codeList } from "@/server/api/cmmn/codeService.ts";
 import type { ResCmmnCodeDTO } from "@/types/cmmn.ts";
 
 interface CmmnCodeProps  {
@@ -21,11 +21,11 @@ const CmmnCodeSelect: React.FC<CmmnCodeProps> = ({
     const [ options, setOptions ] = useState<ResCmmnCodeDTO[]>([]);
 
     useEffect(() => {
-        const fetchOptions = async (): Promise<void> => {
-
-            const response = await codeList(groupCode);
-            setOptions(response);
-        };
+        const fetchOptions
+            = async (): Promise<void> => {
+                const response = await codeList(groupCode);
+                setOptions(response ?? []);
+            };
 
         fetchOptions();
     }, [groupCode]);

@@ -1,7 +1,6 @@
 import React from "react";
 
 interface UseYnSelectProps {
-    selectId?: string;
     value: string;
     onChange: React.ChangeEventHandler<HTMLSelectElement>;
     initText: string;
@@ -14,17 +13,14 @@ const useYnCode = [
 ];
 
 const CmmnUseYnSelect: React.FC<UseYnSelectProps> = ({
-    selectId,
     value,
     onChange,
     initText,
     classNm
 }) => {
-
     return (
         <>
             <select
-                id={selectId}
                 value={value}
                 className={classNm}
                 onChange={onChange}

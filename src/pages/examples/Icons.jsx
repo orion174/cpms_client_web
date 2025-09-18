@@ -29,7 +29,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 // core components
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import Empty from "@/layout/StatusArea/Empty.tsx";
 
 const Icons = () => {
   const [copiedText, setCopiedText] = useState();

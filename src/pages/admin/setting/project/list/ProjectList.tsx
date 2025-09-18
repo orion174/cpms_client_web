@@ -8,9 +8,9 @@ import ProjectDataTable from "./components/ProjectDataTable.tsx";
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
 
 import { useSearchParams } from "@/hooks/customHook.ts";
-import { fetchAdminProjectList } from "@/core/api/setting/projectService.ts";
+import { fetchAdminProjectList } from "@/server/api/setting/projectService.ts";
 
-import type { ReqProjectListDTO, ResProjectListDTO } from "@/types/admin/projectTypes.ts";
+import type { ReqProjectListDTO, ResProjectListDTO } from "@/types/setting/projectTypes.ts";
 
 /* 📁 관리 프로젝트 데이터 목록 */
 const ProjectList: React.FC = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'reactstrap';
 
 import SupportTableRow from "./SupportTableRow.tsx";
-import type { SupportList } from "../../types.ts";
+import type { SupportList } from "@/types/support/types";
 
 interface TableProps {
     data: SupportList[];
@@ -29,7 +29,11 @@ const SupportTable: React.FC<TableProps> = ({ data, onRowClick }) => {
                     {data.length > 0 ? (
                         <>
                             {data.map((row) => (
-                                <SupportTableRow key={row.supportRequestId} row={row} onRowClick={onRowClick} />
+                                <SupportTableRow
+                                    key={row.supportRequestId}
+                                    row={row}
+                                    onRowClick={onRowClick}
+                                />
                             ))}
                         </>
                     ) : (

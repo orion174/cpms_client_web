@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useModalHook from "@/hooks/useModal.ts";
 import { useCancelNavigation } from "@/hooks/customHook.ts";
 
-import { saveUser } from "@/core/api/user/userService.ts";
+import { saveUser } from "@/server/api/user/userService.ts";
 import type { ReqUserDTO } from "@/types/user/userTypes.ts";
 
 interface UserFormButtonPrps {
@@ -14,7 +14,7 @@ interface UserFormButtonPrps {
 const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO }) => {
 
     const { openCustomModal } = useModalHook();
-    const confirmCancel = useCancelNavigation();
+    const confirmCancel = useCancelNavigation(true);
     const navigate = useNavigate();
 
     const validate = (): string => {
@@ -59,10 +59,16 @@ const UserFormButton:React.FC<UserFormButtonPrps> = ({ isEditMode, reqUserDTO })
 
     return (
         <>
-            <Button color="default" onClick={confirmCancel}>
+            <Button
+                color="default"
+                onClick={confirmCancel}
+            >
                 등록 취소
             </Button>
-            <Button color="success" onClick={handSave}>
+            <Button
+                color="success"
+                onClick={handSave}
+            >
                 {isEditMode ? "수정 완료" : "사용자 등록"}
             </Button>
         </>

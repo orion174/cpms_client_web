@@ -11,7 +11,7 @@ import CmmnCodeSelect from "@/components/SelectModule/CmmnCodeSelect.tsx"
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
 import LitePicker from "@/components/CmmnModule/LitePicker.tsx";
 
-import type { ReqSupportListDTO } from "../../types";
+import type { ReqSupportListDTO } from "@/types/support/types";
 
 interface Props {
     authType: string;
@@ -34,7 +34,9 @@ const SupportSearchBar: React.FC<Props> = ({
                 <InputGroup>
                     <CpmsCompanySelect
                         value={searchParams.searchCompanyId}
-                        onChange={(e) => updateSearchParams("searchCompanyId", e.target.value)}
+                        onChange={
+                            (e) => updateSearchParams("searchCompanyId", e.target.value)
+                        }
                         classNm="my-custom-select"
                         initText="업체 선택"
                     />
@@ -44,7 +46,9 @@ const SupportSearchBar: React.FC<Props> = ({
                 <CmmnCodeSelect
                     groupCode="10"
                     value={searchParams.searchRequestCd}
-                    onChange={(e) => updateSearchParams("searchRequestCd", e.target.value)}
+                    onChange={
+                        (e) => updateSearchParams("searchRequestCd", e.target.value)
+                    }
                     classNm="my-custom-select"
                     initText="요청 선택"
                 />
@@ -54,7 +58,9 @@ const SupportSearchBar: React.FC<Props> = ({
                 <CmmnCodeSelect
                     groupCode="20"
                     value={searchParams.searchStatusCd}
-                    onChange={(e) => updateSearchParams("searchStatusCd", e.target.value)}
+                    onChange={
+                        (e) => updateSearchParams("searchStatusCd", e.target.value)
+                    }
                     classNm="my-custom-select"
                     initText="처리상태 선택"
                 />
@@ -62,7 +68,6 @@ const SupportSearchBar: React.FC<Props> = ({
 
             <InputGroup className="input-group-dynamic-2date">
                 <LitePicker
-                    inputId="searchDate"
                     singleMode={false}
                     placeholder="등록일 범위 선택"
                     onDateChange={(startDate, endDate) => {
@@ -84,15 +89,24 @@ const SupportSearchBar: React.FC<Props> = ({
                     className="my-input-text"
                     placeholder="문의 제목 입력"
                     value={searchParams.searchTitle}
-                    onChange={(e) => updateSearchParams("searchTitle", e.target.value)}
+                    onChange={
+                        (e) => updateSearchParams("searchTitle", e.target.value)
+                    }
                 />
             </InputGroup>
 
             <div className="d-flex gap-2">
-                <Button onClick={onSearch} color="primary">
+                <Button
+                    onClick={onSearch}
+                    color="primary"
+                >
                     검색
                 </Button>
-                <Button onClick={resetSearchParams} color="primary" outline>
+                <Button
+                    onClick={resetSearchParams}
+                    color="primary"
+                    outline
+                >
                     초기화
                 </Button>
             </div>

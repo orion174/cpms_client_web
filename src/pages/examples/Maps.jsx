@@ -21,7 +21,7 @@ import React from "react";
 import { Card, Container, Row } from "reactstrap";
 
 // core components
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import Empty from "@/layout/StatusArea/Empty.tsx";
 
 const MapWrapper = () => {
   const mapRef = React.useRef(null);

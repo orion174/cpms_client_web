@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { projectList } from "@/core/api/setting/projectService.ts";
-import type { ResProjectListDTO } from "@/types/admin/projectTypes.ts";
+import { projectList } from "@/server/api/setting/projectService.ts";
+import type { ResProjectListDTO } from "@/types/setting/projectTypes.ts";
 
 interface CpmsProjectProps  {
     companyId?: number;
@@ -23,9 +23,8 @@ const CpmsProjectSelect: React.FC<CpmsProjectProps> = ({
 
     useEffect(():void => {
         const fetchProjects = async (): Promise<void> => {
-
             const response = await projectList(companyId);
-            setOptions(response);
+            setOptions(response ?? []);
         };
 
         fetchProjects();

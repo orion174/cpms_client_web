@@ -1,38 +1,24 @@
-import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    FormGroup,
-    Form,
-    Input,
-    Container,
-    Row,
-    Col,
-    InputGroupText,
-    InputGroupAddon,
-    InputGroup
-} from "reactstrap";
-import { useState, useEffect, useRef } from "react";
+import { Button, Card, CardHeader, CardBody, FormGroup, Form, Input, Container, Row, Col, InputGroupText, InputGroupAddon, InputGroup } from "reactstrap";
+import { useState, useRef } from "react";
 
-import useModalHook from "@/hooks/useModal.ts";
-import { useCancelNavigation } from "@/hooks/customHook.ts";
-import { getEditorContent, initializeSmartEditor } from "@/utils/smartEditor.js";
-import { apiClient } from "@/core/api/client.ts";
+import useModalHook from "@/hooks/useModal";
+import { useCancelNavigation } from "@/hooks/customHook";
 
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
-import CmmnCodeSelect from "@/components/SelectModule/CmmnCodeSelect.tsx";
-import LitePicker from "@/components/CmmnModule/LitePicker.tsx";
-import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import CpmsProjectSelect from "@/components/SelectModule/CpmsProjectSelect.tsx";
-import RequestFile from "./components/RequestFile.tsx";
+import SmartEditor, { SmartEditorHandle } from "@/components/CmmnModule/SmartEditor";
+import LitePicker from "@/components/CmmnModule/LitePicker";
+import Empty from "@/layout/StatusArea/Empty";
+import CmmnCodeSelect from "@/components/SelectModule/CmmnCodeSelect";
+import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect";
+import CpmsProjectSelect from "@/components/SelectModule/CpmsProjectSelect";
+import RequestFile from "./components/RequestFile";
 
-import type { FileItem, NewFileItem } from "@/types/cmmn.ts";
-import type { ReqSupportDTO } from "@/pages/admin/support/types.ts";
+import { saveSupportRequestApi } from "@/server/api/support/service";
+import type { FileItem, NewFileItem } from "@/types/cmmn";
+import type { ReqSupportDTO } from "@/types/support/types";
 
 const RequestForm: React.FC = () => {
     const { openCustomModal } = useModalHook();
-    const confirmCancel = useCancelNavigation();
+    const confirmCancel = useCancelNavigation(true);
 
     const searchParams = new URLSearchParams(location.search);
     const formType = searchParams.get('formType') ?? 'insert';
@@ -40,30 +26,7 @@ const RequestForm: React.FC = () => {
     const [ formData, setFormData ] = useState<ReqSupportDTO>(getInitSupport());
     const [ fileList, setFileList ] = useState<FileItem[]>([]);
 
-    // 네이버 에디터
-    const oEditors = useRef<never[]>([]);
-
-    useEffect((): void => {
-        const loadScripts = () => {
-            const script = document.createElement("script");
-
-            script.src = "/smarteditor/js/HuskyEZCreator.js";
-            script.type = "text/javascript";
-            script.onload = (): void => {
-                initializeSmartEditor("editorTxt", oEditors.current)
-                    .then((): void => console.log("SmartEditor initialized."))
-                    .catch((error: any) => console.error("SmartEditor error:", error));
-            };
-
-            document.body.appendChild(script);
-
-            return () => {
-                document.body.removeChild(script);
-            };
-        };
-
-        loadScripts();
-    }, []);
+    const editorRef = useRef<SmartEditorHandle>(null);
 
     // 폼 데이터 매핑
     const handleInputChange = (key: keyof typeof formData, value: string): void => {
@@ -97,13 +60,13 @@ const RequestForm: React.FC = () => {
             title: "확인",
             message: "저장하시겠습니까?",
             isConfirm: true,
-            onConfirm: () => {
+            onConfirm: (): void => {
                 if (formType === "insert") saveSupportRequest();
             },
         });
     };
 
-    // 유지보수 문의 저장 api
+    // 유지보수 문의 저장
     const saveSupportRequest = async (): Promise<void> => {
         const data = new FormData();
 
@@ -113,13 +76,15 @@ const RequestForm: React.FC = () => {
                 data.append(key, value.toString());
             });
 
-        data.append("supportEditor", getEditorContent(oEditors.current));
+        // 네이버 에디터 입력 데이터
+        const content = editorRef.current?.getContent() ?? "";
+        data.append("supportEditor", content);
 
         fileList
             .filter((file): file is NewFileItem => file.isNew && !!file.file)
             .forEach((file) => file.file && data.append("supportFile", file.file));
 
-        await apiClient.postForm<null>('/api/support/insert', data);
+        saveSupportRequestApi(data);
 
         openCustomModal({
             title: "알림",
@@ -140,11 +105,23 @@ const RequestForm: React.FC = () => {
                             <CardHeader className="bg-white border-0">
                                 <Row className="align-items-center">
                                     <Col xs="8">
-                                        {formType === "insert" && <h2 className="mb-0">프로젝트 문의</h2>}
+                                        {formType === "insert" &&
+                                            <h2 className="mb-0">프로젝트 문의</h2>
+                                        }
                                     </Col>
                                     <Col xs="4" className="text-right">
-                                        <Button color="default" onClick={confirmCancel}>목록</Button>
-                                        <Button color="success" onClick={handleSave}>저장</Button>
+                                        <Button
+                                            color="default"
+                                            onClick={confirmCancel}
+                                        >
+                                            목록
+                                        </Button>
+                                        <Button
+                                            color="success"
+                                            onClick={handleSave}
+                                        >
+                                            저장
+                                        </Button>
                                     </Col>
                                 </Row>
                             </CardHeader>
@@ -156,9 +133,12 @@ const RequestForm: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label">요청 업체</label>
+
                                                     <CpmsCompanySelect
                                                         value={formData.requestCompanyId}
-                                                        onChange={(e) => handleInputChange("requestCompanyId", e.target.value)}
+                                                        onChange={
+                                                            (e) => handleInputChange("requestCompanyId", e.target.value)
+                                                        }
                                                         initText="요청 업체 선택"
                                                         classNm="my-custom-select form-control"
                                                     />
@@ -167,9 +147,12 @@ const RequestForm: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label">문의 프로젝트</label>
+
                                                     <CpmsProjectSelect
                                                         value={formData.requestProjectId}
-                                                        onChange={(e) => handleInputChange("requestProjectId", e.target.value)}
+                                                        onChange={
+                                                            (e) => handleInputChange("requestProjectId", e.target.value)
+                                                        }
                                                         classNm="my-custom-select form-control"
                                                         initText="프로젝트 선택"
                                                     />
@@ -178,10 +161,13 @@ const RequestForm: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label">요청 유형</label>
+
                                                     <CmmnCodeSelect
                                                         groupCode="10"
                                                         value={formData.requestCd}
-                                                        onChange={(e) => handleInputChange("requestCd", e.target.value)}
+                                                        onChange={
+                                                            (e) => handleInputChange("requestCd", e.target.value)
+                                                        }
                                                         classNm="my-custom-select form-control"
                                                         initText="요청 유형 선택"
                                                     />
@@ -192,6 +178,7 @@ const RequestForm: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label">처리 기한</label>
+
                                                     <InputGroup>
                                                         <LitePicker
                                                             placeholder="처리 기한 선택"
@@ -210,10 +197,13 @@ const RequestForm: React.FC = () => {
                                             <Col lg="4">
                                                 <FormGroup>
                                                     <label className="form-control-label">처리 상태</label>
+
                                                     <CmmnCodeSelect
                                                         groupCode="20"
                                                         value={formData.statusCd}
-                                                        onChange={(e) => handleInputChange("statusCd", e.target.value)}
+                                                        onChange={
+                                                            (e) => handleInputChange("statusCd", e.target.value)
+                                                        }
                                                         classNm="my-custom-select form-control"
                                                         initText="처리 상태 선택"
                                                     />
@@ -227,12 +217,15 @@ const RequestForm: React.FC = () => {
                                             <Col lg="12">
                                                 <FormGroup>
                                                     <label className="form-control-label">요청 제목</label>
+
                                                     <Input
                                                         type="text"
                                                         className="my-input-text"
                                                         placeholder="문의하실 글의 제목을 입력하세요."
                                                         value={formData.supportTitle}
-                                                        onChange={(e) => handleInputChange("supportTitle", e.target.value)}
+                                                        onChange={
+                                                            (e) => handleInputChange("supportTitle", e.target.value)
+                                                        }
                                                         maxLength={50}
                                                     />
                                                 </FormGroup>
@@ -242,14 +235,12 @@ const RequestForm: React.FC = () => {
                                             <Col lg="12">
                                                 <FormGroup>
                                                     <label className="form-control-label">상세 내용</label>
-                                                    <div id="smarteditor">
-                                                        <textarea
-                                                            name="editorTxt"
-                                                            id="editorTxt"
-                                                            rows={20}
-                                                            style={{width: "100%"}}
-                                                        />
-                                                    </div>
+                                                    
+                                                    <SmartEditor
+                                                        id="editorTxt"
+                                                        row={20}
+                                                        ref={editorRef}
+                                                    />
                                                 </FormGroup>
                                             </Col>
                                         </Row>
@@ -274,7 +265,7 @@ const getInitSupport = (): ReqSupportDTO => ({
     requestCompanyId: 0,
     requestProjectId: 0,
     requestCd: 0,
-    statusCd: 3,
+    statusCd: 3, // 초기에는 접수대기
     supportTitle: "",
     requestDate: "",
 });

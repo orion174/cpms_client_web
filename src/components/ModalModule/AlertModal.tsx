@@ -33,6 +33,7 @@ const AlertModal: React.FC = () => {
     const handleConfirm = () => {
         if (currentModal.modalId) {
             const callback = callbackStore.getCallback(currentModal.modalId);
+
             if (callback) {
                 callback();
                 callbackStore.removeCallback(currentModal.modalId);
@@ -49,8 +50,16 @@ const AlertModal: React.FC = () => {
     };
 
     return (
-        <Modal isOpen={currentModal.isOpen || false} toggle={handleClose} backdrop="static" centered>
-            <ModalHeader toggle={handleClose} className="my-modal-header-text">
+        <Modal
+            isOpen={currentModal.isOpen || false}
+            toggle={handleClose}
+            backdrop="static"
+            centered
+        >
+            <ModalHeader
+                toggle={handleClose}
+                className="my-modal-header-text"
+            >
                 {currentModal.title || ''}
             </ModalHeader>
 
@@ -66,10 +75,20 @@ const AlertModal: React.FC = () => {
             </ModalBody>
 
             <ModalFooter>
-                <Button color="primary" onClick={handleConfirm}>확인</Button>
+                <Button
+                    color="primary"
+                    onClick={handleConfirm}
+                >
+                    확인
+                </Button>
 
                 {currentModal.isConfirm && (
-                    <Button color="secondary" onClick={handleClose}>취소</Button>
+                    <Button
+                        color="secondary"
+                        onClick={handleClose}
+                    >
+                        취소
+                    </Button>
                 )}
             </ModalFooter>
         </Modal>

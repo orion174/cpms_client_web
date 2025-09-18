@@ -1,7 +1,7 @@
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from "reactstrap";
 import React from "react";
 
-import type { ResProjectListDTO } from "@/types/admin/projectTypes.ts";
+import type { ResProjectListDTO } from "@/types/setting/projectTypes.ts";
 
 interface ProjectDataProps {
     index: number;

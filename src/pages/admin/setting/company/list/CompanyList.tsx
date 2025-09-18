@@ -2,14 +2,14 @@ import { useCallback, useState, useEffect } from "react";
 import { CardHeader, Col, Row } from "reactstrap";
 
 import { useSearchParams } from "@/hooks/customHook.ts";
-import { adminCompanyList } from "@/core/api/setting/companyService.ts";
+import { adminCompanyList } from "@/server/api/setting/companyService.ts";
 
 import PaginationComponent from "@/components/TableModule/PaginationComponent.tsx";
 import CompanySearchBar from "@/pages/admin/setting/company/list/components/CompanySearchBar.tsx";
 import ManagementButton from "@/pages/admin/setting/company/list/components/ManagementButton.tsx";
 import CompanyDataTable from "@/pages/admin/setting/company/list/components/CompanyDataTable.tsx";
 
-import type { ResCompanyListDTO, ReqCompanyListDTO } from "@/types/admin/companyTypes.ts";
+import type { ResCompanyListDTO, ReqCompanyListDTO } from "@/types/setting/companyTypes.ts";
 
 /* 📁 CPMS 관리 업체 데이터 목록 */
 const CompanyList: React.FC = () => {

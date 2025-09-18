@@ -8,10 +8,11 @@ import {
     Button,
 } from 'reactstrap';
 import { useState } from 'react';
-import axios from 'axios';
 
-import { formatPhoneNumber } from '@/utils/format.ts';
-import useModalHook from '@/hooks/useModal.ts';
+import { formatPhoneNumber } from '@/utils/format';
+import useModalHook from '@/hooks/useModal';
+import { sendSms } from '@/server/api/user/verifyService';
+import { HttpError } from '@/types/cmmn';
 
 interface PhoneVerifyBlockProps {
     phone: string;
@@ -27,47 +28,49 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({
     isVerified
 }) => {
     const { openCustomModal, openErrorModal } = useModalHook();
-    const [ phoneLocked, setPhoneLocked ] = useState(false);
+    const [ phoneLocked, setPhoneLocked ] = useState<boolean>(false);
 
-    // 입력된 휴대폰 번호로 인증 문자를 전송한다.
     const handlePhoneVerify = async (): Promise<void> => {
-
         if (!/^\d{11}$/.test(phone)) {
             openCustomModal({
                 title: '알림',
                 message: '전화번호는 숫자 11자리만 입력해주세요.',
-                isConfirm: false
+                isConfirm: false,
             });
 
             return;
         }
 
         try {
-            const endPoint = `
-                ${import.meta.env.VITE_API_URL}/api/user/verify/send-sms
-            `;
+            const result
+                = await sendSms({ receiver: phone.replace(/-/g, '') });
 
-            const response
-                = await axios.post(endPoint, { receiver: phone.replace(/-/g, '') });
-
-            const { success, message } = response.data;
-
-            if (success) {
+            if (result.success) {
                 setPhoneLocked(true);
 
                 openCustomModal({
                     title: '알림',
-                    message,
-                    isConfirm: false
+                    message: result.message ?? '인증번호가 발송되었습니다.',
+                    isConfirm: false,
                 });
 
-                onVerified(); // 인증번호 입력창 열기 외부에 알림
-            }
-        } catch (error: any) {
-            if (axios.isAxiosError(error)) {
+                onVerified(); // 인증번호 입력창 열기
+            } else {
                 openErrorModal({
-                    errorCode: error?.response?.data?.errorCode ?? '0000',
-                    message: error?.response?.data?.message ?? 'SMS 전송 중 오류가 발생했습니다.'
+                    errorCode: result.errorCode ?? '0000',
+                    message: result.message ?? 'SMS 전송 중 오류가 발생했습니다.',
+                });
+            }
+        } catch (e: unknown) {
+            if (e instanceof HttpError) {
+                openErrorModal({
+                    errorCode: e.code,
+                    message: e.message
+                });
+            } else {
+                openErrorModal({
+                    errorCode: '0000',
+                    message: '예상치 못한 오류가 발생했습니다.',
                 });
             }
         }
@@ -77,20 +80,22 @@ const PhoneVerifyBlock: React.FC<PhoneVerifyBlockProps> = ({
         <Row>
             <Col xs="8">
                 <InputGroup
-                    className={`input-group-alternative mb-3 ${phoneLocked ? 'custom-disabled-group' : ''}`}
+                    className={`input-group-alternative mb-3 ${
+                        phoneLocked ? 'custom-disabled-group' : ''
+                    }`}
                 >
                     <InputGroupAddon addonType="prepend">
                         <InputGroupText>
-                            <i className="ni ni-chat-round"/>
+                            <i className="ni ni-chat-round" />
                         </InputGroupText>
                     </InputGroupAddon>
                     <Input
                         placeholder="휴대폰 번호"
                         disabled={phoneLocked}
                         value={formatPhoneNumber(phone)}
-                        onChange={(e) => setPhone(
-                            e.target.value.replace(/[^\d]/g, '').slice(0, 11)
-                        )}
+                        onChange={(e) =>
+                            setPhone(e.target.value.replace(/[^\d]/g, '').slice(0, 11))
+                        }
                     />
                 </InputGroup>
             </Col>

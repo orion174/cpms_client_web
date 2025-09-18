@@ -3,17 +3,23 @@ import { useNavigate } from "react-router-dom";
 
 import useModalHook from "@/hooks/useModal.ts";
 
-export const useCancelNavigation = () => {
+export const useCancelNavigation = (mode: boolean) => {
     const navigate = useNavigate();
     const { openCustomModal } = useModalHook();
 
     const confirmCancel = () => {
-        openCustomModal({
-            title: "알림",
-            message: "목록으로 돌아가겠습니까?\n작성 중인 정보는 저장되지 않습니다.",
-            isConfirm: true,
-            onConfirm: () => navigate(-1),
-        });
+        if (mode) {
+            // 확인 모달
+            openCustomModal({
+                title: "알림",
+                message: "목록으로 돌아가겠습니까?\n작성 중인 정보는 저장되지 않습니다.",
+                isConfirm: true,
+                onConfirm: () => navigate(-1),
+            });
+        } else {
+            // 그냥 바로 이동
+            navigate(-1);
+        }
     };
 
     return confirmCancel;

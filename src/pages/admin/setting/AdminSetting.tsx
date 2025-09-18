@@ -2,7 +2,7 @@ import { Container, Row, Card } from "reactstrap";
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import TempHeader from "@/pages/layout/StatusArea/Status.tsx";
+import TempHeader from "@/layout/StatusArea/Status.tsx";
 import SettingSelectBar from "@/pages/admin/setting/SettingSelectBar.tsx";
 import UserList from "@/pages/admin/setting/user/list/UserList.tsx";
 import CompanyList from "@/pages/admin/setting/company/list/CompanyList.tsx";
@@ -15,7 +15,7 @@ const tabRoutes = [
 ];
 
 /* 📁 Admin Setting 공통 레이아웃  */
-const SettingPage: React.FC = () => {
+const AdminSetting: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -53,7 +53,10 @@ const SettingPage: React.FC = () => {
                             <Row>
                                 <div className="col">
                                     {/* 메뉴 선택 */}
-                                    <SettingSelectBar activeTab={activeTab} onChangeTab={handleTabChange} />
+                                    <SettingSelectBar
+                                        activeTab={activeTab}
+                                        onChangeTab={handleTabChange}
+                                    />
                                     {/* 선택한 메뉴 컴포넌트 */}
                                     {renderContent()}
                                 </div>
@@ -66,4 +69,4 @@ const SettingPage: React.FC = () => {
     );
 };
 
-export default SettingPage;
+export default AdminSetting;

@@ -33,8 +33,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
     // 파일 추가 이벤트 핸들러
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const files
-            = Array
-                .from(e.target.files || [])
+            = Array.from(e.target.files || [])
                 .filter((file) => {
                     const extension= file.name.split(".").pop()?.toLowerCase() || "";
                     return ALLOWED_EXTENSIONS.includes(extension);
@@ -42,14 +41,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
         // 최대 5개 제한
         const newFiles: NewFileItem[]
-            = files
-                .map((file, index) => ({
-                    id: Date.now() + index,
-                    file,
-                    name: file.name,
-                    isNew: true,
-                })
-            );
+            = files.map((file, index) => ({
+                id: Date.now() + index,
+                file,
+                name: file.name,
+                isNew: true,
+            }));
 
         const totalFiles = [...fileList, ...newFiles];
 
@@ -91,11 +88,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
                         size="sm"
                         color="primary"
                         type="button"
-                        onClick={() => document.getElementById("fileInput")?.click()}
+                        onClick={
+                            () => document.getElementById("fileInput")?.click()
+                        }
                     >
                         <span className="btn-inner--icon">
-                            <i className="ni ni-fat-add" />
+                            <i className="ni ni-fat-add"/>
                         </span>
+
                         {fileList.length === 0 ? (
                             <span className="btn-inner--text">첨부파일 등록</span>
                         ) : (
@@ -123,7 +123,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
                                     <Button
                                         color="danger"
                                         size="sm"
-                                        onClick={() => handleDeleteFile(file.id, file.isNew)}
+                                        onClick={
+                                            (): void => handleDeleteFile(file.id, file.isNew)
+                                        }
                                     >
                                         <i className="ni ni-basket"/>
                                     </Button>
@@ -143,11 +145,12 @@ const FileUpload: React.FC<FileUploadProps> = ({
     );
 };
 
+// 허용된 파일 업로드 확장자ㄴ
 const ALLOWED_EXTENSIONS = [
     'xlsx', 'xls', 'hwp', 'jpg', 'jpeg', 'pdf', 'png', 'ppt', 'pptx', 'doc', 'docx'
 ];
 
-// 파일 확장자에 따른 아이콘 반환 함수
+// 파일 확장자에 따른 아이콘 반환
 const getIconByExtension = (extension: string): string => {
     switch (extension) {
         case "xlsx":

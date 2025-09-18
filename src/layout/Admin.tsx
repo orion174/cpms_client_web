@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from "react";
 import { Container } from "reactstrap";
 import { useLocation, Outlet } from "react-router-dom";
 
-import Sidebar from "@/pages/layout/Sidebar/Sidebar.tsx";
-import AdminHeader from "@/pages/layout/Header/AdminHeader.tsx";
-import AdminFooter from "@/pages/layout/Footers/AdminFooter.tsx";
+import Sidebar from "@/layout/Sidebar/Sidebar.tsx";
+import AdminHeader from "@/layout/Header/AdminHeader.tsx";
+import AdminFooter from "@/layout/Footers/AdminFooter.tsx";
 
 import logoImage from '@/assets/img/brand/main_logo.png';
 

@@ -1,12 +1,12 @@
 import { Card, CardBody, CardHeader, Col, Container, Form, Row } from "reactstrap";
 
 import { useFormState } from "@/hooks/customHook.ts";
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import Empty from "@/layout/StatusArea/Empty.tsx";
 import CompanyFormButton from "@/pages/admin/setting/company/form/components/CompanyFormButton.tsx";
 import BasicInfoSection from "./components/BasicInfoSection.tsx";
 import EtcInfoSection from "@/pages/admin/setting/company/form/components/EtcInfoSection.tsx";
 
-import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
+import type { ReqCompanyDTO } from "@/types/setting/companyTypes.ts";
 
 const CompanyForm: React.FC = () => {
     const isEditMode = new URLSearchParams(location.search).has("companyId");

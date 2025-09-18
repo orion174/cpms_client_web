@@ -2,8 +2,8 @@ import { Container, Row } from "reactstrap";
 import React, { useRef, useEffect } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 
-import AuthHeader from "@/pages/layout/Header/AuthHeader.tsx";
-import AuthFooter from "@/pages/layout/Footers/AuthFooter.tsx";
+import AuthHeader from "@/layout/Header/AuthHeader.tsx";
+import AuthFooter from "@/layout/Footers/AuthFooter.tsx";
 
 const Auth: React.FC = () => {
 

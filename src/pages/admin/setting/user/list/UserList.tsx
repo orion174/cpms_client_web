@@ -8,7 +8,7 @@ import UserSearchBar from "@/pages/admin/setting/user/list/components/UserSearch
 import UserDataTable from "@/pages/admin/setting/user/list/components/UserDataTable.tsx";
 import CreateUserButton from "@/pages/admin/setting/user/list/components/CreateUserButton.tsx";
 
-import { adminUserList } from "@/core/api/user/userService.ts";
+import { adminUserList } from "@/server/api/user/userService.ts";
 import type { ReqUserListDTO, ResUserListDTO } from "@/types/user/userTypes.ts";
 
 /* 📁 사용자 데이터 목록 */

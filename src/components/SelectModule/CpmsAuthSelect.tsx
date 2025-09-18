@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { cpmsAuthList } from "@/server/api/auth/service";
+import type { ResAuthDTO } from "@/types/auth/types";
 
 interface AuthSelectProps {
     value: string;
@@ -7,19 +10,25 @@ interface AuthSelectProps {
     classNm: string;
 };
 
-// TODO 관리자 기능 고도화 하여, 공통코드로 관리되게 개발하기
-const authCode = [
-    { codeId: "ADMIN", codeNm: "관리자" },
-    { codeId: "USER", codeNm: "일반" },
-    { codeId: "TEMP", codeNm: "임시" }
-];
-
 const CpmsAuthSelect: React.FC<AuthSelectProps> = ({
     value,
     onChange,
     initText,
     classNm
 }) => {
+    const [ authCode, setAuthCode ] = useState<ResAuthDTO[]>([]);
+
+    useEffect((): void => {
+        const fetchOptions
+            = async (): Promise<void> => {
+                const response = await cpmsAuthList();
+                setAuthCode(response ?? []);
+            };
+
+        fetchOptions();
+    }, []); // 처음 마운트 될때만 호출
+
+
     return (
         <>
             <select
@@ -30,8 +39,8 @@ const CpmsAuthSelect: React.FC<AuthSelectProps> = ({
                 <option value="">{initText}</option>
 
                 {authCode.map((option) => (
-                    <option key={option.codeId} value={option.codeId}>
-                        {option.codeNm}
+                    <option key={option.authType} value={option.authType}>
+                        {option.authNm}
                     </option>
                 ))}
             </select>

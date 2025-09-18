@@ -27,22 +27,53 @@ rawAPI.interceptors.response.use(responseInterceptor, errorInterceptor);
 
 /* API 호출 헬퍼 */
 
-const get = async <T>(url: string, config?: AxiosRequestConfig): Promise<T> => {
-    const response = await callAPI.get<ApiResponse<T>>(url, config);
+const get = async <T>(
+    url: string,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
+    const response
+        = await callAPI.get<ApiResponse<T>>(url, config);
+
     return response.data.data;
 };
 
-const post = async <T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
-    const response = await callAPI.post<ApiResponse<T>>(url, data, config);
+const post = async <T, D = unknown>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
+    const response
+        = await callAPI.post<ApiResponse<T>>(url, data, config);
+
     return response.data.data;
 };
 
-const put = async <T, D = unknown>(url: string, data?: D, config?: AxiosRequestConfig): Promise<T> => {
-    const response = await callAPI.put<ApiResponse<T>>(url, data, config);
+const put = async <T, D = unknown>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
+    const response
+        = await callAPI.put<ApiResponse<T>>(url, data, config);
+
     return response.data.data;
 };
 
-const postForm = async <T>(url: string, formData: FormData, config?: AxiosRequestConfig): Promise<T> => {
+const patch = async <T, D = unknown>(
+    url: string,
+    data?: D,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
+    const response = await callAPI.patch<ApiResponse<T>>(url, data, config);
+    return response.data.data;
+};
+
+
+const postForm = async <T>(
+    url: string,
+    formData: FormData,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
     const response
         = await rawAPI.post<ApiResponse<T>>(url, formData, {
             ...config,
@@ -56,4 +87,5 @@ const postForm = async <T>(url: string, formData: FormData, config?: AxiosReques
 };
 
 export { callAPI, rawAPI };
-export const apiClient = { get, post, put, postForm };
+
+export const apiClient = { get, post, put, patch, postForm };

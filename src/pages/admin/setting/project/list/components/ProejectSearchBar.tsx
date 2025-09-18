@@ -2,7 +2,8 @@ import { Button, Form, Input, InputGroup } from "reactstrap";
 
 import CmmnUseYnSelect from "@/components/SelectModule/CmmnUseYnSelect.tsx";
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import type { ReqProjectListDTO } from "@/types/admin/projectTypes.ts";
+
+import type { ReqProjectListDTO } from "@/types/setting/projectTypes.ts";
 
 interface ProjectSearchProps {
     searchParams: ReqProjectListDTO;
@@ -19,7 +20,12 @@ const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
 }) => {
     return (
         <>
-            <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()} >
+            <Form
+                inline
+                className="d-flex flex-wrap"
+                style={{ gap: "0.5rem" }}
+                onSubmit={(e) => e.preventDefault()}
+            >
                 <InputGroup>
                     <CpmsCompanySelect
                         value={searchParams.companyId}
@@ -47,10 +53,21 @@ const ProjectSearchBar: React.FC<ProjectSearchProps> = ({
                 </InputGroup>
 
                 <div className="d-flex gap-2">
-                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">
+                    <Button
+                        type="button"
+                        onClick={onSearch}
+                        color="default"
+                        className="px-3 py-2"
+                    >
                         검색
                     </Button>
-                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">
+                    <Button
+                        type="button"
+                        onClick={resetSearchParams}
+                        color="default"
+                        className="px-3 py-2"
+                        outline
+                    >
                         초기화
                     </Button>
                 </div>

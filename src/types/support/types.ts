@@ -80,3 +80,8 @@ export interface supportFileList {
     fileOgNm: string;
     fileCategory : string;
 }
+
+// 문의 응답 저장 인터페이스
+export interface ReqSupportResponse {
+
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-import { companyList } from "@/core/api/setting/companyService.ts";
-import type { ResCompanyListDTO } from "@/types/admin/companyTypes.ts";
+import { companyList } from "@/server/api/setting/companyService.ts";
+import type { ResCompanyListDTO } from "@/types/setting/companyTypes.ts";
 
 interface CpmsCompanyProps {
     companyId?: number;
@@ -23,9 +23,8 @@ const CpmsCompanySelect: React.FC<CpmsCompanyProps> = ({
 
     useEffect((): void => {
         const fetchCompanys = async (): Promise<void> => {
-
             const response = await companyList(companyId);
-            setOptions(response);
+            setOptions(response ?? []);
         };
 
         fetchCompanys();

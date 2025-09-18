@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import AuthGuard from "@/pages/layout/AuthGuard.tsx";
+import AuthGuard from "@/layout/AuthGuard.tsx";
 
 /* 로그인 및 회원가입 */
-import Auth from "@/pages/layout/Auth.tsx";
-import Login from "@/pages/auth/login/Index.tsx";
+import Auth from "@/layout/Auth.tsx";
+import Login from "@/pages/auth/login/LoginContainer.tsx";
 import CpmsRegister from "@/pages/auth/register/CpmsRegister.tsx";
 /* CPMS 주요 기능 */
-import Admin from "@/pages/layout/Admin.tsx";
+import Admin from "@/layout/Admin.tsx";
 import SupportList from "@/pages/admin/support/list/RequestList.tsx";
 import SupportForm from '@/pages/admin/support/form/RequestForm.tsx';
 import SupportView from '@/pages/admin/support/view/RequestView.tsx';
-import SettingPage from '@/pages/admin/setting/SettingPage.tsx';
+import AdminSetting from '@/pages/admin/setting/AdminSetting.tsx';
 import UserForm from '@/pages/admin/setting/user/form/UserForm';
 import CompanyForm from '@/pages/admin/setting/company/form/CompanyForm';
 /* 템플릿 임시 페이지 */
@@ -53,7 +53,7 @@ const Router = () => {
                     <Route path="support/form" element={<SupportForm/>} />
                     <Route path="support/view" element={<SupportView/>} />
 
-                    <Route path="setting/*" element={<SettingPage />} />
+                    <Route path="setting/*" element={<AdminSetting />} />
                     <Route path="setting/user/form" element={<UserForm />} />
                     <Route path="setting/company/form" element={<CompanyForm />} />
 

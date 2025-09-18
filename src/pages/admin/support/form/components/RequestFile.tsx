@@ -7,9 +7,13 @@ interface RequestFileProps {
     formType: string;
     fileList: FileItem[];
     setFileList: React.Dispatch<React.SetStateAction<FileItem[]>>;
-}
+};
 
-const RequestFile: React.FC<RequestFileProps> = ({ formType, fileList, setFileList }) => {
+const RequestFile: React.FC<RequestFileProps> = ({
+    formType,
+    fileList,
+    setFileList
+}) => {
     return (
         <div className="section-space">
             <FileUpload

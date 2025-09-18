@@ -29,7 +29,10 @@ const FormModal: React.FC<FormModalProps> = ({
     }, [isOpen]);
 
     return (
-        <Modal isOpen={isOpen} toggle={onClose}>
+        <Modal
+            isOpen={isOpen}
+            toggle={onClose}
+        >
             <ModalHeader toggle={onClose}>
                 {title}
             </ModalHeader>
@@ -37,10 +40,16 @@ const FormModal: React.FC<FormModalProps> = ({
                 {children}
             </ModalBody>
             <ModalFooter>
-                <Button color="secondary" onClick={onClose}>
+                <Button
+                    color="secondary"
+                    onClick={onClose}
+                >
                     취소
                 </Button>
-                <Button color="primary" onClick={onConfirm}>
+                <Button
+                    color="primary"
+                    onClick={onConfirm}
+                >
                     저장
                 </Button>
             </ModalFooter>

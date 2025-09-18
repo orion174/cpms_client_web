@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
 import { useFormState } from "@/hooks/customHook.ts";
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import Empty from "@/layout/StatusArea/Empty.tsx";
 import SideInfoForm from "@/pages/admin/setting/user/view/components/SideInfoForm.tsx";
 import UserFormButton from "@/pages/admin/setting/user/form/components/UserFormButton.tsx";
 import BasicInfoSection from "@/pages/admin/setting/user/form/components/BasicInfoSection.tsx";

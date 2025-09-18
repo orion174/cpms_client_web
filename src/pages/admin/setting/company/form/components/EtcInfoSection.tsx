@@ -1,7 +1,7 @@
 import { FormGroup, Input } from "reactstrap";
 import SectionBorder from "@/components/FormModule/SectionBorder.tsx";
 
-import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
+import type { ReqCompanyDTO } from "@/types/setting/companyTypes.ts";
 
 interface EtcInfoSectionProps {
     reqCompanyDTO: ReqCompanyDTO;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 
 import { openErrorModal } from '@/utils/modal'
-import { getAccessToken, refreshAccessToken } from '@/core/certification/jwt';
+import { getAccessToken, refreshAccessToken } from '@/server/utils/jwt';
 import type { ApiResponse } from '@/types/cmmn';
 
 // 상태 변수: refresh 중 여부

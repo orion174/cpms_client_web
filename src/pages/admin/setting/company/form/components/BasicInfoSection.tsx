@@ -5,7 +5,7 @@ import SectionBorder from "@/components/FormModule/SectionBorder.tsx"
 import DaumAddressInput from "@/components/FormModule/DaumAddressInput.tsx";
 import CpmsAuthSelect from "@/components/SelectModule/CpmsAuthSelect.tsx";
 
-import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
+import type { ReqCompanyDTO } from "@/types/setting/companyTypes.ts";
 
 interface BasicInfoSectionProps {
     reqCompanyDTO: ReqCompanyDTO;
@@ -40,7 +40,7 @@ const BasicInfoSection: React.FC<BasicInfoSectionProps> = ({ reqCompanyDTO, hand
                     <Col lg="4">
                         <FormGroup>
                             <label className="form-control-label">
-                                업체 등급 설정<span style={{ color: "red" }}>*</span>
+                                업체 등급 설정 <span style={{ color: "red" }}>*</span>
                             </label>
 
                             <CpmsAuthSelect

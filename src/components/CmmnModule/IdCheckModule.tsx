@@ -2,7 +2,8 @@ import { Button } from 'reactstrap';
 import React, { useState } from 'react';
 
 import useModalHook from '@/hooks/useModal';
-import { idCheck } from '@/core/api/user/verifyService';
+import { idCheck } from '@/server/api/user/verifyService';
+import { HttpError } from '@/types/cmmn';
 
 interface idCheckProps {
     loginId: string;
@@ -11,15 +12,26 @@ interface idCheckProps {
 };
 
 const IdCheckModule: React.FC<idCheckProps> = ({
-                                                   loginId,
-                                                   classNm,
-                                                   onValid
-                                               }: idCheckProps) => {
-    const { openCustomModal } = useModalHook();
-    const [ isValid, setIsValid ] = useState(false);
+    loginId,
+    classNm,
+    onValid
+}: idCheckProps) => {
+    const { openCustomModal, openErrorModal } = useModalHook();
+    const [ isValid, setIsValid ] = useState<boolean>(false);
 
     // 아아디 중복 검사
     const handleCheckDuplicate = async (): Promise<void> => {
+        if (isValid) return;
+
+        if (!/^[a-zA-Z0-9]+$/.test(loginId)) {
+            openCustomModal({
+                title: '알림',
+                message: '아이디는 영문과 숫자만 입력 가능합니다.',
+                isConfirm: false
+            });
+
+            return;
+        }
 
         if (!loginId || loginId.trim().length < 4) {
             openCustomModal({
@@ -49,19 +61,34 @@ const IdCheckModule: React.FC<idCheckProps> = ({
                     }
                 });
             } else {
-                openCustomModal({
-                    title: '알림',
-                    message: result.message ?? '아이디 중복검사 중 오류가 발생했습니다.'
+                openErrorModal({
+                    errorCode: result.errorCode ?? '0000',
+                    message: result.message ?? '아이디 중복검사 중 오류가 발생했습니다.',
                 });
             }
-        } catch {
-            console.warn('handleCheckDuplicate error!');
+        } catch (e: unknown) {
+            if (e instanceof HttpError) {
+                openErrorModal({
+                    errorCode: e.code,
+                    message: e.message
+                });
+            } else {
+                openErrorModal({
+                    errorCode: '0000',
+                    message: '예상치 못한 오류가 발생했습니다.'
+                });
+            }
         }
     };
 
     return (
         <>
-            <Button color="info" className={classNm} disabled={isValid} onClick={handleCheckDuplicate}>
+            <Button
+                color="info"
+                className={classNm}
+                disabled={isValid}
+                onClick={handleCheckDuplicate}
+            >
                 {isValid ? '사용가능' : '중복검사'}
             </Button>
         </>

@@ -2,7 +2,7 @@ import { Col, FormGroup, Input, Row } from "reactstrap";
 import React from "react";
 
 import CpmsCompanySelect from "@/components/SelectModule/CpmsCompanySelect.tsx";
-import type { ReqProjectDTO } from "@/types/admin/projectTypes.ts";
+import type { ReqProjectDTO } from "@/types/setting/projectTypes.ts";
 
 interface ProjectModalFormProps {
     formState: ReqProjectDTO;

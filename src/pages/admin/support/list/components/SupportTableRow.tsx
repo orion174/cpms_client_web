@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "reactstrap";
 
-import type { SupportList } from "../../types.ts";
+import type { SupportList } from "@/types/support/types";
 
 interface RowProps {
     row: SupportList;
@@ -61,7 +61,10 @@ const SupportTableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
     return (
         <tr onClick={() => onRowClick(row.supportRequestId)} style={{ cursor: "pointer" }}>
             <td className="text-center align-middle">
-                <Badge color={requestCdColors[row.requestCd]} className="px-3 py-2 fs-5 fw-bold pill custom-badge-status">
+                <Badge
+                    color={requestCdColors[row.requestCd]}
+                    className="px-3 py-2 fs-5 fw-bold pill custom-badge-status"
+                >
                     {row.requestNm}
                 </Badge>
             </td>
@@ -72,7 +75,10 @@ const SupportTableRow: React.FC<RowProps> = ({ row, onRowClick }) => {
             <td className="my-input-text-tbody">{row.regDt}</td>
             <td className="my-input-text-tbody">{renderDeadline()}</td>
             <td className="text-center align-middle">
-                <Badge color={statusColors[row.statusCd]} className="px-3 py-2 fs-5 fw-bold custom-badge-request">
+                <Badge
+                    color={statusColors[row.statusCd]}
+                    className="px-3 py-2 fs-5 fw-bold custom-badge-request"
+                >
                     {row.statusNm}
                 </Badge>
             </td>

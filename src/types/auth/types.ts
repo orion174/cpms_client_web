@@ -19,3 +19,8 @@ export interface ResRefreshTokenDTO {
     accessTokenExpiration: number;
 }
 
+// 권한 인터페이스
+export interface ResAuthDTO {
+    authType: string;
+    authNm: string;
+}

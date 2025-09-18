@@ -3,17 +3,17 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { utf8ToBase64 } from "@/utils/cmmn";
-import { apiClient } from "@/core/api/client";
 import { getUserAuthType } from "@/utils/cmmn";
 import { useSearchParams } from "@/hooks/customHook";
 
 import PaginationComponent from "@/components/TableModule/PaginationComponent";
-import TempHeader from "@/pages/layout/StatusArea/Status";
-import Empty from "@/pages/layout/StatusArea/Empty";
+import TempHeader from "@/layout/StatusArea/Status";
+import Empty from "@/layout/StatusArea/Empty";
 import SupportSearchBar from "./components/SupportSearchBar";
 import SupportTable from "./components/SupportTable";
 
-import type { ResSupportListDTO, SupportList, ReqSupportListDTO } from "../types";
+import { fetchSupportListApi, updateStatusApi } from "@/server/api/support/service.ts";
+import type { SupportList, ReqSupportListDTO } from "@/types/support/types";
 
 const RequestList: React.FC = () => {
     const navigate = useNavigate();
@@ -31,8 +31,7 @@ const RequestList: React.FC = () => {
             pageNo: currentPage,
         };
 
-        const result
-            = await apiClient.post<ResSupportListDTO>('/api/support/list', request);
+        const result = await fetchSupportListApi(request);
 
         setTotalCnt(result.totalCnt);
         setData(result.supportList);
@@ -58,17 +57,12 @@ const RequestList: React.FC = () => {
         = useCallback(async (supportRequestId: number, statusCd: number): Promise<void> => {
             // 접수대기인 게시물을 최초 클릭시, 접수완료 상태로 바뀐다.
             if (statusCd === 3) {
-                const request = {
-                    supportRequestId: supportRequestId,
-                    statusCd: 4
-                };
-
-                await apiClient.post('/api/support/update-status', request);
+                await updateStatusApi(supportRequestId);
             }
 
             const encodeId = utf8ToBase64(supportRequestId.toString());
             navigate(`/admin/support/view?support_page=${encodeId}`);
-        }, [navigate]
+        }, [ navigate ]
     );
 
     if (authType === null) return null;

@@ -17,3 +17,10 @@ export interface ReqSmsCodeDTO {
 export interface SmsDTO {
     receiver: string;
 }
+
+export interface ReqRegisterDTO {
+    phone: string;
+    loginId: string;
+    password: string;
+    confirmPassword: string;
+}

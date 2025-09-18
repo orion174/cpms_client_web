@@ -12,8 +12,7 @@ interface DaumAddressInputProps {
 const DaumAddressInput: React.FC<DaumAddressInputProps> = ({
     zipCode, address, onChangeZipCode, onChangeAddress
 }) => {
-
-    const handleSearch = () => {
+    const handleSearch = (): void => {
         loadDaumPostCodeModal(onChangeZipCode, onChangeAddress);
     };
 
@@ -24,9 +23,15 @@ const DaumAddressInput: React.FC<DaumAddressInputProps> = ({
                 className="form-control-alternative"
                 placeholder="주소를 입력하세요."
                 value={address}
-                onChange={(e) => onChangeAddress(e.target.value)}
+                onChange={
+                    (e) => onChangeAddress(e.target.value)
+                }
             />
-            <Input type="hidden" value={zipCode} name="zipCode" />
+            <Input
+                type="hidden"
+                value={zipCode}
+                name="zipCode"
+            />
             <Button
                 type="button"
                 color="primary"

@@ -21,7 +21,12 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
 }) => {
     return (
         <>
-            <Form inline className="d-flex flex-wrap" style={{ gap: "0.5rem" }} onSubmit={(e) => e.preventDefault()}>
+            <Form
+                inline
+                className="d-flex flex-wrap"
+                style={{ gap: "0.5rem" }}
+                onSubmit={(e) => e.preventDefault()}
+            >
                 <InputGroup>
                     <CpmsCompanySelect
                         value={searchParams.searchCompanyId}
@@ -57,10 +62,21 @@ const UserSearchBar:React.FC<UserSearchProps> = ({
                 </InputGroup>
 
                 <div className="d-flex gap-2">
-                    <Button type="button" onClick={onSearch} color="default" className="px-3 py-2">
+                    <Button
+                        type="button"
+                        onClick={onSearch}
+                        color="default"
+                        className="px-3 py-2"
+                    >
                         검색
                     </Button>
-                    <Button type="button" onClick={resetSearchParams} color="default" outline className="px-3 py-2">
+                    <Button
+                        type="button"
+                        onClick={resetSearchParams}
+                        color="default"
+                        className="px-3 py-2"
+                        outline
+                    >
                         초기화
                     </Button>
                 </div>

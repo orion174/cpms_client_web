@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 
 import { chartOptions, parseOptions, chartExample1, chartExample2 } from '@/pages/examples/charts.jsx';
-import Empty from "@/pages/layout/StatusArea/Empty.tsx";
+import Empty from "@/layout/StatusArea/Empty.tsx";
 
 const Index = (props) => {
   const [activeNav, setActiveNav] = useState(1);

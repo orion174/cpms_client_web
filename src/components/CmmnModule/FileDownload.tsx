@@ -1,5 +1,3 @@
-import { rawAPI } from "@/core/api/client.ts";
-
 import excelIcon from "@/assets/img/icons/excel_icon.png";
 import hwpIcon from "@/assets/img/icons/hwp_icon.png";
 import jpgIcon from "@/assets/img/icons/jpg_icon.png";
@@ -8,6 +6,7 @@ import pngIcon from "@/assets/img/icons/png_icon.png";
 import pptIcon from "@/assets/img/icons/ppt_icon.png";
 import wordIcon from "@/assets/img/icons/word_icon.png";
 
+import { cmmnDownloadFile } from "@/server/api/cmmn/fileService.ts";
 import type { FileList } from "@/types/cmmn.ts";
 
 interface FileDownProps<T extends keyof FileList> {
@@ -28,11 +27,7 @@ const FileDown = <T extends keyof FileList>({
 
         if (!fileId) return;
 
-        const endPoint = `/api/${content}/file/${fileId}/download`;
-        const response
-            = await rawAPI.get(endPoint, { responseType: 'blob' });
-
-        const blob = response.data;
+        const blob = await cmmnDownloadFile(content, fileId);
         const url = window.URL.createObjectURL(blob);
 
         const link = document.createElement("a");

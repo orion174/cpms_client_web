@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useModalHook from "@/hooks/useModal.ts";
 import { useCancelNavigation } from "@/hooks/customHook.ts";
 
-import { saveCompany } from "@/core/api/setting/companyService.ts";
-import type { ReqCompanyDTO } from "@/types/admin/companyTypes.ts";
+import { saveCompany } from "@/server/api/setting/companyService.ts";
+import type { ReqCompanyDTO } from "@/types/setting/companyTypes.ts";
 
 interface CompanyFormButtonPrps {
     reqCompanyDTO: ReqCompanyDTO
@@ -14,7 +14,7 @@ interface CompanyFormButtonPrps {
 const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCompanyDTO }) => {
 
     const { openCustomModal } = useModalHook();
-    const confirmCancel = useCancelNavigation();
+    const confirmCancel = useCancelNavigation(true);
     const navigate = useNavigate();
 
     const validate = (): string => {
@@ -42,7 +42,7 @@ const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCom
             title: "확인",
             message: "저장하시겠습니까?",
             isConfirm: true,
-            onConfirm: async () => {
+            onConfirm: async (): Promise<void> => {
                 if (!isEditMode) await saveCompany(reqCompanyDTO);
 
                 openCustomModal({
@@ -57,10 +57,18 @@ const CompanyFormButton: React.FC<CompanyFormButtonPrps> = ({ isEditMode, reqCom
 
     return (
         <>
-            <Button type="button" color="default" onClick={confirmCancel}>
+            <Button
+                type="button"
+                color="default"
+                onClick={confirmCancel}
+            >
                 등록 취소
             </Button>
-            <Button type="button" color="success" onClick={handSave}>
+            <Button
+                type="button"
+                color="success"
+                onClick={handSave}
+            >
                 {isEditMode ? "수정 완료" : "업체 등록"}
             </Button>
         </>

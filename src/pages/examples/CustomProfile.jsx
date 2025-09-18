@@ -30,7 +30,7 @@ import {
     Col,
 } from "reactstrap";
 // core components
-import TempHeader from "@/pages/layout/StatusArea/Status.tsx";
+import TempHeader from "@/layout/StatusArea/Status.tsx";
 
 import team4Image from '@/assets/img/theme/team-4-800x800.jpg';
 
