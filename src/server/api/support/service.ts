@@ -11,22 +11,6 @@ export const fetchSupportListApi = async (
     return response;
 };
 
-// 문의 저장 API
-export const saveSupportRequestApi = (
-    reqFormData: FormData
-): void => {
-    const url = '/api/support/insert';
-    apiClient.postForm(url, reqFormData);
-};
-
-// 문의글 처리상태 업데이트 API
-export const updateStatusApi = async (
-    supportRequestId: number
-): Promise<void> => {
-    const url = `/api/support/update/${supportRequestId}/status`;
-    await apiClient.patch<void>(url);
-};
-
 // 문의 상세 조회 API
 export const fetchSupportViewApi = async (
     supportRequestId: number
@@ -38,23 +22,54 @@ export const fetchSupportViewApi = async (
     );
 };
 
-// 문의 응답글 삭제 API
-export const deleteSupportResponseApi = async (
+// 문의 저장 API
+export const saveSupportRequestApi = async (
+    reqFormData: FormData
+): Promise<void> => {
+    const url = '/api/support/insert';
+    await apiClient.postForm(url, reqFormData);
+};
+
+// 문의글 처리상태 업데이트 API
+export const updateStatusApi = async (
     supportRequestId: number
 ): Promise<void> => {
-    const url = '/api/support/delete-response';
-    await apiClient.post(url, { supportRequestId });
+    const url = `/api/support/update/${supportRequestId}/status`;
+    await apiClient.patch(url);
 };
 
 // 문의 답변 저장(수정) API
 export const saveSupportResponseApi = async (
     reqFormData: FormData, editMode: boolean
 ): Promise<void> => {
-    const url = editMode
-        ? `/api/support/update-response`
-        : `/api/support/insert-response`;
+    let url: string;
 
-    await apiClient.postForm(url, reqFormData);
+    if (editMode) {
+        const supportRequestId = reqFormData.get("supportRequestId") as string;
+        const supportResponseId = reqFormData.get("supportResponseId") as string;
+
+        if (!supportRequestId || !supportResponseId) {
+            throw new Error("수정 모드에서는 supportRequestId, supportResponseId 가 필요합니다.");
+        }
+
+        const requestId = parseInt(supportRequestId, 10);
+        const responseId = parseInt(supportResponseId, 10);
+
+        url = `/api/support/update/${requestId}/response/${responseId}`;
+        await apiClient.putForm(url, reqFormData);
+
+    } else {
+        url = `/api/support/insert-response`;
+        await apiClient.postForm(url, reqFormData);
+    }
+};
+
+// 문의 응답글 삭제 API
+export const deleteSupportResponseApi = async (
+    supportRequestId: number
+): Promise<void> => {
+    const url = `/api/support/delete/${supportRequestId}/response`;
+    await apiClient.patch(url);
 };
 
 // 문의 첨부파일 삭제 API
@@ -62,5 +77,5 @@ export const deleteSupportFileApi = async (
     supportFileId: number
 ): Promise<void> => {
     const url = `/api/support/file/${supportFileId}/delete`;
-    await apiClient.post(url);
+    await apiClient.patch(url);
 };

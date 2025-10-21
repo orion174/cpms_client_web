@@ -4,6 +4,7 @@ import { initializeSmartEditor } from "@/utils/smartEditor.js";
 interface SmartEditorProps {
     id: string;
     row: number;
+    initValue?: string;
 }
 
 export interface SmartEditorHandle {
@@ -12,7 +13,7 @@ export interface SmartEditorHandle {
 }
 
 const SmartEditor = forwardRef<SmartEditorHandle, SmartEditorProps>((
-    { id, row } , ref
+    { id, row, initValue }, ref
 ) => {
     const oEditors = useRef<unknown[]>([]);
 
@@ -25,7 +26,7 @@ const SmartEditor = forwardRef<SmartEditorHandle, SmartEditorProps>((
         },
         setContent: (content: string) => {
             if (!oEditors.current[0]) return;
-            // @ts-ignore
+            // @ts-ignore: 네이버 에디터 JS 객체
             oEditors.current[0].setIR(content);
         },
     }));
@@ -38,7 +39,14 @@ const SmartEditor = forwardRef<SmartEditorHandle, SmartEditorProps>((
         script.type = "text/javascript";
         script.onload = () => {
             initializeSmartEditor(id, oEditors.current as any[])
-                .then(() => console.log("SmartEditor initialized."))
+                .then(():void => {
+                    console.log("SmartEditor initialized.");
+
+                    if (initValue) {
+                        // @ts-ignore: 네이버 에디터 JS 객체
+                        oEditors.current[0]?.setIR(initValue);
+                    }
+                })
                 .catch((error: unknown) => console.error("SmartEditor error:", error));
         };
 
@@ -47,7 +55,7 @@ const SmartEditor = forwardRef<SmartEditorHandle, SmartEditorProps>((
         return () => {
             document.body.removeChild(script);
         };
-    }, [id]);
+    }, [id, initValue]);
 
     return <textarea id={id} rows={row} style={{ width: '100%' }}></textarea>;
 });

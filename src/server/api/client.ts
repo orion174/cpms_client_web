@@ -68,7 +68,6 @@ const patch = async <T, D = unknown>(
     return response.data.data;
 };
 
-
 const postForm = async <T>(
     url: string,
     formData: FormData,
@@ -86,6 +85,22 @@ const postForm = async <T>(
     return response.data.data;
 };
 
+export const putForm = async <T>(
+    url: string,
+    formData: FormData,
+    config?: AxiosRequestConfig
+): Promise<T | null> => {
+    const response = await rawAPI.put<ApiResponse<T>>(url, formData, {
+        ...config,
+        headers: {
+            ...(config?.headers ?? {}),
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    return response.data.data;
+};
+
 export { callAPI, rawAPI };
 
-export const apiClient = { get, post, put, patch, postForm };
+export const apiClient = { get, post, put, patch, postForm, putForm };

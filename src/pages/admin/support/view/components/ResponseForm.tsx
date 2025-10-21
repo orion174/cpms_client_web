@@ -35,6 +35,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({
     const [ fileList, setFileList ] = useState<FileItem[]>([]);
 
     const editorRef = useRef<SmartEditorHandle>(null);
+    const responseEditor = editData?.responseEditor || "";
 
     // 문의 답변 첨부파일
     useEffect((): void => {
@@ -182,6 +183,7 @@ const ResponseForm: React.FC<ResponseFormProps> = ({
                                                     id="responseEditorTxt"
                                                     row={10}
                                                     ref={editorRef}
+                                                    initValue={responseEditor}
                                                 />
                                             </FormGroup>
                                         </Col>

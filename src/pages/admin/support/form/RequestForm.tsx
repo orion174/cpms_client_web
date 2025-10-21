@@ -40,7 +40,8 @@ const RequestForm: React.FC = () => {
     const handleSave = (): void => {
         let message = "";
 
-        if (!formData.requestProjectId) message = "프로젝트를 선택하세요.";
+        if (!formData.requestCompanyId) message = "요청 업체를 선택하세요."
+        else if (!formData.requestProjectId) message = "프로젝트를 선택하세요.";
         else if (!formData.requestCd) message = "요청 유형을 선택하세요.";
         else if (!formData.supportTitle) message = "제목을 입력하세요.";
         else if (!formData.statusCd) message = "처리 상태를 선택하세요.";
@@ -84,7 +85,7 @@ const RequestForm: React.FC = () => {
             .filter((file): file is NewFileItem => file.isNew && !!file.file)
             .forEach((file) => file.file && data.append("supportFile", file.file));
 
-        saveSupportRequestApi(data);
+        await saveSupportRequestApi(data);
 
         openCustomModal({
             title: "알림",
