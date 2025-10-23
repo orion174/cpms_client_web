@@ -33,8 +33,15 @@ const RequestList: React.FC = () => {
 
         const result = await fetchSupportListApi(request);
 
+        if (!result) {
+            setTotalCnt(0);
+            setData([]);
+            return;
+        }
+
         setTotalCnt(result.totalCnt);
         setData(result.supportList);
+
     }, [ searchParams, currentPage ]);
 
     useEffect((): void => {
